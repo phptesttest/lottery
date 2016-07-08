@@ -8,22 +8,22 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Controller;
 
-class IndexController extends Controller
+class UserController extends Controller
 {
-    public function login(){
-    	return view('admin.login');
+    public function search(){
+    	return view('admin.user.search');
     }
 
-    public function index(){
-    	return view('admin.index');
+    public function produce(){
+    	return view('admin.user.produce');
     }
 
-    public function account(){
-    	return view('admin.account');
+     public function pay(){
+    	return view('admin.user.pay');
     }
 
-    public function logout(){
-    	
+    public function userlist(){
+    	return view('admin.user.list');
     }
 }
 

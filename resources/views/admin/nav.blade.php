@@ -45,19 +45,23 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="#">开奖记录</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">用户管理<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">用户充值</a></li>
-                        <li><a href="#">用户查询</a></li>
-                        <li><a href="#">账号生成</a></li>
-                        <li><a href="#"></a></li>
+                        <li><a href="/admin/userlist">用户列表</a></li>
+                        <li><a href="/admin/pay">用户充值</a></li>
+                        <li><a href="/admin/search">用户查询</a></li>
                     </ul>
                 </li>
-                <li><a href="#">下注记录</a></li>
-                <li><a href="#">结算管理</a></li>
-                <li><a href="#">充值记录</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">记录管理<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/admin/recharge">充值记录</a></li>
+                        <li><a href="/admin/betrecord">下注记录</a></li>
+                        <li><a href="/admin/openrecord">开奖记录</a></li>
+                    </ul>
+                </li>
+                <li><a href="/admin/account">结算管理</a></li>
                 <li><a href="#">退出</a></li>
             </ul>
         </div>
