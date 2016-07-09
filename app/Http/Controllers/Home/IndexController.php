@@ -15,7 +15,13 @@ class IndexController extends Controller
     }
 
     public function index(){
-    	return view('home.index');
+
+    	$file_contents = file_get_contents('http://c.apiplus.net/newly.do?token=66c6e6553316f570&code=cqssc&format=json&rows=20');
+        $res=json_decode($file_contents); 
+        $data=[
+            'datas'=>$res->data,
+        ];
+    	return view('home.index',$data);
     }
     
     public function buy(){
