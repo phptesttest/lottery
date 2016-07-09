@@ -19,26 +19,23 @@
                         <th>充值金额</th>
                         <th>时间</th>
                         <th>操作者</th>
+                        <th>操作</th>
                     </tr>
+                @if(count($recharges)==0)
                     <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
+                        <td colspan="4">尚未有充值记录</td>
                     </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                    </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                    </tr>
-                   
+                @else
+                    @foreach($recharges as $recharges)
+                        <tr>
+                            <td>{{$recharges->username}}</td>
+                            <td>{{$recharges->num}}</td>
+                            <td>{{$recharges->created_at}}</td>
+                            <td>{{$recharges->aName}}</td>
+                            <td><button type="submit" class="btn btn-danger">删除</button></td>
+                        </tr>
+                    @endforeach
+                @endif
                 </table>
             </div>
         </div>

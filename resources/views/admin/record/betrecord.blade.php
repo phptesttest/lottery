@@ -20,24 +20,23 @@
                         <th>下注内容</th>
                         <th>操作</th>
                     </tr>
+
+        @if(count($bets)==0)
                     <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
+                        <td colspan="4">目前下注记录为零</td>
                     </tr>
+        @else
+            @foreach($bets as $bets)
                     <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
+                        <td>{{ $bets->username }}</td>
+                        <td>{{ $bets->created_at }}</td>
+                        <td>{{ $bets->content }}</td>
+                        <td><button type="submit" class="btn btn-danger">删除</button></td>
                     </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                    </tr>
+            @endforeach
+        @endif  
+                    
+                    
                    
                 </table>
             </div>
