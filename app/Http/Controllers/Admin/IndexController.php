@@ -7,7 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Controller;
-
+use DB;
 class IndexController extends Controller
 {
     public function login(){
@@ -19,11 +19,17 @@ class IndexController extends Controller
     }
 
     public function account(){
-    	return view('admin.account');
+
+        $users = DB::table('users')->get();
+    	return view('admin.account')->with('users',$users);
     }
 
     public function logout(){
     	
+    }
+
+    public function times(){
+        return view('admin.times');
     }
 }
 

@@ -27,7 +27,7 @@
             </div>
         </div>
     </div>
-</div>
+
     <?php 
 
         if (isset($user)) {
@@ -70,4 +70,5 @@
         }
                  
     ?>
+</div>
 @endsection

@@ -62,6 +62,7 @@
                     </ul>
                 </li>
                 <li><a href="/admin/account">结算管理</a></li>
+                <li><a href="/admin/times">赔率设置</a></li>
                 <li><a href="#">退出</a></li>
             </ul>
         </div>

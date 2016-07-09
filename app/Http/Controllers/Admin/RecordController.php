@@ -35,7 +35,6 @@ class RecordController extends Controller
 
     //返回开奖记录的数据
     public function openrecord(){
-
     	return view('admin.record.openrecord');
     }
 }
