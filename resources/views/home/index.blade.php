@@ -4,6 +4,17 @@
 		border:2px solid #ccc;
 		box-shadow:3px 3px #cccc;
 	}
+	.result tr td{
+		text-align:center;
+	}
+	.smallRedball{
+		background-color:rgb(221,62,62);
+		color:white;
+		display: block;
+		width: 30px;
+		height: 25px;
+		border-radius: 30px
+	}
 @endsection
 @section('content')
 @extends('home.person')
@@ -16,7 +27,7 @@
                 <h3 class="panel-title">彩票结果信息</h3>
             </div>
             <div class="panel-body">
-                <table class="table">
+                <table class="table  result">
                     <tr>
 							<th>期次</th>
 							<th>开奖时间</th>
