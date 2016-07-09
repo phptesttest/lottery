@@ -3,7 +3,17 @@
 	.panel{
 		border:2px solid #ccc;
 		box-shadow:3px 3px #cccc;
+        margin-top:20px;
 	}
+    .enterCount{
+        width:100px;
+    }
+    .enterPassword{
+        width:100px;
+    }
+    .enterPoint{
+        width:50px;
+    }
 @endsection
 @section('content')
 	<div class="container">
@@ -13,64 +23,65 @@
                     <h3 class="panel-title">账号生成</h3>
                 </div>
                 <div class="panel-body">
+                <form action="{{ asset('/admin/userlist')}}" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <table class="table">
                         <tr>
                             <th>下注等级</th>
                             <th>用户账号</th>
                             <th>用户密码</th>
+                            <th>初始积分</th>
                             <th></th>
                         </tr>
                         <tr>
-                            <td><select>
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
+                            <td><select name='level'>
+                                <option value="1" selected="selected">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
                             </select></td>
-                            <td><input type='text' onfocus = "javascript:this.blur()" ></td>
-                            <td><input type='text' onfocus = "javascript:this.blur()" ></td>
-                            <td><button type='submit'>确认生成</button></td>
+                            <td><input class="enterCount" type='text' onfocus = "javascript:this.blur()" ></td>
+                            <td><input class="enterPassword" type='text' onfocus = "javascript:this.blur()" ></td>
+                            <td><input class="enterPoint" type='text' name='point'></td>
+                            <td><input type="submit" value="确定生成"></td>
                         </tr>
                     </table>
+                    </form>
                 </div>
             </div>
+
+            
         <div class="panel">
             <div class="panel-heading">
                 <h3 class="panel-title">用户列表信息</h3>
             </div>
             <div class="panel-body">
-                <table class="table">
+
+                @if(count($users)==0)
+
+                  <p>您还没有生成用户账号！</p>  
+
+                @else
+                    <table class="table">
+
                     <tr>
                         <th>用户账号</th>
                         <th>用户密码</th>
                         <th>用户积分</th>
                         <th>操作</th>
                     </tr>
-                    <tr>
-                        <td>账号1</td>
-                        <td>xx</td>
-                        <td>xx</td>
-                        <td>xx</td>
-                    </tr>
-                    <tr>
-                        <td>账号1</td>
-                        <td>xx</td>
-                        <td>xx</td>
-                        <td>xx</td>
-                    </tr>
-                    <tr>
-                        <td>账号1</td>
-                        <td>xx</td>
-                        <td>xx</td>
-                        <td>xx</td>
-                    </tr>
-                    <tr>
-                        <td>账号1</td>
-                        <td>xx</td>
-                        <td>xx</td>
-                        <td>xx</td>
-                    </tr>
                    
-                </table>
+                
+                    @foreach($users as $user)
+                        <tr>
+                            <td>{{ $user->username}}</td>
+                            <td>{{ $user->password}}</td>
+                            <td>{{ $user->point}}</td>
+                            <td><button>删除</button></td>
+                        </tr>
+                    @endforeach
+                    </table>
+                @endif
+                
             </div>
         </div>
     </div>

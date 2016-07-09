@@ -29,7 +29,7 @@
     @yield('headder')
     </style>
 </head>
-<body id="app-layout" style='padding-top:100px;'>
+<body id="app-layout" style='padding-top:70px;'>
     <nav class="navbar navbar-default navbar navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">

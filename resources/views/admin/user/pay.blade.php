@@ -13,13 +13,23 @@
                 <h3 class="panel-title">用户充值</h3>
             </div>
             <div class="panel-body">
+            <form action="{{ asset('/admin/pay')}}" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <table class="table">
                     <tr>
                         <td>请输入要充值的账号</td>
-                        <td><input type='text' ></td>
-                        <td><button type='submit'>充值</button></td>
+                        <td><input type='text' name="account"></td>
+                    </tr>
+                    <tr>
+                        <td>请输入充值的金额</td>
+                        <td><input type='text' name="point"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="确定充值"></td>
                     </tr>
                 </table>
+            </form>
             </div>
         </div>
     </div>
