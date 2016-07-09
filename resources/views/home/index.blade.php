@@ -8,11 +8,12 @@
 		text-align:center;
 	}
 	.smallRedball{
-		background-color:rgb(221,62,62);
+		background-color:rgb(46,94,187);
 		color:white;
 		display: block;
 		width: 30px;
-		height: 25px;
+		height: 30px;
+		line-height:30px;
 		border-radius: 30px
 	}
 @endsection
@@ -48,12 +49,12 @@
 					    <tr>
 							<td class="period"><?php echo expectTurn(nextExpect($datas[0]->expect)) ?></td>
 							<td><?php echo timeTurn(nextTime($datas[0]->opentimestamp)) ?></td>
-							<td colspan="5" style="text-align:center;">距离开奖时间还有
+							<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
 							<?php 
 								echo desTime($datas[0]->opentimestamp)
 							?>
 							分钟</td>
-							<td><input type='button' value="投注" ></td>
+							<td><a href='/buy'><input type='button' class='btn btn-info'value="投注" ></a></td>
 						</tr>
 					    @foreach($datas as $data)
 					    	<tr>

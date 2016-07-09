@@ -30,19 +30,6 @@ Route::group(['middleware' => ['web']], function () {
 	  Route::get('/index', 'Home\IndexController@index');//前台会员登录
 	  Route::get('/buy', 'Home\IndexController@buy');//前台会员登录
 	  Route::get('/', 'Home\IndexController@login');//前台会员登录
-<<<<<<< HEAD
-	  Route::get('/index', 'Home\IndexController@index');//前台会员登录
-	  Route::get('/buy', 'Home\IndexController@buy');//前台会员登录
-
-
-//后台部分
-	  // Route::get('/admin','Admin\IndexController@login');//后台用户登录
-	  // Route::get('/admin/logout','Admin\IndexController@logout');//用户退出登录
-	  // Route::get('/admin/index','Admin\IndexController@index');
-	  // Route::get('/admin/account','Admin\IndexController@account');//结算管理
-	  
-=======
->>>>>>> 80f3182d82355208838d498136419f618f040ea4
 });
 
 /**后台部分**/
@@ -52,14 +39,13 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('logout','Admin\IndexController@logout');//用户退出登录
 	  Route::get('index','Admin\IndexController@index');
 	  Route::get('times','Admin\IndexController@times');//赔率设置
-<<<<<<< HEAD
+
 	  Route::post('times','Admin\IndexController@timesFun');//赔率设置
 	  Route::get('account','Admin\IndexController@account');//结算管理
-=======
 	  Route::get('account','Admin\IndexController@account');//结算管理 , 提现
 	  Route::get('account/{id}','Admin\IndexController@account');//结算管理 , 提现
 
->>>>>>> 80f3182d82355208838d498136419f618f040ea4
+
 });
 
 /**记录(充值记录和下注记录) Record 路由**/
