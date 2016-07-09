@@ -73,6 +73,13 @@ if (!function_exists('nextTime')) {
 	function nextTime($str){
 		$str1=$str+10*60+8*60*60;
 		$str2=date('Y-m-d H:i:s',$str1);
+		$str3=timeTurn($str2);
+		$arr=explode(":",$str3);
+		$str4=$arr[0];
+		if($str4>22){
+			$str1=$str1-5*60;
+			$str2=date('Y-m-d H:i:s',$str1);
+		}
 		return $str2;
 	}
 	# code...

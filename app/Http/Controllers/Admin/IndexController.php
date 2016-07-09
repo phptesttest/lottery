@@ -1,13 +1,16 @@
-<?php
+<?php namespace App\Http\Controllers\Admin;
 
-namespace App\Http\Controllers\Admin;
-
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Http\Requests;
 use App\Http\Controllers\Controller;
+
+//use Illuminate\Http\Request;
+use Request;
+
+use App\user;
+use App\category;
+use Redirect;
 use DB;
+
 class IndexController extends Controller
 {
     public function login(){
@@ -29,6 +32,22 @@ class IndexController extends Controller
     }
 
     public function times(){
+        return view('admin.times');
+    }
+
+    //赔率设置
+    public function timesFun(){
+
+        $ball=Request::input('ball');
+        $type=Request::input('type');
+        $rate=Request::input('rate');
+        $cate=DB::table('categories')->where('cName','=',$type)->where('cId','=',$ball)->get();
+        if(!is_null($cate)) {
+            $cId=$cate[0]->id;
+            $category=category::find($cId);
+            $category->rate=$rate;
+            $category->save();
+        }
         return view('admin.times');
     }
 }

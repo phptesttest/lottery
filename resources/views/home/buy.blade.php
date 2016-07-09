@@ -59,114 +59,51 @@
 
 							
 						</tr>
-						<tr>
-				
-							<td>大</td>
-							<td>1.95</td>
+
+						@if(count($bigs)==0)
+
+					      <p>还没有信息</p>  
+
+					    @else
+					   	 
+					   	 <!-- 大球 -->
+					   	<tr>
+					    @foreach($bigs as $big)
+					    	<td>大</td>
+							<td><?php echo $big->rate ?></td>
 							<td><input type='text'></td>
+					    @endforeach
+					    </tr>
 
-							<td>大</td>
-							<td>1.95</td>
+					    <!-- 小球 -->
+					    <tr>
+					    @foreach($smalls as $small)
+					    	<td>小</td>
+							<td><?php echo $small->rate ?></td>
 							<td><input type='text'></td>
+					    @endforeach
+					    </tr>
 
-							<td>大</td>
-							<td>1.95</td>
+					    <!-- 单球 -->
+					    <tr>
+					    @foreach($singles as $single)
+					    	<td>单</td>
+							<td><?php echo $single->rate ?></td>
 							<td><input type='text'></td>
+					    @endforeach
+					    </tr>
 
-							<td>大</td>
-							<td>1.95</td>
+					    <!-- 双球 -->
+					    <tr>
+					    @foreach($doubles as $double)
+					    	<td>双</td>
+							<td><?php echo $double->rate ?></td>
 							<td><input type='text'></td>
+					    @endforeach
+					    </tr>
 
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
+					    @endif
 
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>	
-
-						</tr>
-						<tr>
-				
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>	
-
-						</tr>
-						<tr>
-				
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>	
-
-						</tr>
-						<tr>
-				
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>
-
-							<td>大</td>
-							<td>1.95</td>
-							<td><input type='text'></td>	
-
-						</tr>
                 </table>
                 <button type="submit" class="btn ">返回</button>
                 <button type="submit" class="btn ">重置</button>

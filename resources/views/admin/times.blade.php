@@ -13,6 +13,8 @@
                 <h3 class="panel-title">赔率设定</h3>
             </div>
             <div class="panel-body">
+            <form action="{{ asset('/admin/times')}}" method="POST">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                  <table class="table">
                         <tr>
                             <th>第几球</th>
@@ -22,24 +24,25 @@
                             
                         </tr>
                         <tr>
-                            <td><select name='level'>
+                            <td><select name='ball'>
                                 <option value="1" selected="selected">第一球</option>
                                 <option value="2">第二球</option>
                                 <option value="3">第三球</option>
-                                <option value="3">第四球</option>
-                                <option value="3">第五球</option>
-                                <option value="3">总分</option>
+                                <option value="4">第四球</option>
+                                <option value="5">第五球</option>
+                                <option value="6">总分</option>
                             </select></td>
-                            <td><select>
-                                <option>大</option>
-                                <option>小</option>
-                                <option>单</option>
-                                <option>双</option>
+                            <td><select name="type">
+                                <option value="大">大</option>
+                                <option value="小">小</option>
+                                <option value="单">单</option>
+                                <option value="双">双</option>
                             </select></td>
-                            <td><input  type='text'></td>
+                            <td><input  type='text' name="rate"></td>
                             <td><input type="submit" value="设定赔率"></td>
                         </tr>
                     </table>
+            </form>
             </div>
         </div>
     </div>

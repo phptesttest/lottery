@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Home;
 
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Http\Requests;
 use App\Http\Controllers\Controller;
+
+//use Illuminate\Http\Request;
+use Request;
+
+use App\user;
+use App\category;
+use Redirect;
+use DB;
+
 
 class IndexController extends Controller
 {
@@ -25,7 +31,18 @@ class IndexController extends Controller
     }
     
     public function buy(){
-    	return view('home.buy');
+
+        $big=DB::table('categories')->where('cName','=','大')->orderBy('cId','Asc')->get();
+        $samll=DB::table('categories')->where('cName','=','小')->orderBy('cId','Asc')->get();
+        $single=DB::table('categories')->where('cName','=','单')->orderBy('cId','Asc')->get();
+        $double=DB::table('categories')->where('cName','=','双')->orderBy('cId','Asc')->get();
+        $data=[
+            'bigs'=>$big,
+            'smalls'=>$samll,
+            'singles'=>$single,
+            'doubles'=>$double,
+        ];
+    	return view('home.buy',$data);
     }
 }
 
