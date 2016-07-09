@@ -19,25 +19,19 @@
                         <th>剩余积分</th>
                         <th>操作</th>
                     </tr>
+                @if(count($users)==0)
                     <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td><input type="button" value="提现"></td>
-                       
+                        <td colspan="4">尚未有充值记录</td>
                     </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        
-                    </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                       
-                    </tr>
-                   
+                @else
+                    @foreach($users as $users)
+                        <tr>
+                            <td>{{$users->username}}</td>
+                            <td>{{$users->point}}</td>
+                            <td><button type="submit" class="btn btn-danger">删除</button></td>
+                        </tr>
+                    @endforeach
+                @endif
                 </table>
             </div>
         </div>
