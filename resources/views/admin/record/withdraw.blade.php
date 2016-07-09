@@ -10,25 +10,27 @@
     <div class="col-xs-12 col-sm-6">
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title">结算管理</h3>
+                <h3 class="panel-title">提现记录</h3>
             </div>
             <div class="panel-body">
                 <table class="table">
                     <tr>
-                        <th>用户名</th>
-                        <th>剩余积分</th>
+                        <th>时间</th>
+                        <th>提现用户</th>
+                        <th>提现积分</th>
                         <th>操作</th>
                     </tr>
-                @if(count($users)==0)
+                @if(count($withdraw)==0)
                     <tr>
-                        <td colspan="4">目前没有用户</td>
+                        <td colspan="4">提现记录为零</td>
                     </tr>
                 @else
-                    @foreach($users as $users)
+                    @foreach($withdraw as $withdraw)
                         <tr>
-                            <td>{{$users->username}}</td>
-                            <td>{{$users->point}}</td>
-                            <td><a href='/admin/account/{{$users->id}}'><button type="submit" class="btn btn-info">提现</button></a></td>
+                            <td>{{$withdraw->created_at}}</td>
+                            <td>{{$withdraw->username}}</td>
+                            <td>{{$withdraw->withdraw_num}}</td>
+                            <td><a href='/admin/withdraw/{{$withdraw->id}}'><button type="submit" class="btn btn-danger">删除</button></a></td>
                         </tr>
                     @endforeach
                 @endif

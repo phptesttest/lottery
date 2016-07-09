@@ -42,7 +42,7 @@
                             <td><input class="enterCount" type='text' onfocus = "javascript:this.blur()" ></td>
                             <td><input class="enterPassword" type='text' onfocus = "javascript:this.blur()" ></td>
                             <td><input class="enterPoint" type='text' name='point'></td>
-                            <td><input type="submit" value="确定生成"></td>
+                            <td><input type="submit" value="确定生成" class="btn btn-info"></td>
                         </tr>
                     </table>
                     </form>
@@ -76,7 +76,7 @@
                             <td>{{ $user->username}}</td>
                             <td>{{ $user->password}}</td>
                             <td>{{ $user->point}}</td>
-                            <td><button>删除</button></td>
+                            <td><button type="submit" class="btn btn-danger">删除</button></td>
                         </tr>
                     @endforeach
                     </table>

@@ -47,7 +47,9 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('logout','Admin\IndexController@logout');//用户退出登录
 	  Route::get('index','Admin\IndexController@index');
 	  Route::get('times','Admin\IndexController@times');//赔率设置
-	  Route::get('account','Admin\IndexController@account');//结算管理
+	  Route::get('account','Admin\IndexController@account');//结算管理 , 提现
+	  Route::get('account/{id}','Admin\IndexController@account');//结算管理 , 提现
+
 });
 
 /**记录(充值记录和下注记录) Record 路由**/
@@ -56,7 +58,8 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('recharge','Admin\RecordController@recharge');//充值记录
 	  Route::get('betrecord','Admin\RecordController@betrecord');//下注记录
 	  Route::get('openrecord','Admin\RecordController@openrecord');//下注记录
-
+	  Route::get('withdraw','Admin\RecordController@withdraw');//结算管理 , 提现
+	  Route::get('withdraw/{id}','Admin\RecordController@withdraw');//结算管理 , 提现
 });
 
 /**用户 User 管理路由**/
