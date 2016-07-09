@@ -7,6 +7,8 @@
 @endsection
 @section('content')
 @extends('home.person')
+
+
 <div class="container">
     <div class="col-xs-12 col-sm-9">
         <div class="panel">
@@ -25,53 +27,44 @@
 							<th>第五球</th>
 							<th>总和</th>
 						</tr>
-						<tr>
-							<td class="period"><a href="/award/ssq/2016078.html#from=kjdt">2016078期</a></td>
-							<td>21:00</td>
-							<td colspan="5" style="text-align:center;">距离开奖时间还有xx分钟</td>
+						
+
+						@if(count($datas)==0)
+
+					      <p>还没有开奖信息</p>  
+
+					    @else
+					    <tr>
+							<td class="period"><?php echo expectTurn(nextExpect($datas[0]->expect)) ?></td>
+							<td><?php echo timeTurn(nextTime($datas[0]->opentimestamp)) ?></td>
+							<td colspan="5" style="text-align:center;">距离开奖时间还有
+							<?php 
+								echo desTime($datas[0]->opentimestamp)
+							?>
+							分钟</td>
 							<td><input type='button' value="投注" ></td>
 						</tr>
-						<tr>
-							<td class="period"><a href="/award/ssq/2016078.html#from=kjdt">2016078期</a></td>
-							<td>21:00</td>
-							<td><em class="smallRedball">02</em></td>
-							<td><em class="smallRedball">03</em></td>
-							<td><em class="smallRedball">04</em></td>
-							<td><em class="smallRedball">02</em></td>
-							<td><em class="smallRedball">02</em></td>
-							<td>801</td>
-						</tr>
-						<tr>
-							<td class="period"><a href="/award/ssq/2016078.html#from=kjdt">2016078期</a></td>
-							<td>21:00</td>
-							<td><em class="smallRedball">02</em></td>
-							<td><em class="smallRedball">03</em></td>
-							<td><em class="smallRedball">04</em></td>
-							<td><em class="smallRedball">02</em></td>
-							<td><em class="smallRedball">02</em></td>
-							<td>801</td>
-						</tr>
-						<tr>
-							<td class="period"><a href="/award/ssq/2016078.html#from=kjdt">2016078期</a></td>
-							<td>21:00</td>
-							<td><em class="smallRedball">02</em></td>
-							<td><em class="smallRedball">03</em></td>
-							<td><em class="smallRedball">04</em></td>
-							<td><em class="smallRedball">02</em></td>
-							<td><em class="smallRedball">02</em></td>
-							<td>801</td>
-						</tr>
-						<tr>
-							<td class="period"><a href="/award/ssq/2016078.html#from=kjdt">2016078期</a></td>
-							<td>21:00</td>
-							<td><em class="smallRedball">02</em></td>
-							<td><em class="smallRedball">03</em></td>
-							<td><em class="smallRedball">04</em></td>
-							<td><em class="smallRedball">02</em></td>
-							<td><em class="smallRedball">02</em></td>
-							<td>801</td>
-						</tr>
-								
+					    @foreach($datas as $data)
+					    	<tr>
+							<td class="period"><?php echo expectTurn($data->expect) ?></td>
+							<td><?php echo timeTurn($data->opentime) ?></td>
+					        <?php
+					        	$all=0; 
+					        	$arr=stringToArray($data->opencode);
+					        	foreach ($arr as $key => $value) {
+					        		$all=$all+$value;
+					        ?>
+
+					        		<td><em class="smallRedball"><?php echo $value;?></em></td>
+					        <?php
+					        	}
+					        ?>
+					        <td><?php echo $all ?></td>
+					        </tr>
+					    @endforeach
+
+					    @endif
+		
                 </table>
             </div>
         </div>

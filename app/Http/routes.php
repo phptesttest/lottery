@@ -27,6 +27,10 @@
 //前台部分
 Route::group(['middleware' => ['web']], function () {
     
+<<<<<<< HEAD
+	  Route::get('/index', 'Home\IndexController@index');//前台会员登录
+	  Route::get('/buy', 'Home\IndexController@buy');//前台会员登录
+=======
 	  Route::get('/', 'Home\IndexController@login');//前台会员登录
 	  Route::get('/index', 'Home\IndexController@index');//前台会员登录
 	  Route::get('/buy', 'Home\IndexController@buy');//前台会员登录
@@ -37,6 +41,7 @@ Route::group(['middleware' => ['web']], function () {
 	  // Route::get('/admin/logout','Admin\IndexController@logout');//用户退出登录
 	  // Route::get('/admin/index','Admin\IndexController@index');
 	  // Route::get('/admin/account','Admin\IndexController@account');//结算管理
+>>>>>>> a0e91c4d2abf1e6a3ebae2b38b0c370e43c7be36
 	  
 });
 
