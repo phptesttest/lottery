@@ -28,6 +28,19 @@
 Route::group(['middleware' => ['web']], function () {
     
 	  Route::get('/', 'Home\IndexController@login');//前台会员登录
+<<<<<<< HEAD
+=======
+	  Route::get('/index', 'Home\IndexController@index');//前台会员登录
+	  Route::get('/buy', 'Home\IndexController@buy');//前台会员登录
+
+
+//后台部分
+	  Route::get('/admin','Admin\IndexController@login');//后台用户登录
+	  Route::get('/admin/logout','Admin\IndexController@logout');//用户退出登录
+	  Route::get('/admin/index','Admin\IndexController@index');
+
+	  Route::get('/admin/account','Admin\IndexController@account');//结算管理
+>>>>>>> 7074ff8b759f65d05bc12c27d1752027b73f76fe
 	  
 });
 
