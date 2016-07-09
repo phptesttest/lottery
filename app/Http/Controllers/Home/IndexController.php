@@ -18,5 +18,8 @@ class IndexController extends Controller
     	return view('home.index');
     }
     
+    public function buy(){
+    	return view('home.buy');
+    }
 }
 
