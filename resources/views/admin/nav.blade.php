@@ -59,6 +59,7 @@
                         <li><a href="/admin/recharge">充值记录</a></li>
                         <li><a href="/admin/betrecord">下注记录</a></li>
                         <li><a href="/admin/openrecord">开奖记录</a></li>
+                        <li><a href="/admin/withdraw">提现记录</a></li>
                     </ul>
                 </li>
                 <li><a href="/admin/account">结算管理</a></li>

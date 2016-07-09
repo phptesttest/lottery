@@ -10,8 +10,8 @@
 							<th>用户余额</th>
 						</tr>
 						<tr>
-							<td><em class="smallRedball">小米</em></td>
-							<td><em class="smallRedball">1113</em></td>
+							<td><em >小米</em></td>
+							<td><em >1113</em></td>
 						</tr>
 						
                 </table>

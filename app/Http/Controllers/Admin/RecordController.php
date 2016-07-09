@@ -8,6 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Controller;
 use DB;
+use App\withdraw;
 
 class RecordController extends Controller
 {
@@ -36,6 +37,20 @@ class RecordController extends Controller
     //返回开奖记录的数据
     public function openrecord(){
     	return view('admin.record.openrecord');
+    }
+
+//提现记录
+    public function withdraw($id=null){  
+        if($id != null){
+            $withdraw=withdraw::find($id);  //提现记录删除
+            if (!is_null($withdraw)) {
+                $withdraw->delete();
+            }
+        }
+
+        //显示提现记录
+        $withdraw = DB::table('withdraws')->get();
+        return view('admin.record.withdraw')->with('withdraw',$withdraw);
     }
 }
 
