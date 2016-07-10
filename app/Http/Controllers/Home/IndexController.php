@@ -25,7 +25,24 @@ class IndexController extends Controller
     	return view('home.index',$data);
     }
     
+    //下注处理
+    public function buyFun(){
+
+        $getId=Request::input('getId');
+       // echo $getId;
+        $res=explode(",",$getId);
+        for ($i=1; $i <count($res); $i++) { 
+           // echo $res[$i].Request::input($res[$i]);
+            $idArr=explode(":",$res[$i]);
+            $id=$idArr[0];
+            echo Request::input("expect").$id.Request::input($res[$i]);
+        }
+    }
+
     public function buy(){
+
+        $file_contents = file_get_contents('http://c.apiplus.net/newly.do?token=66c6e6553316f570&code=cqssc&format=json&rows=20');
+        $res=json_decode($file_contents); 
 
         $big=DB::table('categories')->where('cName','=','大')->orderBy('cId','Asc')->get();
         $samll=DB::table('categories')->where('cName','=','小')->orderBy('cId','Asc')->get();
@@ -36,6 +53,7 @@ class IndexController extends Controller
             'smalls'=>$samll,
             'singles'=>$single,
             'doubles'=>$double,
+            'datas'=>$res->data,
         ];
     	return view('home.buy',$data);
     }
