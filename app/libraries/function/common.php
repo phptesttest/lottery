@@ -70,8 +70,24 @@ if (!function_exists('nextExpect')) {
 
 //求下一期开奖时间
 if (!function_exists('nextTime')) {
+	//传入开奖时间
 	function nextTime($str){
-		$str1=$str+10*60+8*60*60;
+		$str1=explode(" ",$str);
+		$str2=explode(":",$str1[1]);
+		$str3=floor($str2[1]/10)*10;
+		if($str3==50){
+			$str4=$str2[0]+1;
+			if ($str4==24) {
+				$str4='00';
+			}
+			$res=$str4.":"."00";
+		}
+		else{
+			$str3=$str3+10;
+			$res=$str2[0].":".$str3;
+		}
+		return $res;
+		/*$str1=$str+10*60+8*60*60;
 		$str2=date('Y-m-d H:i:s',$str1);
 		$str3=timeTurn($str2);
 		$arr=explode(":",$str3);
@@ -80,15 +96,35 @@ if (!function_exists('nextTime')) {
 			$str1=$str1-5*60;
 			$str2=date('Y-m-d H:i:s',$str1);
 		}
-		return $str2;
+		return $str2;*/
 	}
 	# code...
 }
 
 //下一期倒计时
 if (!function_exists('desTime')) {
+	//strtotime('2010-03-24 08:15:42')
 	function desTime($str){
-		$str1=$str+10*60-time();
+		$str1=explode(" ",$str);//xxxx-xx-xx
+		$str2=explode(":",$str1[1]);
+		$str3=floor($str2[1]/10)*10;
+		if($str3==50){
+			$str4=$str2[0]+1;
+			if ($str4==24) {
+				$str4='00';
+			}
+			$res=$str4.":"."00";
+		}
+		else{
+			$str3=$str3+10;
+			$res=$str2[0].":".$str3;
+		}
+		$next=$str1[0]." ".$res.":00";
+		//$nextstamp=strtotime($next);
+		//$stamp=$nextstamp+10*60-time()-8*60*60;
+		//$sss=date('Y-m-d H:i:s',time());
+		return $next;
+		/*$str1=$str+10*60-time();
 		if ($str1<0) {
 			$str1=0;
 		}
@@ -96,7 +132,7 @@ if (!function_exists('desTime')) {
 		//$str2=$str1-time();
 		//$str3=date('Y-m-d H:i:s',time());
 		
-		return $des; 
+		return $des; */
 	}
 }
 

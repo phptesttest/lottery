@@ -139,7 +139,7 @@ $(function(){
 			if (alls[i].value!=0) {
 				var arr=alls[i].name.split(':');
 				str=str+","+alls[i].name;
-				res=res+"\n"+"第"+arr[1]+",金额为："+alls[i].value;
+				res=res+"\n"+"第"+arr[0]+",金额为："+alls[i].value;
 			}
 		}
 		if (str!="") {
