@@ -17,6 +17,7 @@
 		border-radius: 30px
 	}
 @endsection
+
 @section('content')
 @extends('home.person')
 
@@ -53,7 +54,10 @@
 							<?php 
 								echo desTime($datas[0]->opentimestamp)
 							?>
-							分钟</td>
+							分钟
+							<span id="t_m">00分</span>
+        					<span id="t_s">00秒</span>
+							</td>
 							<td><a href='/buy'><input type='button' class='btn btn-info'value="投注" ></a></td>
 						</tr>
 					    @foreach($datas as $data)
@@ -82,4 +86,21 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+   function GetRTime(str){
+       var EndTime= new Date(str);
+       var NowTime = new Date();
+       var t =EndTime.getTime() - NowTime.getTime();
+ 
+       var m=Math.floor(t/1000/60%60);
+       var s=Math.floor(t/1000%60);
+
+       document.getElementById("t_m").innerHTML = m + "分";
+       document.getElementById("t_s").innerHTML = s + "秒";
+   }
+   setInterval("GetRTime('2017-07-10 15:05:00')",0);
+</script>
 @endsection

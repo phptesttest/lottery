@@ -52,7 +52,9 @@
         </div>
     </div>
 </nav>
-    @yield('content')
+@yield('content')
+
+@yield('script')
 
 </body>
 </html>

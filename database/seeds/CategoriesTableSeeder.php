@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use DB;
 
-class CategoryTableSeeder extends Seeder
+class CategoriesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -12,8 +11,7 @@ class CategoryTableSeeder extends Seeder
      */
     public function run()
     {
-        //大
-         DB::table('categories')->insert([
+        DB::table('categories')->insert([
             'cName' =>'大',
             'rate' =>'1.96',
             'cId' =>'1',
