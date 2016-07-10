@@ -12,6 +12,8 @@ use DB;
 class IndexController extends Controller
 {
     public function login(){
+
+        
     	return view('home.login');
     }
 
@@ -57,5 +59,6 @@ class IndexController extends Controller
         ];
     	return view('home.buy',$data);
     }
+
 }
 
