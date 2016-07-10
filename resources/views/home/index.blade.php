@@ -49,16 +49,13 @@
 					    @else
 					    <tr>
 							<td class="period"><?php echo expectTurn(nextExpect($datas[0]->expect)) ?></td>
-							<td><?php echo timeTurn(nextTime($datas[0]->opentimestamp)) ?></td>
+							<td><?php echo nextTime($datas[0]->opentime) ?></td>
 							<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
-							<?php 
-								echo desTime($datas[0]->opentimestamp)
-							?>
-							分钟
-							<span id="t_m">00分</span>
-        					<span id="t_s">00秒</span>
+							<input type="hidden" id="desTime" value="<?php echo desTime($datas[0]->opentime) ?>">
+							<span id="t_m"></span>
+        					<span id="t_s"></span> 
 							</td>
-							<td><a href='/buy'><input type='button' class='btn btn-info'value="投注" ></a></td>
+							<td><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
 						</tr>
 					    @foreach($datas as $data)
 					    	<tr>
@@ -90,6 +87,70 @@
 
 @section('script')
 <script>
+
+//日期与时间戳的转换
+(function($) {
+  $.extend({
+    myTime: {
+      /**
+       * 当前时间戳
+       * @return <int>    unix时间戳(秒) 
+       */
+      CurTime: function(){
+        return Date.parse(new Date())/1000;
+      },
+      /**       
+       * 日期 转换为 Unix时间戳
+       * @param <string> 2014-01-01 20:20:20 日期格式       
+       * @return <int>    unix时间戳(秒)       
+       */
+      DateToUnix: function(string) {
+        var f = string.split(' ', 2);
+        var d = (f[0] ? f[0] : '').split('-', 3);
+        var t = (f[1] ? f[1] : '').split(':', 3);
+        return (new Date(
+            parseInt(d[0], 10) || null,
+            (parseInt(d[1], 10) || 1) - 1,
+            parseInt(d[2], 10) || null,
+            parseInt(t[0], 10) || null,
+            parseInt(t[1], 10) || null,
+            parseInt(t[2], 10) || null
+            )).getTime() / 1000;
+      },
+      /**       
+       * 时间戳转换日期       
+       * @param <int> unixTime  待时间戳(秒)       
+       * @param <bool> isFull  返回完整时间(Y-m-d 或者 Y-m-d H:i:s)       
+       * @param <int> timeZone  时区       
+       */
+      UnixToDate: function(unixTime, isFull, timeZone) {
+        if (typeof (timeZone) == 'number')
+        {
+          unixTime = parseInt(unixTime) + parseInt(timeZone) * 60 * 60;
+        }
+        var time = new Date(unixTime * 1000);
+        var ymdhis = "";
+        ymdhis += time.getUTCFullYear() + "-";
+        if (time.getUTCMonth()<10) {
+        	ymdhis=ymdhis+"0"+(time.getUTCMonth()+1) + "-";
+        }else{
+        	ymdhis += (time.getUTCMonth()+1) + "-";
+        }
+       
+        ymdhis += time.getUTCDate();
+        if (isFull === true)
+        {
+          ymdhis += " " + time.getUTCHours() + ":";
+          ymdhis += time.getUTCMinutes() + ":";
+          ymdhis += time.getUTCSeconds();
+        }
+        return ymdhis;
+      }
+    }
+  });
+})(jQuery);
+	
+	var flag;
    function GetRTime(str){
        var EndTime= new Date(str);
        var NowTime = new Date();
@@ -97,10 +158,25 @@
  
        var m=Math.floor(t/1000/60%60);
        var s=Math.floor(t/1000%60);
+       if (m<0) {
+       	clearInterval(flag);//str加十分钟再开始
+       	var stamp=$.myTime.DateToUnix(str);
+       	stamp=stamp+10*60+8*60*60;
+       	var newStr=$.myTime.UnixToDate(stamp,true);
+       	$("#desTime").val(newStr);
+       //	alert(desTime=$("#desTime").val());
+       	flag=setInterval('GetRTime(newStr)',1000);
+       }
 
-       document.getElementById("t_m").innerHTML = m + "分";
-       document.getElementById("t_s").innerHTML = s + "秒";
+       document.getElementById("t_m").innerHTML = m + " :";
+       document.getElementById("t_s").innerHTML = s + "";
    }
-   setInterval("GetRTime('2017-07-10 15:05:00')",0);
+   var desTime=$("#desTime").val();
+   //alert(desTime);
+   flag=setInterval('GetRTime(desTime)',1000);
+
+   	//document.write($.myTime.DateToUnix('2016-04-12 10:49:59')+'<br>');
+    // document.write($.myTime.UnixToDate(1460429399));
+	//alert($.myTime.UnixToDate(1460429399,true));
 </script>
 @endsection
