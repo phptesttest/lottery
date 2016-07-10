@@ -16,6 +16,7 @@ class CreateAdminsTable extends Migration
 
             $table->increments('id');
             $table->string('aName');
+            $table->string('password');
             $table->integer('wPool');
             $table->integer('flag');
             $table->rememberToken();

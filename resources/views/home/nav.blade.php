@@ -47,7 +47,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="/index">彩票结果</a></li>
                 <li><a href="/buy">彩票下注</a></li>
-                <li><a href="#">退出</a></li>
+                <li><a href="/logout">退出</a></li>
             </ul>
         </div>
     </div>

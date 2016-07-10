@@ -13,15 +13,51 @@ use App\user;
 use App\category;
 use Redirect;
 use DB;
+use Session;
 
 class IndexController extends Controller
 {
+
+//显示管理员登录页面
     public function login(){
         return view('admin.login');
     }
 
+
+//管理员登录验证
+    public function logindeal(){
+        $password = Request::input('password');
+        $adname  = Request::input('adname');
+        $user=DB::table('admins')->where('aName','=',$adname)->get();
+        
+        if($user){
+            $truepsw = $user[0]->password;
+            //验证密码
+            if($truepsw == $password){
+                //存储用户账号和id
+                $userid = $user[0]->id;
+                $flag = $user[0]->flag;
+                Session::put('userid',$userid);
+                Session::put('adname',$adname);
+                return redirect('/admin/index')->with('message','login success');
+            }else{
+                return redirect()->back()->with('errors','login Failed');
+            }
+        }else{
+            return redirect()->back()->with('errors','login Failed');
+        }
+        
+    }
+
     public function index(){
-        return view('admin.index');
+        if($adname=Session::get('adname')){
+            $user=DB::table('admins')->where('aName','=',$adname)->get();
+            return view('admin.index');
+
+        }else{
+            return redirect('/admin');
+        }
+        
     }
 
     public function account($id=null){  //结算管理，显示
@@ -43,7 +79,9 @@ class IndexController extends Controller
     }
 
     public function logout(){
-        
+        Session::forget('username');
+        Session::forget('userid');
+        return redirect('/admin');
     }
 
     public function times(){

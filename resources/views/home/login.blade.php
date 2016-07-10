@@ -13,23 +13,21 @@
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
-							<strong>Whoops!</strong> There were some problems with your input.<br><br>
-							<ul>
-								@foreach ($errors->all() as $error)
-									<li>{{ $error }}</li>
-								@endforeach
+							<strong>登录失败!</strong> 您的输入存在一些问题.<br><br>
+								<li>{{ $errors }}</li>
 							</ul>
 						</div>
 					@endif
 
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/auth/login') }}">
-						<input type="hidden" name="_token" value="{{ csrf_token() }}">
+					<form class="form-horizontal" role="form" method="POST" action="{{ asset('/logindeal') }}">
+						
+						<input type="hidden" method='post' name="_token" value="{{ csrf_token() }}">
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">用户名</label>
 							<div class="col-md-4">
-								<input type="name" class="form-control" name="name" value="{{ old('name') }}">
+								<input type="name" class="form-control" name="username" value="{{ old('name') }}">
 							</div>
 						</div>
 
@@ -42,7 +40,7 @@
 
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
-								<button type="submit" class="btn btn-primary">登陆</button>
+								<input type="submit" value='登陆' class="btn btn-primary">
 							</div>
 						</div>
 					</form>
