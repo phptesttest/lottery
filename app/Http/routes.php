@@ -28,7 +28,8 @@
 Route::group(['middleware' => ['web']], function () {
     
 	  Route::get('/index', 'Home\IndexController@index');//前台会员登录
-	  Route::get('y', 'Home\IndexController@buy');//前台会员登录
+	  Route::get('/buy', 'Home\IndexController@buy');//前台会员登录
+	  Route::post('/buy', 'Home\IndexController@buyFun');//前台会员登录
 	  Route::get('/', 'Home\IndexController@login');//前台会员登录
 });
 

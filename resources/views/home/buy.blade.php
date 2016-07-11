@@ -19,14 +19,14 @@
     <div class="col-xs-12 col-sm-12">
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title">彩票下注</h3>
+                <h3 class="panel-title">彩票结果信息</h3>
                 <table>
                 	<tr>
 						<td class="period"><?php echo expectTurn(nextExpect($datas[0]->expect)) ?></td>
-						<!-- <td><?php echo timeTurn(nextTime($datas[0]->opentimestamp)) ?></td> -->
+						
 						<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
 						<?php 
-							echo desTime($datas[0]->opentimestamp)
+							echo desTime($datas[0]->opentime)
 						?>
 						分钟</td>
 						</tr>

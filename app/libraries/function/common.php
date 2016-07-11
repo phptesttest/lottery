@@ -73,7 +73,9 @@ if (!function_exists('nextTime')) {
 	//传入开奖时间
 	function nextTime($str){
 		$str1=explode(" ",$str);
-		$str2=explode(":",$str1[1]);
+		if ($str1[1]!=null) {
+			$str2=explode(":",$str1[1]);
+		}
 		$str3=floor($str2[1]/10)*10;
 		if($str3==50){
 			$str4=$str2[0]+1;
@@ -133,6 +135,18 @@ if (!function_exists('desTime')) {
 		//$str3=date('Y-m-d H:i:s',time());
 		
 		return $des; */
+	}
+}
+
+//更新开奖记录
+if (!function_exists('update')) {
+	function update(){
+	  $sql = "select * from user";
+	  $result = mysql_query($sql);
+	  $arr = array();
+	  while($rows=mysql_fetch_assoc($reslut)){
+	    $arr[]=$rows;
+	  }
 	}
 }
 
