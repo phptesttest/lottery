@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class openrecord extends Model
+class nextinfo extends Model
 {
     //
 }

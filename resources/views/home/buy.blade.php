@@ -22,19 +22,19 @@
                 <h3 class="panel-title">彩票结果信息</h3>
                 <table>
                 	<tr>
-						<td class="period"><?php echo expectTurn(nextExpect($datas[0]->expect)) ?></td>
-						
+						<td class="period"><span id="nextExpect"></span></td>
+						<td><span id="nextTime"></span></td>
 						<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
-						<?php 
-							echo desTime($datas[0]->opentime)
-						?>
-						分钟</td>
-						</tr>
+						<span id="showDes"></span>
+						</td>
+						<td><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
+					</tr> 
                 </table>
             </div>
             <div class="panel-body">
             <form id="form" action="{{ asset('/buy')}}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <input id="expect" type="hidden" name="expect" value="">
                 <table class="table">
                     <tr>
 							<td colspan="3">第一球</td>
@@ -119,7 +119,6 @@
 
                 </table>
                 <input value=""  id="getId" type="hidden" name="getId">
-                <input type="hidden" name="expect" value='<?php echo expectTurn(nextExpect($datas[0]->expect)) ?>'>
                 <input type="button" value="返回" class="btn" id="return">
                 <input type="button" value="重置" class="btn" id="reset">
                 <input type="button" value="提交" class="btn" id="sub">
@@ -139,7 +138,7 @@ $(function(){
 			if (alls[i].value!=0) {
 				var arr=alls[i].name.split(':');
 				str=str+","+alls[i].name;
-				res=res+"\n"+"第"+arr[0]+",金额为："+alls[i].value;
+				res=res+"\n"+"第"+arr[1]+",金额为："+alls[i].value;
 			}
 		}
 		if (str!="") {
@@ -156,5 +155,25 @@ $(function(){
 		}		
 	});
 });
+function gett(){
+$(function(){
+  $.ajax({
+    url:"{{ url('/countdown')}}",
+    type:"GET",
+    //data:{action:"guesslike"},
+    dataType:"json",
+    //timeout:3000,
+    cache:false,
+    success:function(re){
+      $("#nextExpect").html(re.nextexpect);
+      $("#nextTime").html(re.nexttime);
+      $("#showDes").html(re.desTime);
+      $("#expect").val(re.nextexpect);
+    }
+    })
+});
+setTimeout("gett()",1000) 
+}
+gett();
 </script>
 @endsection

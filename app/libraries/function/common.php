@@ -72,35 +72,91 @@ if (!function_exists('nextExpect')) {
 if (!function_exists('nextTime')) {
 	//传入开奖时间
 	function nextTime($str){
-		$str1=explode(" ",$str);
-		if ($str1[1]!=null) {
-			$str2=explode(":",$str1[1]);
-		}
-		$str3=floor($str2[1]/10)*10;
-		if($str3==50){
-			$str4=$str2[0]+1;
-			if ($str4==24) {
-				$str4='00';
+		$str2=explode(":",$str);
+		if ($str2[0]>=10&&$str2[0]<22) {
+			if($str2[1]==50){
+				$str4=$str2[0]+1;
+				if ($str4==24) {
+					$str4='00';
+				}
+				$res=$str4.":"."00";
 			}
-			$res=$str4.":"."00";
+			else{
+				$str3=$str2[1]+10;
+				$res=$str2[0].":".$str3;
+			}
 		}
 		else{
-			$str3=$str3+10;
-			$res=$str2[0].":".$str3;
+			if($str2[1]==55){
+				$str4=$str2[0]+1;
+				if ($str4==24) {
+					$str4='00';
+				}
+				$res=$str4.":"."00";
+			}
+			else{
+				$str3=$str2[1]+5;
+				if ($str3<10) {
+					$str3="0".$str3;
+				}
+				$res=$str2[0].":".$str3;
+			}
 		}
+		
 		return $res;
-		/*$str1=$str+10*60+8*60*60;
-		$str2=date('Y-m-d H:i:s',$str1);
-		$str3=timeTurn($str2);
-		$arr=explode(":",$str3);
-		$str4=$arr[0];
-		if($str4>22){
-			$str1=$str1-5*60;
-			$str2=date('Y-m-d H:i:s',$str1);
+	}
+}
+
+//根据开奖时间计算出对应的开奖期数
+if (!function_exists('timeToExpect')) {
+	//$time是开奖的小时分钟，$date是开奖年月日 
+	function timeTOExpect($time,$date){
+		$arr=explode(":",$time);
+		$allTime=$arr[0]*60+$arr[1];
+		//二十二点到凌晨两点每五分钟一期
+		if ($allTime<120) {
+			$expect=floor($allTime/5);
 		}
-		return $str2;*/
+		if ($allTime>1320) {
+			$expect=floor(($allTime-1320)/5)+96;
+		}
+		//十点到二十二点每十分钟一期
+		if ($allTime>=600&&$allTime<=1320){
+			$expect=floor(($allTime-10*60)/10)+24;
+		}
+		if ($allTime==0) {
+			$expect='120';
+		}
+		if ($expect<10) {
+			$expect="00".$expect;
+		}
+		if ($expect>=10&&$expect<100) {
+			$expect="0".$expect;
+		}
+
+		return $date."-".$expect;
 	}
 	# code...
+}
+
+//将开奖时间延迟去掉
+if (!function_exists('outDelay')) {
+	function outDelay($str){
+		$arr=explode(":",$str);
+		if ($arr[0]>=10&&$arr[0]<22) {
+			$ss=(floor($arr[1]/10))*10;
+		}
+		if ($arr[0]>='0'&&$arr[0]<'2') {
+			$ss=(floor($arr[1]/5))*5;
+		}
+		if ($arr[0]>=22&&$arr[0]<24) {
+			$ss=(floor($arr[1]/5))*5;
+		}
+		if ($ss<10) {
+			$ss="0".$ss;
+		}
+		return $arr[0].":".$ss;
+	}
 }
 
 //下一期倒计时
@@ -122,24 +178,12 @@ if (!function_exists('desTime')) {
 			$res=$str2[0].":".$str3;
 		}
 		$next=$str1[0]." ".$res.":00";
-		//$nextstamp=strtotime($next);
-		//$stamp=$nextstamp+10*60-time()-8*60*60;
-		//$sss=date('Y-m-d H:i:s',time());
 		return $next;
-		/*$str1=$str+10*60-time();
-		if ($str1<0) {
-			$str1=0;
-		}
-		$des=floor($str1/60);
-		//$str2=$str1-time();
-		//$str3=date('Y-m-d H:i:s',time());
-		
-		return $des; */
 	}
 }
 
 //更新开奖记录
-if (!function_exists('update')) {
+/*if (!function_exists('update')) {
 	function update(){
 	  $sql = "select * from user";
 	  $result = mysql_query($sql);
@@ -150,7 +194,7 @@ if (!function_exists('update')) {
 	}
 }
 
-
+*/
 //倒计时效果 javascript
 // <div class="time">
 //         <span id="t_d">00天</span>

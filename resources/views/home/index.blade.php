@@ -17,9 +17,7 @@
 		border-radius: 30px
 	}
 @endsection
-
 @section('content')
-
 <div class="col-xs-12 col-sm-3">
         <div class="panel">
             <div class="panel-heading">
@@ -41,7 +39,6 @@
       </div>
 </div>
 
-<?php  update(); ?>
 <div class="container">
     <div class="col-xs-12 col-sm-9">
         <div class="panel">
@@ -68,21 +65,20 @@
 
 					    @else
 					    <tr>
-							<td class="period"><?php echo expectTurn(nextExpect($datas[0]->expect)) ?></td>
-							<td><?php echo nextTime($datas[0]->opentime) ?></td>
+							<td class="period"><span id="nextExpect"></span></td>
+							<td><span id="nextTime"></span></td>
 							<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
-							<span id="t_m"></span>:
-        					<span id="t_s"></span> 
+							<span id="showDes"></span>
 							</td>
 							<td><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
-						</tr>
+						</tr> 
 					    @foreach($datas as $data)
 					    	<tr>
-							<td class="period"><?php echo expectTurn($data->expect) ?></td>
-							<td><?php echo timeTurn($data->opentime) ?></td>
+							<td class="period"><?php echo $data->period ?></td>
+							<td><?php echo $data->time ?></td>
 					        <?php
 					        	$all=0; 
-					        	$arr=stringToArray($data->opencode);
+					        	$arr=stringToArray($data->number);
 					        	foreach ($arr as $key => $value) {
 					        		$all=$all+$value;
 					        ?>
@@ -106,8 +102,25 @@
 
 @section('script')
 <script type="text/javascript">
+function gett(){
 $(function(){
-
+  $.ajax({
+    url:"{{ url('/countdown')}}",
+    type:"GET",
+    //data:{action:"guesslike"},
+    dataType:"json",
+    //timeout:3000,
+    cache:false,
+    success:function(re){
+      $("#nextExpect").html(re.nextexpect);
+      $("#nextTime").html(re.nexttime);
+      $("#showDes").html(re.desTime);
+      //$("#showDes").html(re.desTime);
+    }
+    })
 });
+setTimeout("gett()",1000) 
+}
+gett();
 </script>
 @endsection

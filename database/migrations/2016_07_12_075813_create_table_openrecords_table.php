@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOpenRecordsTable extends Migration
+class CreateTableOpenrecordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateOpenRecordsTable extends Migration
      */
     public function up()
     {
-        Schema::create('openRecords', function (Blueprint $table) {
+        Schema::create('openrecords', function (Blueprint $table) {
 
             $table->increments('id');
             $table->string('period');
@@ -31,6 +31,6 @@ class CreateOpenRecordsTable extends Migration
      */
     public function down()
     {
-         Schema::drop('openRecords');
+        Schema::drop('openrecords');
     }
 }

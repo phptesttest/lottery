@@ -15,6 +15,9 @@
         width:50px;
     }
 @endsection
+<?php 
+
+?>
 @section('content')
 	<div class="container">
     <div class="col-xs-12 col-sm-6">
