@@ -5,7 +5,6 @@
 		box-shadow:3px 3px #cccc;
 	}
 @endsection
-<?php echo nextTime('22:00');?>
 @section('content')
 	<div class="container">
     <div class="col-xs-12 col-sm-6">

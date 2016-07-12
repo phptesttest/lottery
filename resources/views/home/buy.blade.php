@@ -84,7 +84,7 @@
 					    @foreach($bigs as $big)
 					    	<td>大</td>
 							<td><?php echo $big->rate ?></td>
-							<td><input class="rate" type='text' value="0" name='<?php echo $big->id.":".$big->cId."球".$big->cName ?>' ></td>
+							<td><input class="rate" type='text' name='<?php echo $big->id.":".$big->cId."球".$big->cName ?>' ></td>
 					    @endforeach
 					    </tr>
 
@@ -93,7 +93,7 @@
 					    @foreach($smalls as $small)
 					    	<td>小</td>
 							<td><?php echo $small->rate ?></td>
-							<td><input class="rate" type='text' value="0" name='<?php echo $small->id.":".$small->cId."球".$small->cName ?>'></td>
+							<td><input class="rate" type='text' name='<?php echo $small->id.":".$small->cId."球".$small->cName ?>'></td>
 					    @endforeach
 					    </tr>
 
@@ -102,7 +102,7 @@
 					    @foreach($singles as $single)
 					    	<td>单</td>
 							<td><?php echo $single->rate ?></td>
-							<td><input class="rate" type='text' value="0" name='<?php echo $single->id.":".$single->cId."球".$single->cName ?>'></td>
+							<td><input class="rate" type='text' name='<?php echo $single->id.":".$single->cId."球".$single->cName ?>'></td>
 					    @endforeach
 					    </tr>
 
@@ -111,7 +111,7 @@
 					    @foreach($doubles as $double)
 					    	<td>双</td>
 							<td><?php echo $double->rate ?></td>
-							<td><input class="rate" type='text' value="0" name='<?php echo $double->id.":".$double->cId."球".$double->cName ?>'></td>
+							<td><input class="rate" type='text' name='<?php echo $double->id.":".$double->cId."球".$double->cName ?>'></td>
 					    @endforeach
 					    </tr>
 
@@ -129,13 +129,24 @@
 </div>
 <script type="text/javascript">
 $(function(){
+
+	$("#return").click(function(){
+		history.back(-1);
+	});
+
+	$("#reset").click(function(){
+		var alls=$(".rate");
+		for (var i = alls.length - 1; i >= 0; i--) {
+			alls[i].value="";
+		}
+	});
 	
 	$("#sub").click(function(){
 		var alls=$(".rate");
 		var str="";
 		var res="您的下注结果是：";
 		for (var i = alls.length - 1; i >= 0; i--) {
-			if (alls[i].value!=0) {
+			if (alls[i].value!="") {
 				var arr=alls[i].name.split(':');
 				str=str+","+alls[i].name;
 				res=res+"\n"+"第"+arr[1]+",金额为："+alls[i].value;

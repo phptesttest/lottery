@@ -31,8 +31,6 @@
                     <table class="table">
                         <tr>
                             <th>下注等级</th>
-                            <th>用户账号</th>
-                            <th>用户密码</th>
                             <th>初始积分</th>
                             <th></th>
                         </tr>
@@ -42,8 +40,6 @@
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                             </select></td>
-                            <td><input class="enterCount" type='text' onfocus = "javascript:this.blur()" ></td>
-                            <td><input class="enterPassword" type='text' onfocus = "javascript:this.blur()" ></td>
                             <td><input class="enterPoint" type='text' name='point'></td>
                             <td><input type="submit" value="确定生成" class="btn btn-info"></td>
                         </tr>

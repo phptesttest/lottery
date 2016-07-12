@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Request;
 use App\user;
+use App\bet;
 use App\nextinfo;
 use App\openRecord;
 use App\category;
@@ -60,7 +61,7 @@ class IndexController extends Controller
         $openRecords=openRecord::all();
         $dbNub=count($openRecords);
         //获取网站开奖条数
-        $file_contents = file_get_contents('http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date=2016-07-12&format=json');
+        $file_contents = file_get_contents('http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date=2016-07-13&format=json');
         $res=json_decode($file_contents); 
         $newNub=count($res->data);
         $newres=$res->data;
@@ -189,17 +190,25 @@ class IndexController extends Controller
     //下注处理
     public function buyFun(){
         if($username=Session::get('username')){
+            date_default_timezone_set('PRC');
+            $now=date("Y-m-d H:i:s");
             $getId=Request::input('getId');
-           // echo $getId;
+            $expect=Request::input("expect");
+            $username=Session::get('username');
             $res=explode(",",$getId);
             for ($i=1; $i <count($res); $i++) { 
-           // echo $res[$i].Request::input($res[$i]);
-            $idArr=explode(":",$res[$i]);
-            $id=$idArr[0];
-            echo Request::input("expect").$id.Request::input($res[$i]);
+                $idArr=explode(":",$res[$i]);
+                $id=$idArr[0];
+                $bet=new bet;
+                $bet->username=$username;
+                $bet->content=$id;
+                $bet->period=$expect;
+                $bet->time=$now;
+                $bet->number=Request::input($res[$i]);
+                $bet->save();
+        }
 
-            }
-
+        return redirect('/buy');
 
         }else{
             return redirect('/');

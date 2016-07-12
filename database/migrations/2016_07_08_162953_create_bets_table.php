@@ -18,7 +18,8 @@ class CreateBetsTable extends Migration
             $table->string('username');
             $table->integer('content');
             $table->string('period');
-            $table->integer('time');
+            $table->string('time');
+            $table->integer('number');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -36,7 +36,10 @@ class RecordController extends Controller
 
     //返回开奖记录的数据
     public function openrecord(){
-    	return view('admin.record.openrecord');
+
+        $opens=DB::table('openrecords')->orderBy('time','desc')->get();
+
+    	return view('admin.record.openrecord')->with('opens',$opens);
     }
 
 //提现记录

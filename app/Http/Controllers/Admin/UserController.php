@@ -8,8 +8,10 @@ use App\Http\Controllers\Controller;
 use Request;
 
 use App\user;
+use App\recharge;
 use Redirect;
 use DB;
+use Session;
 
 class UserController extends Controller
 {
@@ -67,12 +69,19 @@ class UserController extends Controller
     	$point=Request::input('point');
     	$users=DB::table('users')->where('username','=',$account)->get();
     	$id=$users[0]->id;
+        $adminId=Session::get('userid');
     	$user=user::find($id);
     	if (!is_null($user)) {
     		$oldPoint=$user->point;
     		$user->point=$oldPoint+$point;
     		$user->save();
     	}
+        //存储充值记录
+        $recharge=new recharge;
+        $recharge->username=$user->username;
+        $recharge->num=$point;
+        $recharge->adminId=$adminId;
+        $recharge->save();
     	
     	return view('admin.user.pay');
     }

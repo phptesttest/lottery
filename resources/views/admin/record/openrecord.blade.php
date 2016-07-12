@@ -13,33 +13,41 @@
                 <h3 class="panel-title">开奖记录</h3>
             </div>
             <div class="panel-body">
-                <table class="table">
+            @if(count($opens)==0)
+
+                  <p>还没有开奖信息</p>  
+
+            @else
+            <table class="table">
                     <tr>
                         <th>期号</th>
                         <th>开奖号码</th>
                         <th>总和值</th>
-                        <th>操作</th>
                     </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                    </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                    </tr>
-                    <tr>
-                        <td>111</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                        <td>xx天</td>
-                    </tr>
-                   
+            @foreach($opens as $open)
+                <tr>
+                <td class="period"><?php echo $open->period ?></td>
+                <td>
+                <?php
+                    $all=0; 
+                    $arr=stringToArray($open->number);
+                    foreach ($arr as $key => $value) {
+                        $all=$all+$value;
+                ?>
+
+                        <?php echo $value." ";?>
+                <?php
+                    }
+                ?>
+                </td>
+                <td><?php echo $all ?></td>
+                </tr>
+                @endforeach
                 </table>
+
+                @endif
+                
+                
             </div>
         </div>
     </div>
