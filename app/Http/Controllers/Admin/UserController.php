@@ -69,7 +69,7 @@ class UserController extends Controller
     	$point=Request::input('point');
     	$users=DB::table('users')->where('username','=',$account)->get();
     	$id=$users[0]->id;
-        $adminId=Session::get('userid');
+        $adminId=Session::get('adminid');
     	$user=user::find($id);
     	if (!is_null($user)) {
     		$oldPoint=$user->point;

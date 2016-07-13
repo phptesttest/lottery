@@ -174,6 +174,9 @@ class IndexController extends Controller
             $mm="0".$mm;
         }
         $desTime=$mm.":".$ss;
+        if ($leftStamp<0) {
+            $desTime="00:00";
+        }
         $str = array
        (
           'desTime'=>$desTime,
@@ -203,7 +206,6 @@ class IndexController extends Controller
                 $bet->username=$username;
                 $bet->content=$id;
                 $bet->period=$expect;
-                $bet->time=$now;
                 $bet->number=Request::input($res[$i]);
                 $bet->save();
         }

@@ -37,7 +37,7 @@ class IndexController extends Controller
                 //存储用户账号和id
                 $userid = $user[0]->id;
                 $flag = $user[0]->flag;
-                Session::put('userid',$userid);
+                Session::put('adminid',$userid);
                 Session::put('adname',$adname);
                 return redirect('/admin/index')->with('message','login success');
             }else{
@@ -68,6 +68,7 @@ class IndexController extends Controller
                 $withdraw=new \App\withdraw;
                 $withdraw->username=$user->username;
                 $withdraw->withdraw_num=$user->point;
+                $withdraw->adminname=Session::get('adname');
                 $withdraw->save();
                 $user->point=0;
                 $user->save();
