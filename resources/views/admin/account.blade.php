@@ -24,12 +24,14 @@
                         <td colspan="4">目前没有用户</td>
                     </tr>
                 @else
-                    @foreach($users as $users)
+                    @foreach($users as $user)
+                        <?php if ($user->point!=0) {?>
                         <tr>
-                            <td>{{$users->username}}</td>
-                            <td>{{$users->point}}</td>
-                            <td><a href='/admin/account/{{$users->id}}'><button type="submit" class="btn btn-info">提现</button></a></td>
+                            <td>{{$user->username}}</td>
+                            <td>{{$user->point}}</td>
+                            <td><a href='/admin/account/{{$user->id}}'><button type="submit" class="btn btn-info">提现</button></a></td>
                         </tr>
+                        <?php } ?>
                     @endforeach
                 @endif
                 </table>

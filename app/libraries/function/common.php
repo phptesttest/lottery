@@ -182,6 +182,21 @@ if (!function_exists('desTime')) {
 	}
 }
 
+//比较两个日期是否为同一天
+if (!function_exists('isSameDay')) {
+	function isSameDay($date1,$date2){
+		$arr1=explode("-",$date1);
+		$arr3=explode(" ",$date2);
+		$arr2=explode("-",$arr3[0]);
+		if (($arr1[0]==$arr2[0])&&($arr1[1]==$arr2[1])&&($arr1[2]==$arr2[2])) {
+			return 1;
+		}
+		else{
+			return 0;
+		}
+	}
+}
+
 //更新开奖记录
 /*if (!function_exists('update')) {
 	function update(){

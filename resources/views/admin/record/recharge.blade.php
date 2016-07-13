@@ -32,7 +32,7 @@
                             <td>{{$recharges->num}}</td>
                             <td>{{$recharges->created_at}}</td>
                             <td>{{$recharges->aName}}</td>
-                            <td><button type="submit" class="btn btn-danger">删除</button></td>
+                            <td><a href='/admin/delRecharge/{{$recharges->id}}'><button class="btn btn-danger">删除</button></a></td>
                         </tr>
                     @endforeach
                 @endif

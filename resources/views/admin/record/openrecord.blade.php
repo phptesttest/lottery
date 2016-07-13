@@ -21,12 +21,14 @@
             <table class="table">
                     <tr>
                         <th>期号</th>
+                        <th>时间</th>
                         <th>开奖号码</th>
                         <th>总和值</th>
                     </tr>
             @foreach($opens as $open)
                 <tr>
                 <td class="period"><?php echo $open->period ?></td>
+                <td class="period"><?php echo $open->time ?></td>
                 <td>
                 <?php
                     $all=0; 
@@ -46,7 +48,7 @@
                 </table>
 
                 @endif
-                
+                <div class="page"><?php echo $opens->render(); ?></div>
                 
             </div>
         </div>

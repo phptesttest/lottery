@@ -40,8 +40,7 @@ class IndexController extends Controller
                     $big = 'super_manager';
                     Session::put('big',$big);
                 }
-                
-                Session::put('userid',$userid);
+                Session::put('adminid',$userid);
                 Session::put('adname',$adname);
                 Session::put('flag',$flag);
 
@@ -74,6 +73,7 @@ class IndexController extends Controller
                 $withdraw=new \App\withdraw;
                 $withdraw->username=$user->username;
                 $withdraw->withdraw_num=$user->point;
+                $withdraw->adminname=Session::get('adname');
                 $withdraw->save();
                 $user->point=0;
                 $user->save();
@@ -107,11 +107,18 @@ class IndexController extends Controller
         $type=Request::input('type');
         $rate=Request::input('rate');
         $cate=DB::table('categories')->where('cName','=',$type)->where('cId','=',$ball)->get();
-        if(!is_null($cate)) {
+        if(count($cate)!=0) {
             $cId=$cate[0]->id;
             $category=category::find($cId);
             $category->rate=$rate;
             $category->save();
+        }
+        else{
+            $cate=new category;
+            $cate->rate=$rate;
+            $cate->cName=$type;
+            $cate->cId=$ball;
+            $cate->save();
         }
         return view('admin.times');
     }

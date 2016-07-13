@@ -59,10 +59,19 @@ class IndexController extends Controller
 
         //获取开奖信息，加工整理后存入数据库
         // 获取数据库开奖条数
+        date_default_timezone_set('PRC');
+        $nowaday=date("Y-m-d");
         $openRecords=openRecord::all();
         $dbNub=count($openRecords);
+        //如果不是同一天数据，则清除
+        if (isSameDay($nowaday,$openRecords[1]->created_at)) {
+            foreach ($openRecords as $key => $value) {
+                $value->delete();
+            }
+        }
         //获取网站开奖条数
-        $file_contents = file_get_contents('http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date=2016-07-13&format=json');
+        $url='http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date='.$nowaday.'&format=json';
+        $file_contents = file_get_contents($url);
         $res=json_decode($file_contents); 
         $newNub=count($res->data);
         $newres=$res->data;
@@ -175,6 +184,9 @@ class IndexController extends Controller
             $mm="0".$mm;
         }
         $desTime=$mm.":".$ss;
+        if ($leftStamp<0) {
+            $desTime="00:00";
+        }
         $str = array
        (
           'desTime'=>$desTime,
@@ -204,7 +216,6 @@ class IndexController extends Controller
                 $bet->username=$username;
                 $bet->content=$id;
                 $bet->period=$expect;
-                $bet->time=$now;
                 $bet->number=Request::input($res[$i]);
                 $bet->save();
         }

@@ -48,9 +48,9 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('times','Admin\IndexController@times');//赔率设置
 
 	  Route::post('times','Admin\IndexController@timesFun');//赔率设置
-	  Route::get('account','Admin\IndexController@account');//结算管理
 	  Route::get('account','Admin\IndexController@account');//结算管理 , 提现
 	  Route::get('account/{id}','Admin\IndexController@account');//结算管理 , 提现
+
 
 
 });
@@ -63,6 +63,8 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('openrecord','Admin\RecordController@openrecord');//下注记录
 	  Route::get('withdraw','Admin\RecordController@withdraw');//结算管理 , 提现
 	  Route::get('withdraw/{id}','Admin\RecordController@withdraw');//结算管理 , 提现
+	  Route::get('delRecharge/{id}','Admin\RecordController@recharge');
+	  Route::get('betrecord/{id}','Admin\RecordController@betrecord');
 });
 
 /**用户 User 管理路由**/
@@ -71,6 +73,7 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('search','Admin\UserController@search');
 	  Route::get('pay','Admin\UserController@pay');
 	  Route::get('userlist','Admin\UserController@userlist');
+	  Route::get('userlist/{id}','Admin\UserController@userlist');
 	  Route::post('userlist','Admin\UserController@create');
 	  Route::post('pay','Admin\UserController@payFun');
 	  Route::post('search','Admin\UserController@searchFun');

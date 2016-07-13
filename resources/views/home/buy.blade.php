@@ -27,7 +27,7 @@
 						<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
 						<span id="showDes"></span>
 						</td>
-						<td><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
+
 					</tr> 
                 </table>
             </div>

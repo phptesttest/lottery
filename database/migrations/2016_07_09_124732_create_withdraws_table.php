@@ -16,6 +16,7 @@ class CreateWithdrawsTable extends Migration
 
             $table->increments('id');
             $table->string('username');
+            $table->string('adminname');
             $table->integer('withdraw_num');
             $table->rememberToken();
             $table->timestamps();

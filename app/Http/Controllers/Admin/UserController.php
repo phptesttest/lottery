@@ -64,7 +64,7 @@ class UserController extends Controller
     	$point=Request::input('point');
     	$users=DB::table('users')->where('username','=',$account)->get();
     	$id=$users[0]->id;
-        $adminId=Session::get('userid');
+        $adminId=Session::get('adminid');
     	$user=user::find($id);
     	if (!is_null($user)) {
     		$oldPoint=$user->point;
@@ -81,9 +81,16 @@ class UserController extends Controller
     	return view('admin.user.pay');
     }
 
-    public function userlist(){
+    public function userlist($id=null){
 
     	//$users=user::all()->orderBy('c.created_at','desc');
+        if ($id!=null) {
+            $delusr=user::find($id);
+            if (!is_null($delusr)) {
+                $delusr->delete();
+            }
+            
+        }
     	$users=DB::table('users')->orderBy('created_at','desc')->get();
     	$data=[
 			'users'=>$users,
