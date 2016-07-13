@@ -19,6 +19,8 @@
                         <th>下注期数</th>
                         <th>下注时间</th>
                         <th>下注类型</th>
+                        <th>金额</th>
+                        <th>操作</th>
                     </tr>
 
         @if(count($bets)==0)
@@ -59,6 +61,8 @@
                                 echo $ball.$bet->cName;
                             ?>
                         </td>
+                        <td>{{ $bet->number }}</td>
+                        <td><a href='/admin/betrecord/{{ $bet->id}}'><button class="btn btn-danger">删除</button></a></td>
                     </tr>
             @endforeach
         @endif  

@@ -69,13 +69,14 @@
                         <th>操作</th>
                     </tr>
                    
+
                 
                     @foreach($users as $user)
                         <tr>
                             <td>{{ $user->username}}</td>
                             <td>{{ $user->password}}</td>
                             <td>{{ $user->point}}</td>
-                            <td><button type="submit" class="btn btn-danger">删除</button></td>
+                            <td><a href='/admin/userlist/{{$user->id}}'><button class="btn btn-danger">删除</button></a></td>
                         </tr>
                     @endforeach
                     </table>

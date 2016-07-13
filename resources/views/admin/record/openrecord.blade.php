@@ -48,7 +48,7 @@
                 </table>
 
                 @endif
-                
+                <div class="page"><?php echo $opens->render(); ?></div>
                 
             </div>
         </div>

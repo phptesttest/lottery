@@ -96,11 +96,18 @@ class IndexController extends Controller
         $type=Request::input('type');
         $rate=Request::input('rate');
         $cate=DB::table('categories')->where('cName','=',$type)->where('cId','=',$ball)->get();
-        if(!is_null($cate)) {
+        if(count($cate)!=0) {
             $cId=$cate[0]->id;
             $category=category::find($cId);
             $category->rate=$rate;
             $category->save();
+        }
+        else{
+            $cate=new category;
+            $cate->rate=$rate;
+            $cate->cName=$type;
+            $cate->cId=$ball;
+            $cate->save();
         }
         return view('admin.times');
     }

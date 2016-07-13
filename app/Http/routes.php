@@ -64,6 +64,7 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('withdraw','Admin\RecordController@withdraw');//结算管理 , 提现
 	  Route::get('withdraw/{id}','Admin\RecordController@withdraw');//结算管理 , 提现
 	  Route::get('delRecharge/{id}','Admin\RecordController@recharge');
+	  Route::get('betrecord/{id}','Admin\RecordController@betrecord');
 });
 
 /**用户 User 管理路由**/
@@ -72,6 +73,7 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('search','Admin\UserController@search');
 	  Route::get('pay','Admin\UserController@pay');
 	  Route::get('userlist','Admin\UserController@userlist');
+	  Route::get('userlist/{id}','Admin\UserController@userlist');
 	  Route::post('userlist','Admin\UserController@create');
 	  Route::post('pay','Admin\UserController@payFun');
 	  Route::post('search','Admin\UserController@searchFun');

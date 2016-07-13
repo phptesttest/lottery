@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Controller;
 use DB;
 use App\withdraw;
+use App\bet;
 use App\recharge;
 
 class RecordController extends Controller
@@ -35,8 +36,15 @@ class RecordController extends Controller
 
 
     //返回下注记录的数据
-    public function betrecord(){
+    public function betrecord($id=null){
 
+        if ($id!=null) {
+            $bet=bet::find($id);
+            if(!is_null($bet)){
+                $bet->delete();
+            }
+        
+        }
     	$bets = DB::table('bets as b')
         ->leftJoin('categories as c','b.content','=','c.id')
         ->select('b.*','c.cName','c.cId')
@@ -50,7 +58,7 @@ class RecordController extends Controller
     //返回开奖记录的数据
     public function openrecord(){
 
-        $opens=DB::table('openrecords')->orderBy('time','desc')->get();
+        $opens=DB::table('openrecords')->orderBy('time','desc')->paginate(15);;
 
     	return view('admin.record.openrecord')->with('opens',$opens);
     }
