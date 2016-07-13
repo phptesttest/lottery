@@ -13,7 +13,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // $flag=2;
+        // view()->share('flag',$flag);
     }
 
     /**

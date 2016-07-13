@@ -26,11 +26,11 @@
 
 //前台部分
 Route::group(['middleware' => ['web']], function () {
-    
+
 	  Route::get('/index', 'Home\IndexController@index');//前台会员登录
 	  Route::get('/buy', 'Home\IndexController@buy');//前台会员登录
 	  Route::post('/buy', 'Home\IndexController@buyFun');//前台会员登录
-	 Route::get('buy', 'Home\IndexController@buy');//前台会员登录
+	  Route::get('buy', 'Home\IndexController@buy');//前台会员登录
 	  Route::get('/', 'Home\IndexController@login');//前台会员登录
 	  Route::post('/logindeal', 'Home\IndexController@logindeal');//前台会员登录
 	  Route::get('/logout', 'Home\IndexController@logout');//前台会员登录
@@ -74,4 +74,16 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::post('userlist','Admin\UserController@create');
 	  Route::post('pay','Admin\UserController@payFun');
 	  Route::post('search','Admin\UserController@searchFun');
+});
+
+
+/**管理员admin 管理路由**/
+Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
+    //
+	  Route::get('adminlist','Admin\IndexController@adminlist');
+	  Route::post('adminlist','Admin\IndexController@adminlistFun');
+	  Route::get('adminpay','Admin\IndexController@adminpay');
+	  Route::post('adminpayFun','Admin\IndexController@adminpayFun');
+	  Route::get('admindelete/{id}','Admin\IndexController@admindelete');
+	  
 });

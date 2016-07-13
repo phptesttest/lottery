@@ -23,6 +23,7 @@ class IndexController extends Controller
     public function logout(){
         Session::forget('username');
         Session::forget('userid');
+        Session::flush();
         return redirect('/');
     }
 

@@ -53,6 +53,16 @@
                         <li><a href="/admin/search">用户查询</a></li>
                     </ul>
                 </li>
+                @if(Session::has('big'))
+                 <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">普通管理员管理<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="/admin/adminlist">普通管理员列表</a></li>
+                        <li><a href="/admin/adminpay">普通管理员充值</a></li>
+                        
+                    </ul>
+                </li>
+               @endif
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">记录管理<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
