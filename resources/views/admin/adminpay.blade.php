@@ -15,6 +15,7 @@
             <div class="panel-body">
             <form action="{{ asset('/admin/pay')}}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class='table-responsive'>
                 <table class="table">
                     <tr>
                         <td>请输入要充值的管理员账号</td>
@@ -29,6 +30,7 @@
                         <td><input type="submit" value="确定充值"></td>
                     </tr>
                 </table>
+                </div>
             </form>
             </div>
         </div>

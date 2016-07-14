@@ -34,7 +34,10 @@ Route::group(['middleware' => ['web']], function () {
 	  Route::get('/', 'Home\IndexController@login');//前台会员登录
 	  Route::post('/logindeal', 'Home\IndexController@logindeal');//前台会员登录
 	  Route::get('/logout', 'Home\IndexController@logout');//前台会员登录
-	  Route::get('/countdown', 'Home\IndexController@countdown');//前台会员登录
+	  Route::get('/countdown', 'Home\IndexController@countdown');
+	  Route::get('/rules','Home\IndexController@rules');
+	  Route::get('/withdraw','Home\IndexController@withdraw');
+
 });
 
 /**后台部分**/

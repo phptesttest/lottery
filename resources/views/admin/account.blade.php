@@ -13,6 +13,7 @@
                 <h3 class="panel-title">结算管理</h3>
             </div>
             <div class="panel-body">
+                <div class='table-responsive'>
                 <table class="table">
                     <tr>
                         <th>用户名</th>
@@ -35,6 +36,7 @@
                     @endforeach
                 @endif
                 </table>
+                </div>
             </div>
         </div>
     </div>

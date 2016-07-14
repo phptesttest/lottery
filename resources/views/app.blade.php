@@ -15,11 +15,13 @@
     padding:50px 30px 0px 30px;
     padding-bottom: 40px;
     color: #5a5a5a;
-    background-color: #ddd;
+    
     }
     .navbar-nav li a{
         color:white;
+
     }
+
      @yield('yangshi');
      
     </style>

@@ -28,6 +28,7 @@
                 <div class="panel-body">
                 <form action="{{ asset('/admin/adminlist')}}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <div class='table-responsive'>
                     <table class="table">
                         <tr>
                             <th>普通管理员初始积分</th>
@@ -40,6 +41,7 @@
                             <td><input type="submit" value="确定生成" class="btn btn-info"></td>
                         </tr>
                     </table>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -56,6 +58,7 @@
                   <p>您还没有生成普通管理员账号！</p>  
 
                 @else
+                <div class='table-responsive'>
                     <table class="table">
 
                     <tr>
@@ -74,6 +77,7 @@
                         </tr>
                     @endforeach
                     </table>
+                    </div>
                 @endif
                 
             </div>

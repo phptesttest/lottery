@@ -28,6 +28,7 @@
                 <div class="panel-body">
                 <form action="{{ asset('/admin/userlist')}}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <div class='table-responsive'>
                     <table class="table">
                         <tr>
                             <th>下注等级</th>
@@ -44,6 +45,7 @@
                             <td><input type="submit" value="确定生成" class="btn btn-info"></td>
                         </tr>
                     </table>
+                    </div>
                     </form>
                 </div>
             </div>
@@ -60,6 +62,7 @@
                   <p>您还没有生成用户账号！</p>  
 
                 @else
+                    <div class='table-responsive'>
                     <table class="table">
 
                     <tr>
@@ -80,6 +83,7 @@
                         </tr>
                     @endforeach
                     </table>
+                    </div>
                 @endif
                 
             </div>

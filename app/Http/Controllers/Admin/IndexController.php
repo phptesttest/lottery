@@ -16,6 +16,7 @@ use Session;
 class IndexController extends Controller
 {
 
+
 //显示管理员登录页面
     public function login(){
         return view('admin.login');

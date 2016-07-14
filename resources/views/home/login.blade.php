@@ -1,8 +1,6 @@
 @extends('app')
 @section('yangshi')
-	.panel{
-		background-color:#ccc;
-	}
+
 @endsection()
 @section('content')
 <div class="container-fluid">
