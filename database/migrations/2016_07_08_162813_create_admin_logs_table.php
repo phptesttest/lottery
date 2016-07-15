@@ -15,7 +15,7 @@ class CreateAdminLogsTable extends Migration
         Schema::create('admin_logs', function (Blueprint $table) {
 
             $table->increments('id');
-            $table->integer('adminId');
+            $table->string('aName');
             $table->integer('loginTime');
             $table->rememberToken();
             $table->timestamps();

@@ -36,9 +36,6 @@ class RecordController extends Controller
 
     //返回下注记录的数据
     public function betrecord($id=null){
-
-       
-
         if(Session::get('adname')){
              if ($id!=null) {
                 $bet=bet::find($id);
@@ -51,7 +48,6 @@ class RecordController extends Controller
             ->select('b.*','c.cName','c.cId')
             ->orderBy('b.created_at','desc')
             ->get();
-            $bets = DB::table('bets')->get();
             $flag = Session::get('flag');
             return view('admin.record.betrecord')->with('bets',$bets)->with('flag',$flag);
         }else{

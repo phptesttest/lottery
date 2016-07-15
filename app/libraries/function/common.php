@@ -30,6 +30,9 @@ if (!function_exists('getRandomPassword')) {
 	 }
 }
 
+//判断有没有中奖
+
+
 //将开奖号码字符串转化为数组
 if (!function_exists('stringToArray')) {
 	function stringToArray($str){
@@ -197,38 +200,193 @@ if (!function_exists('isSameDay')) {
 	}
 }
 
-//更新开奖记录
-/*if (!function_exists('update')) {
-	function update(){
-	  $sql = "select * from user";
-	  $result = mysql_query($sql);
-	  $arr = array();
-	  while($rows=mysql_fetch_assoc($reslut)){
-	    $arr[]=$rows;
-	  }
+//判断有没有中奖
+if (!function_exists('iswin')) {
+	function iswin($bet,$arrCode){
+		$flag=0;
+		switch ($bet->cId) {
+		    case '1':{
+		        switch ($bet->cName) {
+		            case '大':{
+		                if ($arrCode[0]>=5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '小':{
+		                if ($arrCode[0]<5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '单':{
+		                if (($arrCode[0]%2)==1) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '双':{
+		                if (($arrCode[0]%2)==0) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		        }
+		        break;
+		    }
+
+		    case '2':{
+		        switch ($bet->cName) {
+		            case '大':{
+		                if ($arrCode[1]>=5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '小':{
+		                if ($arrCode[1]<5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '单':{
+		                if (($arrCode[1]%2)==1) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '双':{
+		                if (($arrCode[1]%2)==0) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		        }
+		        break;
+		    }
+
+		    case '3':{
+		        switch ($bet->cName) {
+		            case '大':{
+		                if ($arrCode[2]>=5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '小':{
+		                if ($arrCode[2]<5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '单':{
+		                if (($arrCode[2]%2)==1) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '双':{
+		                if (($arrCode[2]%2)==0) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		        }
+		        break;
+		    }
+
+		    case '4':{
+		        switch ($bet->cName) {
+		            case '大':{
+		                if ($arrCode[3]>=5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '小':{
+		                if ($arrCode[3]<5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '单':{
+		                if (($arrCode[3]%2)==1) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '双':{
+		                if (($arrCode[3]%2)==0) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		        }
+		        break;
+		    }
+
+		    case '5':{
+		        switch ($bet->cName) {
+		            case '大':{
+		                if ($arrCode[4]>=5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '小':{
+		                if ($arrCode[4]<5) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '单':{
+		                if (($arrCode[4]%2)==1) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '双':{
+		                if (($arrCode[4]%2)==0) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		        }
+		        break;
+		    }
+
+		    case '6':{
+		        $all=$arrCode[0]+$arrCode[1]+$arrCode[2]+$arrCode[3]+$arrCode[4];
+		        switch ($bet->cName) {
+		            case '大':{
+		                if ($all>=23) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '小':{
+		                if ($all<23) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '单':{
+		                if (($all%2)==1) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		            case '双':{
+		                if (($all%2)==0) {
+		                    $flag=1;
+		                }
+		                break;
+		            }
+		        }
+		        break;
+		    }
+		    
+		}
+		return $flag;
 	}
 }
-
-*/
-//倒计时效果 javascript
-// <div class="time">
-//         <span id="t_d">00天</span>
-//         <span id="t_h">00时</span>
-//         <span id="t_m">00分</span>
-//         <span id="t_s">00秒</span>
-//     </div>
-// <script>
-//    function GetRTime(str){
-//        var EndTime= new Date(str);
-//        var NowTime = new Date();
-//        var t =EndTime.getTime() - NowTime.getTime();
- 
-//        var m=Math.floor(t/1000/60%60);
-//        var s=Math.floor(t/1000%60);
-
-  
-//        document.getElementById("t_m").innerHTML = m + "分";
-//        document.getElementById("t_s").innerHTML = s + "秒";
-//    }
-//    setInterval("GetRTime('2017/07/10 14:29:00')",0);
-// </script>

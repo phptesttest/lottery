@@ -42,12 +42,32 @@ class IndexController extends Controller
                 $userid = $user[0]->id;
                 Session::put('userid',$userid);
                 Session::put('username',$username);
-                return redirect('/index')->with('message','login success');
+                //更新开奖记录数据库
+                date_default_timezone_set('PRC');
+                $nowaday=date("Y-m-d");
+                $openRecords=openRecord::all();
+                if (count($openRecords)!=0) {
+                    if (isSameDay($nowaday,$openRecords[0]->created_at)==0) {
+                        foreach ($openRecords as $key => $value) {
+                            $value->delete();
+                        }
+                    }
+                }
+                //更新下一期开奖信息数据库
+                $nextinfos=nextinfo::all();
+                if (count($nextinfos)!=0) {
+                    if (isSameDay($nowaday,$nextinfos[0]->created_at)==0) {
+                        foreach ($nextinfos as $key => $value) {
+                            $value->delete();
+                        }
+                    }
+                }
+                return redirect('/index')->with('message','登录成功');
             }else{
-                return redirect()->back()->with('errors','login Failed');
+                return redirect()->back()->with('errors','密码错误');
             }
         }else{
-            return redirect()->back()->with('errors','login Failed');
+            return redirect()->back()->with('errors','该用户不存在');
         }
         
 
@@ -55,20 +75,13 @@ class IndexController extends Controller
     }
 
     public function index(){
-        if($username=Session::get('username')){
 
+        if($username=Session::get('username')){
         //获取开奖信息，加工整理后存入数据库
         // 获取数据库开奖条数
-        date_default_timezone_set('PRC');
-        $nowaday=date("Y-m-d");
         $openRecords=openRecord::all();
         $dbNub=count($openRecords);
-        //如果不是同一天数据，则清除
-        if (isSameDay($nowaday,$openRecords[1]->created_at)) {
-            foreach ($openRecords as $key => $value) {
-                $value->delete();
-            }
-        }
+        $nowaday=date("Y-m-d");
         //获取网站开奖条数
         $url='http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date='.$nowaday.'&format=json';
         $file_contents = file_get_contents($url);
@@ -128,7 +141,7 @@ class IndexController extends Controller
             $arr1=explode(":",$nexttime);
             $first=DB::table('openrecords')->orderBy('time','desc')->first();
             $arr2=explode(":",$first->time);
-            if (($arr2[0]*60+$arr2[1]+5)>($arr1[0]*60+$arr1[1])) {
+            if (($arr2[0]*60+$arr2[1]+10)>($arr1[0]*60+$arr1[1])) {
                 $nextinfo->period=nextExpect($first->period);
                 $nextinfo->time=nextTime($first->time);
                 $nextinfo->save();

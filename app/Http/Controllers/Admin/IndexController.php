@@ -8,6 +8,10 @@ use App\Providers\AppServiceProvider;
 use Request;
 use App\admin;
 use App\User;
+use App\openrecord;
+use App\nextinfo;
+use App\bet;
+use App\admin_log;
 use App\category;
 use Redirect;
 use DB;
@@ -35,7 +39,14 @@ class IndexController extends Controller
                 //存储用户账号和id
                 $userid = $user[0]->id;
                 $flag = $user[0]->flag;
-                
+                if ($flag==2) {
+                    date_default_timezone_set('PRC');
+                    $now=date("Y-m-d H:i:s");
+                    $admin_logs=new admin_log;           
+                    $admin_logs->aName=$adname;
+                    $admin_logs->loginTime=$now;
+                    $admin_logs->save();
+                }
                 if($flag===1){
                     $big = 'super_manager';
                     Session::put('big',$big);
@@ -43,22 +54,81 @@ class IndexController extends Controller
                 Session::put('adminid',$userid);
                 Session::put('adname',$adname);
                 Session::put('flag',$flag);
+                /*//结算
+                $bets = DB::table('bets as b')
+                ->leftJoin('categories as c','b.content','=','c.id')
+                ->select('b.*','c.*')
+                ->orderBy('b.created_at','desc')
+                ->get();
+                foreach ($bets as $key => $bet) {
+                    if ($bet->isaccount==0) {
+                        $expect=$bet->period;
+                        $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                        $openCode=$open[0]->number;
+                        $arrCode=explode(",",$openCode);
+                        if(iswin($bet,$arrCode)==1){
+                            $addpoint=($bet->number)*($bet->rate);
+                            $user=DB::table('users')->where('username','=',$bet->username)->get();
+                            $user[0]->point=$user[0]->point+$addpoint;
+                            $user[0]->save();
+                                                       
+                        }
 
-                return redirect('/admin/index')->with('message','login success');
+                        $bet->isaccount=1;
+                        $bet->save();
+                        
+                    }
+                }*/if (count($openRecords)!=0) {
+                //更新开奖记录数据库
+                date_default_timezone_set('PRC');
+                $nowaday=date("Y-m-d");
+                $openRecords=openRecord::all();
+                if (count($openRecords)!=0) {
+                    if (isSameDay($nowaday,$openRecords[1]->created_at)==0) {
+                        foreach ($openRecords as $key => $value) {
+                            $value->delete();
+                        }
+                    }
+                }
+                //更新下一期开奖信息数据库
+                $nextinfos=nextinfo::all();
+                if (count($nextinfos)!=0) {
+                    if (isSameDay($nowaday,$nextinfos[0]->created_at)==0) {
+                        foreach ($nextinfos as $key => $value) {
+                            $value->delete();
+                        }
+                    }
+                }
+
+                return redirect('/admin/index')->with('message','登录成功');
             }else{
-                return redirect()->back()->with('errors','login Failed');
+                return redirect()->back()->with('errors','密码错误');
             }
         }else{
-            return redirect()->back()->with('errors','login Failed');
+            return redirect()->back()->with('errors','该用户不存在');
         }
         
-    }
+        }
 
-    public function index(){
+    }
+    public function index($id=null){
         if($adname=Session::get('adname')){
+            if ($id!=null) {
+                $admins=admin_log::find($id);
+                if(!is_null($admins)){
+                    $admins->delete();
+                }
+            }
             $user=DB::table('admins')->where('aName','=',$adname)->get();
             $flag = Session::get('flag');
-            return view('admin.index');
+            
+            $admins=DB::table('admin_logs')->orderBy('created_at','desc')->get();
+            $data=[
+                'wPool'=>$user[0]->wPool,
+                'admins'=>$admins,
+
+            ];
+            return view('admin.index',$data);
         }else{
             return redirect('/admin');
         }
