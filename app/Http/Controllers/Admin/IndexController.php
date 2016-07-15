@@ -7,7 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Providers\AppServiceProvider;
 use Request;
 use App\admin;
+use App\recharge;
 use App\User;
+use App\openrecord;
+use App\nextinfo;
+use App\bet;
+use App\admin_log;
 use App\category;
 use Redirect;
 use DB;
@@ -15,7 +20,6 @@ use Session;
 
 class IndexController extends Controller
 {
-
 
 //显示管理员登录页面
     public function login(){
@@ -36,7 +40,14 @@ class IndexController extends Controller
                 //存储用户账号和id
                 $userid = $user[0]->id;
                 $flag = $user[0]->flag;
-                
+                /*if ($flag==2) {
+                    date_default_timezone_set('PRC');
+                    $now=date("Y-m-d H:i:s");
+                    $admin_logs=new admin_log;           
+                    $admin_logs->aName=$adname;
+                    $admin_logs->loginTime=$now;
+                    $admin_logs->save();
+                }*/
                 if($flag===1){
                     $big = 'super_manager';
                     Session::put('big',$big);
@@ -44,22 +55,90 @@ class IndexController extends Controller
                 Session::put('adminid',$userid);
                 Session::put('adname',$adname);
                 Session::put('flag',$flag);
+                //结算
+                $bets = DB::table('bets as b')
+                ->leftJoin('categories as c','b.content','=','c.id')
+                ->select('b.id as bId','b.*','c.*')
+                ->orderBy('b.created_at','desc')
+                ->get();
+                foreach ($bets as $key => $bet) {
+                    if ($bet->isaccount==0) {
+                        $expect=$bet->period;
+                        $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                        if (count($open)!=0) {
+                            $openCode=$open[0]->number;
+                            $arrCode=explode(",",$openCode); 
+                            if(iswin($bet,$arrCode)==1){
+                                $addpoint=($bet->number)*($bet->rate);
+                                $users=DB::table('users')->where('username','=',$bet->username)->get();
+                                $userId=$users[0]->id;
+                                $user=User::find($userId);
+                                $oldPoint=$user->point;
+                                $user->point=$oldPoint+$addpoint;
+                                $user->save();
+                                                           
+                            } 
+                            $betId=$bet->bId;
+                            $be=bet::find($betId);
+                            $be->isaccount='1';
+                            $be->save();  
+                        }
+                      
+                    }
+                }
 
-                return redirect('/admin/index')->with('message','login success');
+                $openRecords=openRecord::all();
+                if (count($openRecords)!=0) {
+                    //更新开奖记录数据库
+                    date_default_timezone_set('PRC');
+                    $nowaday=date("Y-m-d");
+                    $openRecords=openRecord::all();
+                    if (count($openRecords)!=0) {
+                        if (isSameDay($nowaday,$openRecords[1]->created_at)==0) {
+                            foreach ($openRecords as $key => $value) {
+                                $value->delete();
+                            }
+                        }
+                }
+                //更新下一期开奖信息数据库
+                $nextinfos=nextinfo::all();
+                if (count($nextinfos)!=0) {
+                    if (isSameDay($nowaday,$nextinfos[0]->created_at)==0) {
+                        foreach ($nextinfos as $key => $value) {
+                            $value->delete();
+                        }
+                    }
+                }
+
+                return redirect('/admin/index')->with('message','登录成功');
             }else{
-                return redirect()->back()->with('errors','login Failed');
+                return redirect()->back()->with('errors','密码错误');
             }
         }else{
-            return redirect()->back()->with('errors','login Failed');
+            return redirect()->back()->with('errors','该用户不存在');
         }
         
-    }
+        }
 
-    public function index(){
+    }
+    public function index($id=null){
         if($adname=Session::get('adname')){
+            if ($id!=null) {
+                $admins=admin_log::find($id);
+                if(!is_null($admins)){
+                    $admins->delete();
+                }
+            }
             $user=DB::table('admins')->where('aName','=',$adname)->get();
             $flag = Session::get('flag');
-            return view('admin.index');
+            
+            $admins=DB::table('admin_logs')->orderBy('created_at','desc')->get();
+            $data=[
+                'wPool'=>$user[0]->wPool,
+                'admins'=>$admins,
+
+            ];
+            return view('admin.index',$data);
         }else{
             return redirect('/admin');
         }
@@ -69,7 +148,7 @@ class IndexController extends Controller
     public function account($id=null){  //结算管理，显示
         if(Session::get('adname')){
             if($id != null){
-            $user=user::find($id);  //结算管理中，请求提现
+            $user=User::find($id);  //结算管理中，请求提现
             if (!is_null($user)) { 
                 $withdraw=new \App\withdraw;
                 $withdraw->username=$user->username;
@@ -133,18 +212,23 @@ class IndexController extends Controller
     public function adminpayFun(){
         $account=Request::input('account');
         $point=Request::input('point');
-        $users=DB::table('users')->where('username','=',$account)->get();
-        $id=$users[0]->id;
-        $adminId=Session::get('userid');
+        $admins=DB::table('admins')->where('aName','=',$account)->get();
+        $id=$admins[0]->id;
+        $adminId=Session::get('adminid');
         $user=admin::find($id);
         if (!is_null($user)) {
-            $oldPoint=$user->point;
-            $user->point=$oldPoint+$point;
-            $user->save();
+            $oldPoint=$user->wPool;
+            $user->wPool=$oldPoint+$point;
+            if ($user->save()) {
+                $adminid=$adname=Session::get('adminid');
+                $admin=admin::find($adminid);
+                $admin->wPool=$admin->wPool-$point;
+                $admin->save();
+            }
         }
         //存储充值记录
         $recharge=new recharge;
-        $recharge->username=$user->username;
+        $recharge->username=$user->aName;
         $recharge->num=$point;
         $recharge->adminId=$adminId;
         $recharge->save();
@@ -183,7 +267,12 @@ class IndexController extends Controller
         $admin->aName=$account;
         $admin->password=$password;
         $admin->flag = 2;
-        $admin->save();
+        if ($admin->save()) {
+            $adminid=$adname=Session::get('adminid');
+            $admin=admin::find($adminid);
+            $admin->wPool=$admin->wPool-$point;
+            $admin->save();
+        }
         return Redirect('/admin/adminlist');
     }
 

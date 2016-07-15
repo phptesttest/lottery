@@ -45,7 +45,7 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
     //
 	  Route::get('/','Admin\IndexController@login');//后台用户登录
 	  Route::post('/logindeal','Admin\IndexController@logindeal');//后台用户登录
-
+	  Route::get('index/{id}','Admin\IndexController@index');
 	  Route::get('logout','Admin\IndexController@logout');//用户退出登录
 	  Route::get('index','Admin\IndexController@index');
 	  Route::get('times','Admin\IndexController@times');//赔率设置

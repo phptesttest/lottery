@@ -3,6 +3,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Request;
 use App\user;
+use App\admin;
 use App\recharge;
 use Redirect;
 use DB;
@@ -22,7 +23,14 @@ class UserController extends Controller
         $user->point=$point;
         $user->username=$account;
         $user->password=$password;
-        $user->save();
+        //扣除管理员福利池
+        if ($user->save()) {
+           $adminid=$adname=Session::get('adminid');
+           $admin=admin::find($adminid);
+           $admin->wPool=$admin->wPool-$point;
+           $admin->save();
+        }
+
 
         return Redirect('/admin/userlist');
     }
@@ -69,7 +77,13 @@ class UserController extends Controller
     	if (!is_null($user)) {
     		$oldPoint=$user->point;
     		$user->point=$oldPoint+$point;
-    		$user->save();
+            if ($user->save()) {
+                $adminid=$adname=Session::get('adminid');
+                $admin=admin::find($adminid);
+                $admin->wPool=$admin->wPool-$point;
+                $admin->save();
+            }
+    		
     	}
         //存储充值记录
         $recharge=new recharge;

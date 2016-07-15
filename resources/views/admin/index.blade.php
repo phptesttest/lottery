@@ -49,7 +49,7 @@
             </div>
         </div>
     </div>
-    @if(Session::has('big'))
+    <!-- @if(Session::has('big'))
     <div class="col-xs-12 col-sm-6">
         <div class="panel">
             <div class="panel-heading">
@@ -74,7 +74,7 @@
             </div>
         </div>
     </div>
-    @endif
+    @endif -->
 </div>
 @endsection
                

@@ -65,7 +65,7 @@ class RecordController extends Controller
                 }
             }
             //显示提现记录
-            $withdraw = DB::table('withdraws')->get();
+            $withdraw = DB::table('withdraws')->orderBy('created_at','desc')->get();
             return view('admin.record.withdraw')->with('withdraw',$withdraw);
         }else{
             return redirect('/admin');

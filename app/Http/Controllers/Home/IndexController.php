@@ -51,6 +51,37 @@ class IndexController extends Controller
                 $userid = $user[0]->id;
                 Session::put('userid',$userid);
                 Session::put('username',$username);
+                //结算
+                $bets = DB::table('bets as b')
+                ->leftJoin('categories as c','b.content','=','c.id')
+                ->select('b.id as bId','b.*','c.*')
+                ->orderBy('b.created_at','desc')
+                ->get();
+                foreach ($bets as $key => $bet) {
+                    if ($bet->isaccount==0) {
+                        $expect=$bet->period;
+                        $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                        if (count($open)!=0) {
+                            $openCode=$open[0]->number;
+                            $arrCode=explode(",",$openCode); 
+                            if(iswin($bet,$arrCode)==1){
+                                $addpoint=($bet->number)*($bet->rate);
+                                $users=DB::table('users')->where('username','=',$bet->username)->get();
+                                $userId=$users[0]->id;
+                                $user=User::find($userId);
+                                $oldPoint=$user->point;
+                                $user->point=$oldPoint+$addpoint;
+                                $user->save();
+                                                           
+                            } 
+                            $betId=$bet->bId;
+                            $be=bet::find($betId);
+                            $be->isaccount='1';
+                            $be->save();     
+                        }
+                    }
+                        
+                }
                 //更新开奖记录数据库
                 date_default_timezone_set('PRC');
                 $nowaday=date("Y-m-d");
@@ -150,7 +181,7 @@ class IndexController extends Controller
             $arr1=explode(":",$nexttime);
             $first=DB::table('openrecords')->orderBy('time','desc')->first();
             $arr2=explode(":",$first->time);
-            if (($arr2[0]*60+$arr2[1]+10)>($arr1[0]*60+$arr1[1])) {
+            if (($arr2[0]*60+$arr2[1]+12)>($arr1[0]*60+$arr1[1])) {
                 $nextinfo->period=nextExpect($first->period);
                 $nextinfo->time=nextTime($first->time);
                 $nextinfo->save();
@@ -224,6 +255,8 @@ class IndexController extends Controller
     
     //下注处理
     public function buyFun(){
+        //用户积分减少
+        //存储下注记录
         if($username=Session::get('username')){
             date_default_timezone_set('PRC');
             $now=date("Y-m-d H:i:s");
@@ -231,6 +264,7 @@ class IndexController extends Controller
             $expect=Request::input("expect");
             $username=Session::get('username');
             $res=explode(",",$getId);
+            $points=0;
             for ($i=1; $i <count($res); $i++) { 
                 $idArr=explode(":",$res[$i]);
                 $id=$idArr[0];
@@ -238,11 +272,22 @@ class IndexController extends Controller
                 $bet->username=$username;
                 $bet->content=$id;
                 $bet->period=$expect;
-                $bet->number=Request::input($res[$i]);
-                $bet->save();
-        }
+                $point=Request::input($res[$i]);
+                $points=$points+$point;
+                $bet->number=$point;
+                if ($bet->save()) {
+                    $users=DB::table('users')->where('username','=',$username)->get();
+                    $userId=$users[0]->id;
+                    $user=User::find($userId);
+                    $user->point=$user->point-$points;
+                    $user->save();
+                }
+                
 
-        return redirect('/buy');
+            }
+            
+
+            return redirect('/buy');
 
         }else{
             return redirect('/');
@@ -258,11 +303,16 @@ class IndexController extends Controller
             $samll=DB::table('categories')->where('cName','=','小')->orderBy('cId','Asc')->get();
             $single=DB::table('categories')->where('cName','=','单')->orderBy('cId','Asc')->get();
             $double=DB::table('categories')->where('cName','=','双')->orderBy('cId','Asc')->get();
+            $username=Session::get('username');
+            $users=DB::table('users')->where('username','=',$username)->get();
+            $userId=$users[0]->id;
+            $user=User::find($userId);
             $data=[
                 'bigs'=>$big,
                 'smalls'=>$samll,
                 'singles'=>$single,
                 'doubles'=>$double,
+                'point'=>$user->point,
             ];
             return view('home.buy',$data);
         }else{

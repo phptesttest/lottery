@@ -13,7 +13,7 @@
                 <h3 class="panel-title">普通管理员充值</h3>
             </div>
             <div class="panel-body">
-            <form action="{{ asset('/admin/pay')}}" method="POST">
+            <form action="{{ asset('/admin/adminpayFun')}}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class='table-responsive'>
                 <table class="table">

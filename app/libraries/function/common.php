@@ -185,6 +185,15 @@ if (!function_exists('desTime')) {
 	}
 }
 
+//判断管理员是否登录
+if (!function_exists('isAdminLogin')) {
+	function isAdminLogin(){
+		if(!$adname=Session::get('adname')){
+			return redirect('/admin');
+		}
+	}
+}
+
 //比较两个日期是否为同一天
 if (!function_exists('isSameDay')) {
 	function isSameDay($date1,$date2){

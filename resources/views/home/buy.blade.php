@@ -156,14 +156,19 @@ $(function(){
 		var alls=$(".rate");
 		var str="";
 		var res="您的下注结果是：";
+		var allPoints=0;
 		for (var i = alls.length - 1; i >= 0; i--) {
 			if (alls[i].value!="") {
 				var arr=alls[i].name.split(':');
 				str=str+","+alls[i].name;
 				res=res+"\n"+"第"+arr[1]+",金额为："+alls[i].value;
+				allPoints+=alls[i].value;
 			}
 		}
-		if (str!="") {
+		if (({{ $point}})<allPoints) {
+			alert('你的余额不足');
+		}
+		else if (str!="") {
 			$("#getId").val(str);
 			//alert(res);
 			res=res+"\n"+"确定提交？";
