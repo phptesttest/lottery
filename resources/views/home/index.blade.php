@@ -39,14 +39,14 @@
       </div>
 </div>
 
-<div class="container">
     <div class="col-xs-12 col-sm-9">
         <div class="panel">
             <div class="panel-heading">
                 <h3 class="panel-title">彩票结果信息</h3>
             </div>
             <div class="panel-body">
-                <table class="table  result">
+            <div class='table-responsive'>
+                <table class="table table-condensed result">
                     <tr>
 							<th>期次</th>
 							<th>开奖时间</th>
@@ -94,10 +94,11 @@
 					    @endif
 		
                 </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
 @endsection
 
 @section('script')

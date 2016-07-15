@@ -13,6 +13,7 @@
                 <h3 class="panel-title">用户下注记录</h3>
             </div>
             <div class="panel-body">
+                <div class='table-responsive'>
                 <table class="table">
                     <tr>
                         <th>用户名</th>
@@ -65,11 +66,9 @@
                         <td><a href='/admin/betrecord/{{ $bet->id}}'><button class="btn btn-danger">删除</button></a></td>
                     </tr>
             @endforeach
-        @endif  
-                    
-                    
-                   
+        @endif           
                 </table>
+                </div>
             </div>
         </div>
     </div>

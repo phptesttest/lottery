@@ -12,6 +12,14 @@
 	input{
 		width:40px;
 	}
+	.panel-title{
+		font-size:20px;
+		font-weight:bold;
+		padding-bottom:10px;
+	}
+	.btn{
+		width:auto;
+	}
 @endsection
 @section('content')
 
@@ -19,7 +27,8 @@
     <div class="col-xs-12 col-sm-12">
         <div class="panel">
             <div class="panel-heading">
-                <h3 class="panel-title">彩票结果信息</h3>
+                <h1 class="panel-title">彩票结果信息</h1>
+                <div class='table-responsive'>
                 <table>
                 	<tr>
 						<td class="period"><span id="nextExpect"></span></td>
@@ -27,14 +36,15 @@
 						<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
 						<span id="showDes"></span>
 						</td>
-
 					</tr> 
                 </table>
+                </div>
             </div>
             <div class="panel-body">
             <form id="form" action="{{ asset('/buy')}}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input id="expect" type="hidden" name="expect" value="">
+               <div class='table-responsive'>
                 <table class="table">
                     <tr>
 							<td colspan="3">第一球</td>
@@ -118,10 +128,11 @@
 					    @endif
 
                 </table>
+                </div>
                 <input value=""  id="getId" type="hidden" name="getId">
-                <input type="button" value="返回" class="btn" id="return">
-                <input type="button" value="重置" class="btn" id="reset">
-                <input type="button" value="提交" class="btn" id="sub">
+                <input type="button" value="返回" class="btn btn-info" id="return">
+                <input type="button" value="重置" class="btn btn-info" id="reset">
+                <input type="button" value="提交" class="btn btn-info" id="sub">
                </form> 
             </div>
         </div>

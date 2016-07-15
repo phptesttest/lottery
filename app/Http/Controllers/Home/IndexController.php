@@ -15,6 +15,15 @@ use Illuminate\Support\Facades\Session;
 
 class IndexController extends Controller
 {
+
+    public function rules(){
+        return view('home.rules');
+    }
+
+    public function withdraw(){
+        return view('home.withdraw');
+    }
+    
    //显示登录页面
     public function login(){
     	return view('home.login');

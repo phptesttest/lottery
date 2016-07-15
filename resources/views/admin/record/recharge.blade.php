@@ -13,6 +13,7 @@
                 <h3 class="panel-title">充值记录</h3>
             </div>
             <div class="panel-body">
+                <div class='table-responsive'>
                 <table class="table">
                     <tr>
                         <th>充值用户</th>
@@ -37,6 +38,7 @@
                     @endforeach
                 @endif
                 </table>
+                </div>
             </div>
         </div>
     </div>

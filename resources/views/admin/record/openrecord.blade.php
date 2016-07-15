@@ -18,6 +18,7 @@
                   <p>还没有开奖信息</p>  
 
             @else
+            <div class='table-responsive'>
             <table class="table">
                     <tr>
                         <th>期号</th>
@@ -46,10 +47,9 @@
                 </tr>
                 @endforeach
                 </table>
-
+                </div>
                 @endif
                 <div class="page"><?php echo $opens->render(); ?></div>
-                
             </div>
         </div>
     </div>

@@ -16,13 +16,19 @@
             <div class="panel-body">
             <form action="{{ asset('/admin/search')}}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class='table-responsive'>
                 <table class="table">
                     <tr>
-                        <td>请输入你要查询的账号</td>
-                        <td><input type='text' name="account"></td>
-                        <td><input type="submit" value="查询"></td>
-                    </tr>   
+                        <td class="col-md-4 control-label">请输入你要查询的账号</td>
+                    </tr>  
+                    <tr>
+                    <td class="col-md-6"><input type='text'  class="form-control" name="account"></td>
+                    </tr> 
+                    <tr>
+                        <td><input type="submit" class='btn btn-info' value="查询"></td>
+                    </tr>
                 </table>
+                </div>
                 </form>
             </div>
         </div>
@@ -44,6 +50,7 @@
                       <p>该账号不存在！</p>  
 
                     @else
+                        <div class='table-responsive'>
                         <table class="table">
 
                             <tr>
@@ -60,6 +67,7 @@
                             </tr>
 
                         </table>
+                        </div>
                     @endif
                     
                 </div>
