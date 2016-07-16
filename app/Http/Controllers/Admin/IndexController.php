@@ -217,6 +217,9 @@ class IndexController extends Controller
         $ball=Request::input('ball');
         $type=Request::input('type');
         $rate=Request::input('rate');
+        if ($rate=="") {
+            return view('admin.times')->with('errors','赔率不能为空');
+        }
         $cate=DB::table('categories')->where('cName','=',$type)->where('cId','=',$ball)->get();
         if(count($cate)!=0) {
             $cId=$cate[0]->id;
@@ -231,7 +234,7 @@ class IndexController extends Controller
             $cate->cId=$ball;
             $cate->save();
         }
-        return view('admin.times');
+        return view('admin.times')->with('errors','设置成功');
     }
 
 
@@ -244,6 +247,9 @@ class IndexController extends Controller
         $account=Request::input('account');
         $point=Request::input('point');
         $admins=DB::table('admins')->where('aName','=',$account)->get();
+        if (count($admins)==0) {
+            return view('admin.adminpay')->with('errors','该管理员账号不存在');
+        }
         $id=$admins[0]->id;
         $adminId=Session::get('adminid');
         $user=admin::find($id);
@@ -264,7 +270,7 @@ class IndexController extends Controller
         $recharge->adminId=$adminId;
         $recharge->save();
         
-        return view('admin.adminpay');
+        return view('admin.adminpay')->with('errors','充值成功');;
     }
 
 

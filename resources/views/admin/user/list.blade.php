@@ -96,20 +96,13 @@
         var point=$("#point").val();
         var s = /^[0-9]*$/;
         if(s.test(point)){
-            if (point==0) {
-                alert("积分不能为零，请输入初始积分");
-                return false;
-            }
-            else{
-                alert("账号生成成功");
-                return true;
-
-            }
+            alert("账号生成成功");
+            return true;       
         }
         else{
             alert("请输入数字");
             return false;
         }
    } 
-</script>>
+</script>
 @endsection

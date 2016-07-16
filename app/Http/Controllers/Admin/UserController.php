@@ -129,7 +129,7 @@ class UserController extends Controller
         $recharge->adminId=$adminId;
         $recharge->save();
     	
-    	return view('admin.user.pay');
+    	return view('admin.user.pay')->with('errors','充值成功');
     }
 
     public function userlist($id=null){
