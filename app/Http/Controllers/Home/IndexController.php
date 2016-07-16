@@ -117,6 +117,8 @@ class IndexController extends Controller
     public function index(){
 
         if($username=Session::get('username')){
+
+        
         //获取开奖信息，加工整理后存入数据库
         // 获取数据库开奖条数
         $openRecords=openRecord::all();
@@ -157,6 +159,37 @@ class IndexController extends Controller
            
         }          
         //从下注记录表中读出未结算记录，进行结算
+        //结算
+        $bets = DB::table('bets as b')
+        ->leftJoin('categories as c','b.content','=','c.id')
+        ->select('b.id as bId','b.*','c.*')
+        ->orderBy('b.created_at','desc')
+        ->get();
+        foreach ($bets as $key => $bet) {
+            if ($bet->isaccount==0) {
+                $expect=$bet->period;
+                $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                if (count($open)!=0) {
+                    $openCode=$open[0]->number;
+                    $arrCode=explode(",",$openCode); 
+                    if(iswin($bet,$arrCode)==1){
+                        $addpoint=($bet->number)*($bet->rate);
+                        $users=DB::table('users')->where('username','=',$bet->username)->get();
+                        $userId=$users[0]->id;
+                        $user=User::find($userId);
+                        $oldPoint=$user->point;
+                        $user->point=$oldPoint+$addpoint;
+                        $user->save();
+                                                   
+                    } 
+                    $betId=$bet->bId;
+                    $be=bet::find($betId);
+                    $be->isaccount='1';
+                    $be->save();     
+                }
+            }
+                
+        }
         //从数据库查询数据，传给前台显示
         //如果没有网，怎么处理
         $dates=DB::table('openrecords')->orderBy('time','desc')->take('20')->get();
@@ -164,6 +197,17 @@ class IndexController extends Controller
         $point=$user[0]->point;
 
         //读出下一条开奖信息
+        $nexts=nextinfo::all();
+        if ($dbNub!=$newNub&&count($nexts)==0) {
+            $nextinfos=new nextinfo;
+            date_default_timezone_set('PRC');
+            $date=date("Y-m-d"); //2016-07-09
+            $expect=$date."001";
+            $nextinfos->period=$expect;
+            $nextinfos->time="00:05";
+            $nextinfos->save();
+
+        }
         $nexts=nextinfo::all();
         if (count($nexts)==0) {
            //计算出下一期开奖时间
@@ -180,12 +224,15 @@ class IndexController extends Controller
             $nexttime=$nextinfo->time;
             $arr1=explode(":",$nexttime);
             $first=DB::table('openrecords')->orderBy('time','desc')->first();
-            $arr2=explode(":",$first->time);
-            if (($arr2[0]*60+$arr2[1]+12)>($arr1[0]*60+$arr1[1])) {
-                $nextinfo->period=nextExpect($first->period);
-                $nextinfo->time=nextTime($first->time);
-                $nextinfo->save();
+            if (count($first)!=0) {
+                $arr2=explode(":",$first->time);
+                if (($arr2[0]*60+$arr2[1]+10)>($arr1[0]*60+$arr1[1])) {
+                    $nextinfo->period=nextExpect($first->period);
+                    $nextinfo->time=nextTime($first->time);
+                    $nextinfo->save();
+                }
             }
+            
         }
   
         $data=[
@@ -215,17 +262,97 @@ class IndexController extends Controller
         $nextexpect=$nextinfo[0]->period;
         //倒计时时间
         date_default_timezone_set('PRC');
-        $date=date("Y-m-d"); //2010-08-29
+        $date=date("Y-m-d"); //2016-07-09
         $desTime=$date." ".$nexttime.":00";
         $now=time();
         $desStamp=strtotime($desTime);
         $leftStamp=$desStamp-$now;
         if ($leftStamp==0) {
-            echo "1";
+            if ($nexttime=='00:00') {
+                //结算
+                $bets = DB::table('bets as b')
+                ->leftJoin('categories as c','b.content','=','c.id')
+                ->select('b.id as bId','b.*','c.*')
+                ->orderBy('b.created_at','desc')
+                ->get();
+                foreach ($bets as $key => $bet) {
+                    if ($bet->isaccount==0) {
+                        $expect=$bet->period;
+                        $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                        if (count($open)!=0) {
+                            $openCode=$open[0]->number;
+                            $arrCode=explode(",",$openCode); 
+                            if(iswin($bet,$arrCode)==1){
+                                $addpoint=($bet->number)*($bet->rate);
+                                $users=DB::table('users')->where('username','=',$bet->username)->get();
+                                $userId=$users[0]->id;
+                                $user=User::find($userId);
+                                $oldPoint=$user->point;
+                                $user->point=$oldPoint+$addpoint;
+                                $user->save();
+                                                           
+                            } 
+                            $betId=$bet->bId;
+                            $be=bet::find($betId);
+                            $be->isaccount='1';
+                            $be->save();     
+                        }
+                    }
+                        
+                }
+                //删除前一天开奖记录
+                $openRecords=openRecord::all();
+                if (count($openRecords)!=0) {
+                    foreach ($openRecords as $key => $value) {
+                        $value->delete();
+                    }
+                }
+                //更新下一期开奖信息
+                $nextinfos=nextinfo::all();
+                date_default_timezone_set('PRC');
+                $date=date("Y-m-d"); //2016-07-09
+                $expect=$date."001";
+                $nextinfos[0]->period=$expect;
+                $nextinfos->time="00:05";
+                $nextinfos->save();
+
+
+
+            }
             $nextinfo[0]->period=nextExpect($nextinfo[0]->period);
             $nextinfo[0]->time=nextTime($nextinfo[0]->time);
             $nextinfo[0]->save();
-            echo "2";
+            //结算
+            $bets = DB::table('bets as b')
+            ->leftJoin('categories as c','b.content','=','c.id')
+            ->select('b.id as bId','b.*','c.*')
+            ->orderBy('b.created_at','desc')
+            ->get();
+            foreach ($bets as $key => $bet) {
+                if ($bet->isaccount==0) {
+                    $expect=$bet->period;
+                    $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                    if (count($open)!=0) {
+                        $openCode=$open[0]->number;
+                        $arrCode=explode(",",$openCode); 
+                        if(iswin($bet,$arrCode)==1){
+                            $addpoint=($bet->number)*($bet->rate);
+                            $users=DB::table('users')->where('username','=',$bet->username)->get();
+                            $userId=$users[0]->id;
+                            $user=User::find($userId);
+                            $oldPoint=$user->point;
+                            $user->point=$oldPoint+$addpoint;
+                            $user->save();
+                                                       
+                        } 
+                        $betId=$bet->bId;
+                        $be=bet::find($betId);
+                        $be->isaccount='1';
+                        $be->save();     
+                    }
+                }
+                    
+            }
         }
 
         $mm=floor($leftStamp/60);

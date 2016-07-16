@@ -36,6 +36,37 @@ class UserController extends Controller
     }
 
     public function search(){
+        //结算
+        $bets = DB::table('bets as b')
+        ->leftJoin('categories as c','b.content','=','c.id')
+        ->select('b.id as bId','b.*','c.*')
+        ->orderBy('b.created_at','desc')
+        ->get();
+        foreach ($bets as $key => $bet) {
+            if ($bet->isaccount==0) {
+                $expect=$bet->period;
+                $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                if (count($open)!=0) {
+                    $openCode=$open[0]->number;
+                    $arrCode=explode(",",$openCode); 
+                    if(iswin($bet,$arrCode)==1){
+                        $addpoint=($bet->number)*($bet->rate);
+                        $users=DB::table('users')->where('username','=',$bet->username)->get();
+                        $userId=$users[0]->id;
+                        $user=User::find($userId);
+                        $oldPoint=$user->point;
+                        $user->point=$oldPoint+$addpoint;
+                        $user->save();
+                                                   
+                    } 
+                    $betId=$bet->bId;
+                    $be=bet::find($betId);
+                    $be->isaccount='1';
+                    $be->save();     
+                }
+            }
+                
+        }
     	return view('admin.user.search');
     }
 
@@ -44,6 +75,9 @@ class UserController extends Controller
 
     	$account=Request::input('account');
     	$users=DB::table('users')->where('username','=',$account)->get();
+        if (count($users)==0) {
+            return view('admin.user.search')->with('errors','该用户不存在');
+        }
     	if (count($users)!=0) {
     		$id=$users[0]->id;
     		$user=user::find($id);
@@ -71,6 +105,9 @@ class UserController extends Controller
     	$account=Request::input('account');
     	$point=Request::input('point');
     	$users=DB::table('users')->where('username','=',$account)->get();
+        if (count($users)==0) {
+            return view('admin.user.pay')->with('errors','该用户不存在');
+        }
     	$id=$users[0]->id;
         $adminId=Session::get('adminid');
     	$user=user::find($id);
@@ -96,6 +133,37 @@ class UserController extends Controller
     }
 
     public function userlist($id=null){
+        //结算
+        $bets = DB::table('bets as b')
+        ->leftJoin('categories as c','b.content','=','c.id')
+        ->select('b.id as bId','b.*','c.*')
+        ->orderBy('b.created_at','desc')
+        ->get();
+        foreach ($bets as $key => $bet) {
+            if ($bet->isaccount==0) {
+                $expect=$bet->period;
+                $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                if (count($open)!=0) {
+                    $openCode=$open[0]->number;
+                    $arrCode=explode(",",$openCode); 
+                    if(iswin($bet,$arrCode)==1){
+                        $addpoint=($bet->number)*($bet->rate);
+                        $users=DB::table('users')->where('username','=',$bet->username)->get();
+                        $userId=$users[0]->id;
+                        $user=User::find($userId);
+                        $oldPoint=$user->point;
+                        $user->point=$oldPoint+$addpoint;
+                        $user->save();
+                                                   
+                    } 
+                    $betId=$bet->bId;
+                    $be=bet::find($betId);
+                    $be->isaccount='1';
+                    $be->save();     
+                }
+            }
+                
+        }
 
     	//$users=user::all()->orderBy('c.created_at','desc');
         if ($id!=null) {

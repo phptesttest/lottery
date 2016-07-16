@@ -14,15 +14,22 @@
                 <h3 class="panel-title">用户信息查询</h3>
             </div>
             <div class="panel-body">
-            <form action="{{ asset('/admin/search')}}" method="POST">
+            <form action="{{ asset('/admin/search')}}" method="POST" onsubmit = "return checkUser();">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class='table-responsive'>
                 <table class="table">
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            <ul>                            
+                                <li>{{ $errors }}</li>
+                            </ul>
+                        </div>
+                    @endif
                     <tr>
                         <td class="col-md-4 control-label">请输入你要查询的账号</td>
                     </tr>  
                     <tr>
-                    <td class="col-md-6"><input type='text'  class="form-control" name="account"></td>
+                    <td class="col-md-6"><input id="account" type='text'  class="form-control" name="account"></td>
                     </tr> 
                     <tr>
                         <td><input type="submit" class='btn btn-info' value="查询"></td>
@@ -79,4 +86,18 @@
                  
     ?>
 </div>
+<script type="text/javascript">
+    function checkUser(){
+        var account=$("#account").val();
+  
+        if (account=="") {
+            alert("请输入你要查询的账号");
+            return false;
+        }
+        else{
+            return true;
+        }
+            
+   }
+</script>
 @endsection

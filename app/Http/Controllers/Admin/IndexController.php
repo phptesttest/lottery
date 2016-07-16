@@ -146,6 +146,37 @@ class IndexController extends Controller
     }
 
     public function account($id=null){  //结算管理，显示
+        //结算
+        $bets = DB::table('bets as b')
+        ->leftJoin('categories as c','b.content','=','c.id')
+        ->select('b.id as bId','b.*','c.*')
+        ->orderBy('b.created_at','desc')
+        ->get();
+        foreach ($bets as $key => $bet) {
+            if ($bet->isaccount==0) {
+                $expect=$bet->period;
+                $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                if (count($open)!=0) {
+                    $openCode=$open[0]->number;
+                    $arrCode=explode(",",$openCode); 
+                    if(iswin($bet,$arrCode)==1){
+                        $addpoint=($bet->number)*($bet->rate);
+                        $users=DB::table('users')->where('username','=',$bet->username)->get();
+                        $userId=$users[0]->id;
+                        $user=User::find($userId);
+                        $oldPoint=$user->point;
+                        $user->point=$oldPoint+$addpoint;
+                        $user->save();
+                                                   
+                    } 
+                    $betId=$bet->bId;
+                    $be=bet::find($betId);
+                    $be->isaccount='1';
+                    $be->save();     
+                }
+            }
+                
+        }
         if(Session::get('adname')){
             if($id != null){
             $user=User::find($id);  //结算管理中，请求提现

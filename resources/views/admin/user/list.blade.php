@@ -26,7 +26,7 @@
                     <h3 class="panel-title">账号生成</h3>
                 </div>
                 <div class="panel-body">
-                <form action="{{ asset('/admin/userlist')}}" method="POST">
+                <form id="form1" action="{{ asset('/admin/userlist')}}" method="POST" onsubmit = "return checkUser();">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class='table-responsive'>
                     <table class="table">
@@ -41,8 +41,8 @@
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                             </select></td>
-                            <td><input class="enterPoint" type='text' name='point'></td>
-                            <td><input type="submit" value="确定生成" class="btn btn-info"></td>
+                            <td><input id="point" class="enterPoint" type='text' name='point'></td>
+                            <td><input type="submit" id="submit" value="确定生成" class="btn btn-info"></td>
                         </tr>
                     </table>
                     </div>
@@ -91,4 +91,25 @@
     </div>
 
 </div>
+<script type="text/javascript">
+   function checkUser(){
+        var point=$("#point").val();
+        var s = /^[0-9]*$/;
+        if(s.test(point)){
+            if (point==0) {
+                alert("积分不能为零，请输入初始积分");
+                return false;
+            }
+            else{
+                alert("账号生成成功");
+                return true;
+
+            }
+        }
+        else{
+            alert("请输入数字");
+            return false;
+        }
+   } 
+</script>>
 @endsection
