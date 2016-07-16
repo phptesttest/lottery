@@ -40,7 +40,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" >欢迎来到！</a>
+            <a class="navbar-brand" href='/index'>欢迎来到首页</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -48,7 +48,6 @@
                 <li><a href="/index">彩票结果</a></li>
                 <li><a href="/buy">彩票下注</a></li>
                 <li><a href="/rules">游戏规则</a></li>
-                <li><a href="/withdraw">提现</a></li>
                 <li><a href="/logout">退出</a></li>
             </ul>
         </div>

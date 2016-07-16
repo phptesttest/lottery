@@ -17,7 +17,7 @@ use App\category;
 use Redirect;
 use DB;
 use Session;
-
+use App\rule;
 class IndexController extends Controller
 {
 
@@ -307,6 +307,31 @@ class IndexController extends Controller
         return Redirect('/admin/adminlist');
     }
 
+    public function rules(){
+        $admins=DB::table('rules')->orderBy('created_at','desc')->get();
+        return view('admin.rules')->with('rules',$admins);
+    }
 
+    public function setrules(){
+        $content=Request::input('content');
+        $rules = new rule();
+        $rules->content=$content;
+        $rules->save();
+        return Redirect('/admin/rules');
+    }
+
+    public function deleterules($id=null){
+        if($id != null){
+            $rules = rule::find($id);
+            if(!is_null($rules)){
+                $rules->delete();
+            }
+
+            return Redirect('/admin/rules');
+        }else{
+            return '该规则不存在';
+        }
+
+    }
 
 }

@@ -12,14 +12,17 @@ use Redirect;
 use DB;
 use Input;
 use Illuminate\Support\Facades\Session;
+use App\rule;
 
 class IndexController extends Controller
 {
-
-    public function rules(){
-        return view('home.rules');
+     public function rules(){
+        $rule=DB::table('rules')->orderBy('created_at','desc')->first();
+     
+        return view('home.rules')->with('rule',$rule);
     }
 
+   
     public function withdraw(){
         return view('home.withdraw');
     }
@@ -377,8 +380,8 @@ class IndexController extends Controller
         $jsonencode = json_encode($str);
         echo $jsonencode;
         //echo $res;
-
-    }
+}
+        
     
     //下注处理
     public function buyFun(){
