@@ -13,9 +13,16 @@
                 <h3 class="panel-title">赔率设定</h3>
             </div>
             <div class="panel-body">
-            <form action="{{ asset('/admin/times')}}" method="POST">
+            <form id="form2" action="{{ asset('/admin/times')}}" method="POST" onsubmit = "return checkUser();">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                  <table class="table">
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            <ul>                            
+                                <li>{{ $errors }}</li>
+                            </ul>
+                        </div>
+                    @endif
                         <tr>
                             <th>第几球</th>
                             <td><select name='ball'>
@@ -39,7 +46,7 @@
                         </tr>
                         <tr>
                             <th>赔率</th>
-                            <td><input  type='text' class='form-control' name="rate"></td>
+                            <td><input id="point" type='text' class='form-control' name="rate"></td>
                         </tr>
                         <tr>
                              <th>操作</th>
@@ -52,4 +59,17 @@
     </div>
     
 </div>
+<script type="text/javascript">
+   function checkUser(){
+        var point=$("#point").val();
+        if (point>0&&point<100) {
+            return true;
+        }
+        else{
+            alert('请输入数字且大于零');
+            return false;
+        }
+        
+   } 
+</script>
 @endsection

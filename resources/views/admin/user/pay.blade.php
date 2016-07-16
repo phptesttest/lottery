@@ -58,7 +58,6 @@
                 return false;
             }
             else{
-                alert("充值成功");
                 return true;
 
             }

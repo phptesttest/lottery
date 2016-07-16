@@ -109,9 +109,7 @@ class IndexController extends Controller
         }else{
             return redirect()->back()->with('errors','该用户不存在');
         }
-        
-
-        
+              
     }
 
     public function index(){
@@ -245,17 +243,17 @@ class IndexController extends Controller
             return redirect('/');
         }
        
-       
-
     }
 
+    
     //异步处理倒计时
-    /* 倒计时到时，前台想后台异步请求
+    public function countdown(){
+        /* 倒计时到时，前台想后台异步请求
         前端异步向后台传去当前期数及开奖时间，后台计算好下一期开奖期数及开奖时间
         获取开奖信息，加工整理后存入数据库
         从下注记录表中读出未结算记录，进行结算
         从数据库查询数据，传给前台显示*/
-    public function countdown(){
+        
          //获取下一期开奖信息
         $nextinfo=nextinfo::all();
         $nexttime=$nextinfo[0]->time;
@@ -263,13 +261,22 @@ class IndexController extends Controller
         //倒计时时间
         date_default_timezone_set('PRC');
         $date=date("Y-m-d"); //2016-07-09
+        $arr=explode(":",$nexttime);
         $desTime=$date." ".$nexttime.":00";
         $now=time();
         $desStamp=strtotime($desTime);
+        $detail=date("Y-m-d H:i:s");
+        $bug=explode(" ",$detail);
+        $bug2=explode(":",$bug[1]);
+        if (($arr[0]*60+$arr[1]==0)&&($bug2[1]>55)) {
+            $desStamp=$desStamp+24*60*60;
+        }
         $leftStamp=$desStamp-$now;
+
         if ($leftStamp==0) {
-            if ($nexttime=='00:00') {
+            if ($arr[0]==0&&$arr[1]==0) {
                 //结算
+                echo "00";
                 $bets = DB::table('bets as b')
                 ->leftJoin('categories as c','b.content','=','c.id')
                 ->select('b.id as bId','b.*','c.*')
@@ -308,50 +315,21 @@ class IndexController extends Controller
                     }
                 }
                 //更新下一期开奖信息
-                $nextinfos=nextinfo::all();
                 date_default_timezone_set('PRC');
                 $date=date("Y-m-d"); //2016-07-09
-                $expect=$date."001";
+                $arr3=explode("-",$date);
+                $dstr=$arr3[0].$arr3[1].$arr3[2];
+                $expect=$dstr."001";
+                $nextinfos=nextinfo::all();
                 $nextinfos[0]->period=$expect;
-                $nextinfos->time="00:05";
-                $nextinfos->save();
+                $nextinfos[0]->time="00:05";
+                $nextinfos[0]->save();
 
-
-
-            }
-            $nextinfo[0]->period=nextExpect($nextinfo[0]->period);
-            $nextinfo[0]->time=nextTime($nextinfo[0]->time);
-            $nextinfo[0]->save();
-            //结算
-            $bets = DB::table('bets as b')
-            ->leftJoin('categories as c','b.content','=','c.id')
-            ->select('b.id as bId','b.*','c.*')
-            ->orderBy('b.created_at','desc')
-            ->get();
-            foreach ($bets as $key => $bet) {
-                if ($bet->isaccount==0) {
-                    $expect=$bet->period;
-                    $open=DB::table('openrecords')->where('period','=',$expect)->get();
-                    if (count($open)!=0) {
-                        $openCode=$open[0]->number;
-                        $arrCode=explode(",",$openCode); 
-                        if(iswin($bet,$arrCode)==1){
-                            $addpoint=($bet->number)*($bet->rate);
-                            $users=DB::table('users')->where('username','=',$bet->username)->get();
-                            $userId=$users[0]->id;
-                            $user=User::find($userId);
-                            $oldPoint=$user->point;
-                            $user->point=$oldPoint+$addpoint;
-                            $user->save();
-                                                       
-                        } 
-                        $betId=$bet->bId;
-                        $be=bet::find($betId);
-                        $be->isaccount='1';
-                        $be->save();     
-                    }
-                }
-                    
+            }else{
+                $nextinfos=nextinfo::all();
+                $nextinfo[0]->period=nextExpect($nextinfo[0]->period);
+                $nextinfo[0]->time=nextTime($nextinfo[0]->time);
+                $nextinfo[0]->save();
             }
         }
 
@@ -377,7 +355,6 @@ class IndexController extends Controller
         $jsonencode = json_encode($str);
         echo $jsonencode;
         //echo $res;
-
     }
     
     //下注处理

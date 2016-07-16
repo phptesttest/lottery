@@ -26,7 +26,7 @@
                     <h3 class="panel-title">管理员账号和密码生成</h3>
                 </div>
                 <div class="panel-body">
-                <form action="{{ asset('/admin/adminlist')}}" method="POST">
+                <form action="{{ asset('/admin/adminlist')}}" method="POST" onsubmit = "return checkUser();">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class='table-responsive'>
                     <table class="table">
@@ -36,7 +36,7 @@
                             <th></th>
                         </tr>
                         <tr>
-                            <td><input class="enterPoint" type='text' name='wPool'></td>
+                            <td><input id="point" class="enterPoint" type='text' name='wPool'></td>
                             <td></td>
                             <td><input type="submit" value="确定生成" class="btn btn-info"></td>
                         </tr>
@@ -85,4 +85,20 @@
     </div>
 
 </div>
+<script type="text/javascript">
+   function checkUser(){
+        var point=$("#point").val();
+        var s = /^[0-9]*$/;
+        if(s.test(point)){
+ 
+            alert("账号生成成功");
+            return true;
+
+        }
+        else{
+            alert("请输入数字");
+            return false;
+        }
+   } 
+</script>
 @endsection

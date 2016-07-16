@@ -49,6 +49,7 @@
                 <li><a href="/buy">彩票下注</a></li>
                 <li><a href="/rules">游戏规则</a></li>
                 <li><a href="/withdraw">提现</a></li>
+                <li><a href="javascript:void(0)" id="reload">刷新</a></li>
                 <li><a href="/logout">退出</a></li>
             </ul>
         </div>
@@ -57,7 +58,12 @@
 @yield('content')
 
 @yield('script')
-
+<script type="text/javascript">
+    $("#reload").click(function(){
+        window.location.reload(); 
+    });
+    
+</script>
 </body>
 </html>
 

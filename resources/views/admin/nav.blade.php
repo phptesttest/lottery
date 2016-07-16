@@ -74,13 +74,19 @@
                 </li>
                 <li><a href="/admin/account">结算管理</a></li>
                 <li><a href="/admin/times">赔率设置</a></li>
+                <li><a href="javascript:void(0)" id="reload">刷新</a></li>
                 <li><a href="/admin/logout">退出</a></li>
             </ul>
         </div>
     </div>
 </nav>
     @yield('content')
-
+<script type="text/javascript">
+    $("#reload").click(function(){
+        window.location.reload(); 
+    });
+    
+</script>
 </body>
 </html>
 
