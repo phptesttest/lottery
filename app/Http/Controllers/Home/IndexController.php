@@ -358,54 +358,54 @@ class IndexController extends Controller
         $jsonencode = json_encode($str);
         echo $jsonencode;
         //echo $res;
-<<<<<<< HEAD
-}
+
+
         
-=======
+
     }
->>>>>>> 7dffa95ebc0dced8e380dbf5e89f706aadd3b624
+
     
     //下注处理
     public function buyFun(){
         //用户积分减少
         //存储下注记录
-        if($username=Session::get('username')){
-            date_default_timezone_set('PRC');
-            $now=date("Y-m-d H:i:s");
-            $getId=Request::input('getId');
-            $expect=Request::input("expect");
-            $username=Session::get('username');
-            $res=explode(",",$getId);
-            $points=0;
-            for ($i=1; $i <count($res); $i++) { 
-                $idArr=explode(":",$res[$i]);
-                $id=$idArr[0];
-                $bet=new bet;
-                $bet->username=$username;
-                $bet->content=$id;
-                $bet->period=$expect;
-                $point=Request::input($res[$i]);
-                $points=$points+$point;
-                $bet->number=$point;
-                if ($bet->save()) {
-                    $users=DB::table('users')->where('username','=',$username)->get();
-                    $userId=$users[0]->id;
-                    $user=User::find($userId);
-                    $user->point=$user->point-$points;
-                    $user->save();
+            if($username=Session::get('username')){
+                date_default_timezone_set('PRC');
+                $now=date("Y-m-d H:i:s");
+                $getId=Request::input('getId');
+                $expect=Request::input("expect");
+                $username=Session::get('username');
+                $res=explode(",",$getId);
+                $points=0;
+                for ($i=1; $i <count($res); $i++) { 
+                    $idArr=explode(":",$res[$i]);
+                    $id=$idArr[0];
+                    $bet=new bet;
+                    $bet->username=$username;
+                    $bet->content=$id;
+                    $bet->period=$expect;
+                    $point=Request::input($res[$i]);
+                    $points=$points+$point;
+                    $bet->number=$point;
+                    if ($bet->save()) {
+                        $users=DB::table('users')->where('username','=',$username)->get();
+                        $userId=$users[0]->id;
+                        $user=User::find($userId);
+                        $user->point=$user->point-$points;
+                        $user->save();
+                    }
+                    
+
                 }
                 
 
+                return redirect('/buy');
+
+            }else{
+                return redirect('/');
             }
             
-
-            return redirect('/buy');
-
-        }else{
-            return redirect('/');
         }
-        
-    }
 
     public function buy(){
 
