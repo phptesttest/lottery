@@ -79,7 +79,7 @@
                             <td>{{ $user->username}}</td>
                             <td>{{ $user->password}}</td>
                             <td>{{ $user->point}}</td>
-                            <td><a href='/admin/userlist/{{$user->id}}'><button class="btn btn-danger">删除</button></a></td>
+                            <td><a href="{{ asset('/admin/userlist')}}/{{$user->id}}"><button class="btn btn-danger">删除</button></a></td>
                         </tr>
                     @endforeach
                     </table>

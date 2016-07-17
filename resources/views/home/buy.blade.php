@@ -162,7 +162,7 @@ $(function(){
 				var arr=alls[i].name.split(':');
 				str=str+","+alls[i].name;
 				res=res+"\n"+"第"+arr[1]+",金额为："+alls[i].value;
-				allPoints+=alls[i].value;
+				allPoints=parseInt(allPoints)+parseInt(alls[i].value);
 			}
 		}
 		if (({{ $point}})<allPoints) {

@@ -9,6 +9,7 @@ use DB;
 use App\withdraw;
 use App\bet;
 use App\recharge;
+use App\openrecord;
 use Session;
 
 class RecordController extends Controller
@@ -74,11 +75,49 @@ class RecordController extends Controller
 
     //返回开奖记录的数据
     public function openrecord(){
+        //获取开奖信息，加工整理后存入数据库
+        // 获取数据库开奖条数
+        $openRecords=openrecord::all();
+        $dbNub=count($openRecords);
+        $nowaday=date("Y-m-d");
+        //获取网站开奖条数
+        $url='http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date='.$nowaday.'&format=json';
+        $file_contents = file_get_contents($url);
+        $res=json_decode($file_contents); 
+        $newNub=count($res->data);
+        $newres=$res->data;
+        // 如果条数一样，则不用更新，否则将新开奖记录存入数据库
+        if ($dbNub!=$newNub) {
+            //如何存储开奖记录：
+            //如果数据库为空时，一次存储每一天开奖记录，开奖时间从00:05开始，如果是两点前，后一期加五分钟，如果是十点前，每后一期加十分钟.读出开奖记录时间，如果开奖时间在前面计算出来的后五分钟或十分钟内，则存入，否则，该期开奖记录为空。
+            if ($dbNub==0) {
+                
+                for ($i=count($res->data)-1; $i>=0 ; $i--) { 
+                    $openrecord=new openrecord;
+                   //echo $newres[$i]->opencode;
+                    $openrecord->period=$newres[$i]->expect;
+                    $openrecord->number=$newres[$i]->opencode;
+                    $openrecord->time=outDelay(timeTurn($newres[$i]->opentime));
+                    $openrecord->save();
+                }
+            }
+            else{
+                $addNub=$newNub-$dbNub;
+                for ($i=$addNub-1; $i>=0 ; $i--) { 
+                    $openrecord=new openrecord;
+                   //echo $newres[$i]->opencode;
+                    $openrecord->period=$newres[$i]->expect;
+                    $openrecord->number=$newres[$i]->opencode;
+                    $openrecord->time=outDelay(timeTurn($newres[$i]->opentime));
+                    $openrecord->save();
+                }
+            }
+           
+        }      
 
         $opens=DB::table('openrecords')->orderBy('time','desc')->paginate(15);;
 
     	return view('admin.record.openrecord')->with('opens',$opens);
     }
-
 
 }
