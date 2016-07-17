@@ -48,11 +48,7 @@
                 <li><a href="/index">彩票结果</a></li>
                 <li><a href="/buy">彩票下注</a></li>
                 <li><a href="/rules">游戏规则</a></li>
-<<<<<<< HEAD
-=======
-                <li><a href="/withdraw">提现</a></li>
                 <li><a href="javascript:void(0)" id="reload">刷新</a></li>
->>>>>>> 7dffa95ebc0dced8e380dbf5e89f706aadd3b624
                 <li><a href="/logout">退出</a></li>
             </ul>
         </div>

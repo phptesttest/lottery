@@ -74,11 +74,8 @@
                 </li>
                 <li><a href="/admin/account">结算管理</a></li>
                 <li><a href="/admin/times">赔率设置</a></li>
-<<<<<<< HEAD
                 <li><a href="/admin/rules">游戏规则设定</a></li>
-=======
                 <li><a href="javascript:void(0)" id="reload">刷新</a></li>
->>>>>>> 7dffa95ebc0dced8e380dbf5e89f706aadd3b624
                 <li><a href="/admin/logout">退出</a></li>
             </ul>
         </div>
