@@ -54,17 +54,17 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">用户管理<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="/admin/userlist">用户列表</a></li>
-                        <li><a href="/admin/pay">用户充值</a></li>
-                        <li><a href="/admin/search">用户查询</a></li>
+                        <li><a href="{{ asset('/admin/userlist')}}">用户列表</a></li>
+                        <li><a href="{{ asset('/admin/pay')}}">用户充值</a></li>
+                        <li><a href="{{ asset('/admin/search')}}">用户查询</a></li>
                     </ul>
                 </li>
                 @if(Session::has('big'))
                  <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">普通管理员管理<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="/admin/adminlist">普通管理员列表</a></li>
-                        <li><a href="/admin/adminpay">普通管理员充值</a></li>
+                        <li><a href="{{ asset('/admin/adminlist')}}">普通管理员列表</a></li>
+                        <li><a href="{{ asset('/admin/adminpay')}}">普通管理员充值</a></li>
                         
                     </ul>
                 </li>
@@ -72,17 +72,17 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">记录管理<span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="/admin/recharge">充值记录</a></li>
-                        <li><a href="/admin/betrecord">下注记录</a></li>
-                        <li><a href="/admin/openrecord">开奖记录</a></li>
-                        <li><a href="/admin/withdraw">提现记录</a></li>
+                        <li><a href="{{ asset('/admin/recharge')}}">充值记录</a></li>
+                        <li><a href="{{ asset('/admin/betrecord')}}">下注记录</a></li>
+                        <li><a href="{{ asset('/admin/openrecord')}}">开奖记录</a></li>
+                        <li><a href="{{ asset('/admin/withdraw')}}">提现记录</a></li>
                     </ul>
                 </li>
-                <li><a href="/admin/account">结算管理</a></li>
-                <li><a href="/admin/times">赔率设置</a></li>
-                <li><a href="/admin/rules">游戏规则设定</a></li>
+                <li><a href="{{ asset('/admin/account')}}">结算管理</a></li>
+                <li><a href="{{ asset('/admin/times')}}">赔率设置</a></li>
+                <li><a href="{{ asset('/admin/rules')}}">游戏规则设定</a></li>
                 <li><a href="javascript:void(0)" id="reload">刷新</a></li>
-                <li><a href="/admin/logout">退出</a></li>
+                <li><a href="{{ asset('/admin/logout')}}">退出</a></li>
             </ul>
         </div>
     </div>

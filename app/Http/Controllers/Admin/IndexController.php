@@ -7,8 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\AppServiceProvider;
 use Request;
 use App\admin;
-use App\recharge;
 use App\User;
+use App\recharge;
+use App\pool;
 use App\openrecord;
 use App\nextinfo;
 use App\bet;
@@ -75,50 +76,65 @@ class IndexController extends Controller
                     setcookie('remember',"");
                 }
                 //结算
-            $bets = DB::table('bets as b')
-            ->leftJoin('categories as c','b.content','=','c.id')
-            ->select('b.id as bId','b.*','c.*')
-            ->orderBy('b.created_at','desc')
-            ->get();
-            foreach ($bets as $key => $bet) {
-                if ($bet->isaccount==0) {
-                    $expect=$bet->period;
-                    $open=DB::table('openrecords')->where('period','=',$expect)->get();
-                    if (count($open)!=0) {
-                        $openCode=$open[0]->number;
-                        $arrCode=explode(",",$openCode); 
-                        if(iswin($bet,$arrCode)==1){
-                            $addpoint=($bet->number)*($bet->rate);
-                            $users=DB::table('users')->where('username','=',$bet->username)->get();
-                            $userId=$users[0]->id;
-                            $user=User::find($userId);
-                            $oldPoint=$user->point;
-                            $user->point=$oldPoint+$addpoint;
-                            $user->save();
-
-                        } 
-                        $betId=$bet->bId;
-                        $be=bet::find($betId);
-                        $be->isaccount='1';
-                        $be->save();  
+                $bets = DB::table('bets as b')
+                ->leftJoin('categories as c','b.content','=','c.id')
+                ->select('b.id as bId','b.*','c.*')
+                ->orderBy('b.created_at','desc')
+                ->get();
+                foreach ($bets as $key => $bet) {
+                    if ($bet->isaccount==0) {
+                        $expect=$bet->period;
+                        $open=DB::table('openrecords')->where('period','=',$expect)->get();
+                        if (count($open)!=0) {
+                            $openCode=$open[0]->number;
+                            $arrCode=explode(",",$openCode); 
+                            if(iswin($bet,$arrCode)==1){
+                                $addpoint=($bet->number)*($bet->rate);
+                                $users=DB::table('users')->where('username','=',$bet->username)->get();
+                                $userId=$users[0]->id;
+                                $user=User::find($userId);
+                                $oldPoint=$user->point;
+                                $user->point=$oldPoint+$addpoint;
+                                if ($user->save()) {
+                                    //更改彩池数据
+                                   $pools=pool::all();
+                                   if (count($pools)==0) {
+                                       $pool=new pool;
+                                       $pool->num=$addpoint;
+                                       $pool->save();
+                                   }
+                                   else{
+                                        $pools[0]->num=$pools[0]->num+$addpoint;
+                                        $pools[0]->save();
+                                   }
+                                }
+                                
+                                                           
+                            } 
+                            $betId=$bet->bId;
+                            $be=bet::find($betId);
+                            $be->isaccount='1';
+                            $be->save();  
+                        }
+                      
                     }
 
                 }
-            }
-
-            $openRecords=openRecord::all();
-            if (count($openRecords)!=0) {
-                    //更新开奖记录数据库
-                date_default_timezone_set('PRC');
-                $nowaday=date("Y-m-d");
-                $openRecords=openRecord::all();
+                $openRecords=openrecord::all();
                 if (count($openRecords)!=0) {
-                    if (isSameDay($nowaday,$openRecords[1]->created_at)==0) {
-                        foreach ($openRecords as $key => $value) {
-                            $value->delete();
+                    //更新开奖记录数据库
+                    date_default_timezone_set('PRC');
+                    $nowaday=date("Y-m-d");
+                    $openRecords=openrecord::all();
+                    if (count($openRecords)!=0) {
+                        if (isSameDay($nowaday,$openRecords[1]->created_at)==0) {
+                            foreach ($openRecords as $key => $value) {
+                                $value->delete();
+                            }
                         }
                     }
                 }
+
                 //更新下一期开奖信息数据库
                 $nextinfos=nextinfo::all();
                 if (count($nextinfos)!=0) {
@@ -130,15 +146,15 @@ class IndexController extends Controller
                 }
                 return redirect('/admin/index')->with('message','登录成功');
             }
-        }else{
+            else{
             return redirect()->back()->with('errors','密码错误');
-        }
+            }
         
-    }else{
+        }else{
         return redirect()->back()->with('errors','该用户不存在');
-    }
+        }
 
-}
+    }
 
 public function index($id=null){
     if($adname=Session::get('adname')){
@@ -185,30 +201,57 @@ public function index($id=null){
                         $user=User::find($userId);
                         $oldPoint=$user->point;
                         $user->point=$oldPoint+$addpoint;
-                        $user->save();
-
-                    } 
-                    $betId=$bet->bId;
-                    $be=bet::find($betId);
-                    $be->isaccount='1';
-                    $be->save();     
+                        if ($user->save()) {
+                            //更改彩池数据
+                           $pools=pool::all();
+                           if (count($pools)==0) {
+                               $pool=new pool;
+                               $pool->num=$addpoint;
+                               $pool->save();
+                           }
+                           else{
+                                $pools[0]->num=$pools[0]->num+$addpoint;
+                                $pools[0]->save();
+                           }
+                        }
+                        $betId=$bet->bId;
+                        $be=bet::find($betId);
+                        $be->isaccount='1';
+                        $be->save();     
+                    }
                 }
             }
-
         }
         if(Session::get('adname')){
             if($id != null){
-            $user=User::find($id);  //结算管理中，请求提现
-            if (!is_null($user)) { 
-                $withdraw=new \App\withdraw;
-                $withdraw->username=$user->username;
-                $withdraw->withdraw_num=$user->point;
-                $withdraw->adminname=Session::get('adname');
-                $withdraw->save();
-                $user->point=0;
-                $user->save();
+                $user=User::find($id);  //请求提现
+                if (!is_null($user)) { 
+                    $withdraw=new \App\withdraw;
+                    $point=$user->point;
+                    $withdraw->username=$user->username;
+                    $withdraw->withdraw_num=$point;
+                    $withdraw->adminname=Session::get('adname');
+                    $withdraw->save();
+                    $user->point=0;
+                    if ($user->save()) {
+                        //更改彩池数据
+                       $pools=pool::all();
+                       if (count($pools)==0) {
+                           $pool=new pool;
+                           $pool->num='-'.$point;
+                           $pool->save();
+                       }
+                       else{
+                            $pools[0]->num=$pools[0]->num-$point;
+                            $pools[0]->save();
+                       }
+                    }
+                    
+                }
+                $users = DB::table('users')->get();
+                $flag = Session::get('flag');
+                return redirect()->back()->with('users',$users)->with('flag',$flag)->with('errors','提现成功');
             }
-        }
 
         $users = DB::table('users')->get();
         $flag = Session::get('flag');

@@ -50,11 +50,12 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="/index">彩票结果</a></li>
-                <li><a href="/buy">彩票下注</a></li>
-                <li><a href="/rules">游戏规则</a></li>
+                <li><a href="{{ asset('/index')}}">彩票结果</a></li>
+                <li><a href="{{ asset('/buy')}}">彩票下注</a></li>
+                <li><a href="{{ asset('/rules')}}">游戏规则</a></li>
+                <li><a href="{{ asset('/withdraw')}}">提现</a></li>
                 <li><a href="javascript:void(0)" id="reload">刷新</a></li>
-                <li><a href="/logout">退出</a></li>
+                <li><a href="{{ asset('/logout')}}">退出</a></li>
             </ul>
         </div>
     </div>

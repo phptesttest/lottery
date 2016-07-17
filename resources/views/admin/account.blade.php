@@ -15,6 +15,13 @@
             <div class="panel-body">
                 <div class='table-responsive'>
                 <table class="table">
+                @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            <ul>                            
+                                <li>{{ $errors }}</li>
+                            </ul>
+                        </div>
+                    @endif
                     <tr>
                         <th>用户名</th>
                         <th>剩余积分</th>
@@ -28,9 +35,9 @@
                     @foreach($users as $user)
                         <?php if ($user->point!=0) {?>
                         <tr>
-                            <td>{{$user->username}}</td>
-                            <td>{{$user->point}}</td>
-                            <td><a href='/admin/account/{{$user->id}}'><button type="submit" class="btn btn-info">提现</button></a></td>
+                            <td>{{ $user->username}}</td>
+                            <td>{{ $user->point}}</td>
+                            <td><a href="{{ asset('/admin/account')}}/{{ $user->id}}"><button type="submit" class="btn btn-info">提现</button></a></td>
                         </tr>
                         <?php } ?>
                     @endforeach

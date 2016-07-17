@@ -3,10 +3,11 @@ namespace App\Http\Controllers\Home;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Request;
-use App\user;
+use App\User;
 use App\bet;
+use App\pool;
 use App\nextinfo;
-use App\openRecord;
+use App\openrecord;
 use App\category;
 use Redirect;
 use DB;
@@ -96,7 +97,19 @@ class IndexController extends Controller
                                 $user=User::find($userId);
                                 $oldPoint=$user->point;
                                 $user->point=$oldPoint+$addpoint;
-                                $user->save();
+                                if ($user->save()) {
+                                    //更改彩池数据
+                                   $pools=pool::all();
+                                   if (count($pools)==0) {
+                                       $pool=new pool;
+                                       $pool->num=$addpoint;
+                                       $pool->save();
+                                   }
+                                   else{
+                                        $pools[0]->num=$pools[0]->num+$addpoint;
+                                        $pools[0]->save();
+                                   }
+                                }
                                                            
                             } 
                             $betId=$bet->bId;
@@ -110,7 +123,7 @@ class IndexController extends Controller
                 //更新开奖记录数据库
                 date_default_timezone_set('PRC');
                 $nowaday=date("Y-m-d");
-                $openRecords=openRecord::all();
+                $openRecords=openrecord::all();
                 if (count($openRecords)!=0) {
                     if (isSameDay($nowaday,$openRecords[0]->created_at)==0) {
                         foreach ($openRecords as $key => $value) {
@@ -141,10 +154,19 @@ class IndexController extends Controller
 
         if($username=Session::get('username')){
 
-        
+        date_default_timezone_set('PRC');
+        $nowaday=date("Y-m-d");
+        $openRecords=openrecord::all();
+        if (count($openRecords)!=0) {
+            if (isSameDay($nowaday,$openRecords[0]->created_at)==0) {
+                foreach ($openRecords as $key => $value) {
+                    $value->delete();
+                }
+            }
+        }
         //获取开奖信息，加工整理后存入数据库
         // 获取数据库开奖条数
-        $openRecords=openRecord::all();
+        $openRecords=openrecord::all();
         $dbNub=count($openRecords);
         $nowaday=date("Y-m-d");
         //获取网站开奖条数
@@ -202,7 +224,19 @@ class IndexController extends Controller
                         $user=User::find($userId);
                         $oldPoint=$user->point;
                         $user->point=$oldPoint+$addpoint;
-                        $user->save();
+                        if ($user->save()) {
+                            //更改彩池数据
+                           $pools=pool::all();
+                           if (count($pools)==0) {
+                               $pool=new pool;
+                               $pool->num=$addpoint;
+                               $pool->save();
+                           }
+                           else{
+                                $pools[0]->num=$pools[0]->num+$addpoint;
+                                $pools[0]->save();
+                           }
+                        }
                                                    
                     } 
                     $betId=$bet->bId;
@@ -235,12 +269,24 @@ class IndexController extends Controller
         if (count($nexts)==0) {
            //计算出下一期开奖时间
             $lastest=DB::table('openrecords')->orderBy('time','desc')->first();
-            $nexttime=nextTime($lastest->time);
-            $nextexpect=nextExpect($lastest->period); 
-            $addnext=new nextinfo;
-            $addnext->period=$nextexpect;
-            $addnext->time=$nexttime;
-            $addnext->save();
+            if (count($lastest)==0) {
+                $nextinfos=new nextinfo;
+                date_default_timezone_set('PRC');
+                $date=date("Y-m-d"); //2016-07-09
+                $expect=$date."001";
+                $nextinfos->period=$expect;
+                $nextinfos->time="00:05";
+                $nextinfos->save(); 
+            }
+            else{
+                $nexttime=nextTime($lastest->time);
+                $nextexpect=nextExpect($lastest->period); 
+                $addnext=new nextinfo;
+                $addnext->period=$nextexpect;
+                $addnext->time=$nexttime;
+                $addnext->save(); 
+            }
+            
         }
         else{
             $nextinfo=$nexts[0];
@@ -321,7 +367,19 @@ class IndexController extends Controller
                                 $user=User::find($userId);
                                 $oldPoint=$user->point;
                                 $user->point=$oldPoint+$addpoint;
-                                $user->save();
+                                if ($user->save()) {
+                                    //更改彩池数据
+                                   $pools=pool::all();
+                                   if (count($pools)==0) {
+                                       $pool=new pool;
+                                       $pool->num=$addpoint;
+                                       $pool->save();
+                                   }
+                                   else{
+                                        $pools[0]->num=$pools[0]->num+$addpoint;
+                                        $pools[0]->save();
+                                   }
+                                }
                                                            
                             } 
                             $betId=$bet->bId;
@@ -333,7 +391,7 @@ class IndexController extends Controller
                         
                 }
                 //删除前一天开奖记录
-                $openRecords=openRecord::all();
+                $openRecords=openrecord::all();
                 if (count($openRecords)!=0) {
                     foreach ($openRecords as $key => $value) {
                         $value->delete();
@@ -379,11 +437,6 @@ class IndexController extends Controller
        );
         $jsonencode = json_encode($str);
         echo $jsonencode;
-        //echo $res;
-
-
-        
-
     }
 
     
@@ -391,43 +444,50 @@ class IndexController extends Controller
     public function buyFun(){
         //用户积分减少
         //存储下注记录
-            if($username=Session::get('username')){
-                date_default_timezone_set('PRC');
-                $now=date("Y-m-d H:i:s");
-                $getId=Request::input('getId');
-                $expect=Request::input("expect");
-                $username=Session::get('username');
-                $res=explode(",",$getId);
-                $points=0;
-                for ($i=1; $i <count($res); $i++) { 
-                    $idArr=explode(":",$res[$i]);
-                    $id=$idArr[0];
-                    $bet=new bet;
-                    $bet->username=$username;
-                    $bet->content=$id;
-                    $bet->period=$expect;
-                    $point=Request::input($res[$i]);
-                    $points=$points+$point;
-                    $bet->number=$point;
-                    if ($bet->save()) {
-                        $users=DB::table('users')->where('username','=',$username)->get();
-                        $userId=$users[0]->id;
-                        $user=User::find($userId);
-                        $user->point=$user->point-$points;
-                        $user->save();
+        if($username=Session::get('username')){
+            date_default_timezone_set('PRC');
+            $now=date("Y-m-d H:i:s");
+            $getId=Request::input('getId');
+            $expect=Request::input("expect");
+            $username=Session::get('username');
+            $res=explode(",",$getId);
+            $points=0;
+            for ($i=1; $i <count($res); $i++) { 
+                $idArr=explode(":",$res[$i]);
+                $id=$idArr[0];
+                $bet=new bet;
+                $bet->username=$username;
+                $bet->content=$id;
+                $bet->period=$expect;
+                $point=Request::input($res[$i]);
+                $points=$points+$point;
+                $bet->number=$point;
+                if ($bet->save()) {
+                    $users=DB::table('users')->where('username','=',$username)->get();
+                    $userId=$users[0]->id;
+                    $user=User::find($userId);
+                    $user->point=$user->point-$points;
+                    if ($user->save()) {
+                       //更改彩池数据
+                       $pools=pool::all();
+                       if (count($pools)==0) {
+                           $pool=new pool;
+                           $pool->num='-'.$points;
+                           $pool->save();
+                       }
+                       else{
+                            $pools[0]->num=$pools[0]->num-$points;
+                            $pools[0]->save();
+                       }
                     }
-                    
-
                 }
-                
-
-                return redirect('/buy');
-
-            }else{
-                return redirect('/');
             }
-            
+            return redirect('/buy');
+        }else{
+            return redirect('/');
         }
+            
+    }
 
     public function buy(){
 

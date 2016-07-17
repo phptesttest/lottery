@@ -2,8 +2,10 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Request;
-use App\user;
+use App\User;
+use App\pool;
 use App\admin;
+use App\openrecord;
 use App\recharge;
 use Redirect;
 use DB;
@@ -18,18 +20,32 @@ class UserController extends Controller
         $point=Request::input('point');
         $account=getRandomAccount(10);
         $password=getRandomPassword(10);
-        $user=new user();
+        $user=new User();
         $user->level=$level;
         $user->point=$point;
         $user->username=$account;
         $user->password=$password;
-        //扣除管理员福利池
+        
         if ($user->save()) {
+            //扣除管理员福利池
            $adminid=$adname=Session::get('adminid');
            $admin=admin::find($adminid);
            $admin->wPool=$admin->wPool-$point;
            $admin->save();
+
+           //更改彩池数据
+           $pools=pool::all();
+           if (count($pools)==0) {
+               $pool=new pool;
+               $pool->num=$point;
+               $pool->save();
+           }
+           else{
+                $pools[0]->num=$pools[0]->num+$point;
+                $pools[0]->save();
+           }
         }
+
 
 
         return Redirect('/admin/userlist');
@@ -56,7 +72,19 @@ class UserController extends Controller
                         $user=User::find($userId);
                         $oldPoint=$user->point;
                         $user->point=$oldPoint+$addpoint;
-                        $user->save();
+                        if ($user->save()) {
+                            //更改彩池数据
+                           $pools=pool::all();
+                           if (count($pools)==0) {
+                               $pool=new pool;
+                               $pool->num=$addpoint;
+                               $pool->save();
+                           }
+                           else{
+                                $pools[0]->num=$pools[0]->num+$addpoint;
+                                $pools[0]->save();
+                           }
+                        }
                                                    
                     } 
                     $betId=$bet->bId;
@@ -80,7 +108,7 @@ class UserController extends Controller
         }
     	if (count($users)!=0) {
     		$id=$users[0]->id;
-    		$user=user::find($id);
+    		$user=User::find($id);
     		$data=[
 			'user'=>$user,
 			];
@@ -110,24 +138,38 @@ class UserController extends Controller
         }
     	$id=$users[0]->id;
         $adminId=Session::get('adminid');
-    	$user=user::find($id);
+    	$user=User::find($id);
     	if (!is_null($user)) {
     		$oldPoint=$user->point;
     		$user->point=$oldPoint+$point;
             if ($user->save()) {
+                //存储操作管理信息
                 $adminid=$adname=Session::get('adminid');
                 $admin=admin::find($adminid);
                 $admin->wPool=$admin->wPool-$point;
                 $admin->save();
+                //存储充值记录
+                $recharge=new recharge;
+                $recharge->username=$user->username;
+                $recharge->num=$point;
+                $recharge->adminId=$adminId;
+                $recharge->save();
+                //更改彩池数据
+               $pools=pool::all();
+               if (count($pools)==0) {
+                   $pool=new pool;
+                   $pool->num=$point;
+                   $pool->save();
+               }
+               else{
+                    $pools[0]->num=$pools[0]->num+$point;
+                    $pools[0]->save();
+               }
+
             }
     		
     	}
-        //存储充值记录
-        $recharge=new recharge;
-        $recharge->username=$user->username;
-        $recharge->num=$point;
-        $recharge->adminId=$adminId;
-        $recharge->save();
+        
     	
     	return view('admin.user.pay')->with('errors','充值成功');
     }
@@ -153,7 +195,19 @@ class UserController extends Controller
                         $user=User::find($userId);
                         $oldPoint=$user->point;
                         $user->point=$oldPoint+$addpoint;
-                        $user->save();
+                        if ($user->save()) {
+                            //更改彩池数据
+                           $pools=pool::all();
+                           if (count($pools)==0) {
+                               $pool=new pool;
+                               $pool->num=$addpoint;
+                               $pool->save();
+                           }
+                           else{
+                                $pools[0]->num=$pools[0]->num+$addpoint;
+                                $pools[0]->save();
+                           }
+                        }
                                                    
                     } 
                     $betId=$bet->bId;
@@ -167,7 +221,7 @@ class UserController extends Controller
 
     	//$users=user::all()->orderBy('c.created_at','desc');
         if ($id!=null) {
-            $delusr=user::find($id);
+            $delusr=User::find($id);
             if (!is_null($delusr)) {
                 $delusr->delete();
             }

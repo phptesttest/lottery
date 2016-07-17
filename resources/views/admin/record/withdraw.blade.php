@@ -28,13 +28,20 @@
                     </tr>
                 @else
                     @foreach($withdraw as $withdraw)
-                        <tr>
-                            <td>{{$withdraw->created_at}}</td>
-                            <td>{{$withdraw->username}}</td>
-                            <td>{{$withdraw->withdraw_num}}</td>
-                            <td>{{$withdraw->adminname}}</td>
-                            <td><a href='/admin/withdraw/{{$withdraw->id}}'><button type="submit" class="btn btn-danger">删除</button></a></td>
-                        </tr>
+                    <?php 
+                        if ($withdraw->withdraw_num!=0) {
+                    ?>
+                    <tr>
+                        <td>{{$withdraw->created_at}}</td>
+                        <td>{{$withdraw->username}}</td>
+                        <td>{{$withdraw->withdraw_num}}</td>
+                        <td>{{$withdraw->adminname}}</td>
+                        <td><a href="{{ asset('/admin/withdraw')}}/{{$withdraw->id}}"><button type="submit" class="btn btn-danger">删除</button></a></td>
+                    </tr>
+                    <?php
+                    }
+                    ?>
+                        
                     @endforeach
                 @endif
                 </table>

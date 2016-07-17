@@ -63,7 +63,7 @@
                             ?>
                         </td>
                         <td>{{ $bet->number }}</td>
-                        <td><a href='/admin/betrecord/{{ $bet->id}}'><button class="btn btn-danger">删除</button></a></td>
+                        <td><a href="{{ asset('/admin/betrecord')}}/{{ $bet->id}}"><button class="btn btn-danger">删除</button></a></td>
                     </tr>
             @endforeach
         @endif           

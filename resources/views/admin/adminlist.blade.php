@@ -69,12 +69,19 @@
                     </tr>
                    
                     @foreach($admins as $admin)
-                        <tr>
+                        <?php 
+                            if ($admin->flag==2) {
+                        ?>
+                            <tr>
                             <td>{{ $admin->aName}}</td>
                             <td>{{ $admin->password}}</td>
                             <td>{{ $admin->wPool}}</td>
-                            <td><a href='/admin/admindelete/{{$admin->id}}'><button type="submit" class="btn btn-danger">删除</button></a></td>
-                        </tr>
+                            <td><a href="{{ asset('/admin/admindelete')}}/{{$admin->id}}"><button type="submit" class="btn btn-danger">删除</button></a></td>
+                            </tr>
+                        <?php
+                             } 
+                        ?>
+                        
                     @endforeach
                     </table>
                     </div>
