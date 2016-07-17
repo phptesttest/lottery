@@ -25,17 +25,27 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">用户名</label>
 							<div class="col-md-4">
-								<input type="name" class="form-control" name="username" value="{{ old('name') }}">
+								<input type="name" class="form-control" name="username" value="<?php echo @$_COOKIE['username'];?>" >
+								
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">密码</label>
 							<div class="col-md-4">
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" name="password" value='<?php echo @$_COOKIE['password'];?>'>
 							</div>
 						</div>
-
+						<div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <div class="checkbox">
+                                    <label>
+  <?php if(@$_COOKIE['remember'] == 1){?><input type="checkbox" name="remember" value="1" checked><?php }else{(@$_COOKIE['remember'] == "")?><input type="checkbox" name="remember" value="1"><?php }?>
+                                         记住我
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<input type="submit" value='登陆' class="btn btn-primary">

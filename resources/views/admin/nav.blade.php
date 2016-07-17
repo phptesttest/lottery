@@ -40,7 +40,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" >后台管理系统</a>
+            <a class="navbar-brand" href="/admin/index" >后台管理首页</a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -74,6 +74,7 @@
                 </li>
                 <li><a href="{{ asset('/admin/account')}}">结算管理</a></li>
                 <li><a href="{{ asset('/admin/times')}}">赔率设置</a></li>
+                <li><a href="{{ asset('/admin/rules')}}">游戏规则设定</a></li>
                 <li><a href="javascript:void(0)" id="reload">刷新</a></li>
                 <li><a href="{{ asset('/admin/logout')}}">退出</a></li>
             </ul>

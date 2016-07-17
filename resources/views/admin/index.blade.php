@@ -17,13 +17,7 @@
                     <tr>
                         <td>亲爱的管理员{{Session::get('adname')}}</td>
                         <td>欢迎你！！</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>xx天</td>
-                    </tr>
-                    
-                   
+                    </tr>            
                 </table>
             </div>
         </div>

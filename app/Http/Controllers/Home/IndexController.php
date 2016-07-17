@@ -13,45 +13,70 @@ use Redirect;
 use DB;
 use Input;
 use Illuminate\Support\Facades\Session;
+use App\rule;
 
 class IndexController extends Controller
 {
-
-    public function rules(){
-        return view('home.rules');
+     public function rules(){
+        $rule=DB::table('rules')->orderBy('created_at','desc')->first();
+     
+        return view('home.rules')->with('rule',$rule);
     }
 
+   
     public function withdraw(){
         return view('home.withdraw');
     }
     
    //显示登录页面
     public function login(){
-    	return view('home.login');
+        return view('home.login');
     }
 
     public function logout(){
         Session::forget('username');
         Session::forget('userid');
         Session::flush();
+        setcookie('password',"");
         return redirect('/');
     }
 
 //用户登录表单的处理post类型
     public function logindeal(){
-        
+
         $password = Request::input('password');
+        if( strlen($password)>10 ){  //判断密码是否加过密
+            $password = $password;
+        }else{
+            $password = md5($password);
+        }
         $username  = Request::input('username');
-        $user=DB::table('users')->where('username','=',$username)->get();
-        
+        $remember=Request::input('remember');//是否自动登录标示
+        //dd($username);die;
+        if($password==''||$username==''){
+            return redirect()->back()->with('errors','账号或密码不能为空');
+        }
+        //dd($username);die;
+        //$user=DB::table('users')->where('username','=',$username)->get();
+        $user=DB::select('select * from users where username = ?', [$username]); 
+        //dd($user); die;   
         if($user){
-            $truepsw = $user[0]->password;
+            $truepsw = md5(trim($user[0]->password));
             //验证密码
             if($truepsw == $password){
                 //存储用户账号和id
                 $userid = $user[0]->id;
                 Session::put('userid',$userid);
                 Session::put('username',$username);
+                if(!empty($remember)){//如果用户选择了，记录登录状态就把用户名和加了密的密码放到cookie里面
+                           setcookie("username",$username,time()+3600*24*365);
+                           setcookie("password",$password,time()+3600*24*365);
+                           setcookie("remember",$remember,time()+3600*24*365);
+                }else{
+                        setcookie("username","");
+                        setcookie("password","");
+                        setcookie('remember',"");
+                }
                 //结算
                 $bets = DB::table('bets as b')
                 ->leftJoin('categories as c','b.content','=','c.id')
@@ -412,8 +437,8 @@ class IndexController extends Controller
        );
         $jsonencode = json_encode($str);
         echo $jsonencode;
-        //echo $res;
     }
+
     
     //下注处理
     public function buyFun(){
@@ -456,17 +481,12 @@ class IndexController extends Controller
                        }
                     }
                 }
-                
-
             }
-            
-
             return redirect('/buy');
-
         }else{
             return redirect('/');
         }
-        
+            
     }
 
     public function buy(){

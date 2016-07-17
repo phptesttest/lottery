@@ -53,7 +53,9 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::post('times','Admin\IndexController@timesFun');//赔率设置
 	  Route::get('account','Admin\IndexController@account');//结算管理 , 提现
 	  Route::get('account/{id}','Admin\IndexController@account');//结算管理 , 提现
-
+	  Route::get('rules','Admin\IndexController@rules');
+	  Route::post('setrules','Admin\IndexController@setrules');
+	  Route::get('deleterules/{id}','Admin\IndexController@deleterules');
 
 
 });

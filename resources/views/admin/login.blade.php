@@ -24,21 +24,31 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">管理员账号</label>
 							<div class="col-md-6">
-								<input type="name" class="form-control" name="adname" value="{{ old('adname') }}">
+								<input type="name" class="form-control" name="adname" value="<?php echo @$_COOKIE['adname'];?>">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">管理员密码</label>
 							<div class="col-md-6">
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" name="password" value='<?php echo @$_COOKIE['adpwd'];?>'>
 							</div>
 						</div>
 
 						<div class="form-group">
+                            <div class="col-md-6 col-md-offset-4">
+                                <div class="checkbox">
+                                    <label>
+                                         <?php if(@$_COOKIE['remember'] == 1){?><input type="checkbox" name="remember" value="1" checked><?php }else{(@$_COOKIE['remember'] == "")?><input type="checkbox" name="remember" value="1"><?php }?>
+                                         记住我
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+						
+						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
 								<button type="submit" class="btn btn-primary">登录</button>
-
 								<a class="btn btn-link" href="#">忘记你的密码?</a>
 							</div>
 						</div>
