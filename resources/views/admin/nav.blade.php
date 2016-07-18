@@ -25,6 +25,9 @@
     .dropdown-menu{
         background-color: #B3B3B3;
     }
+    .navbar-brand{
+        cursor: pointer;
+    }
     @yield('headder')
     </style>
 </head>
@@ -40,6 +43,10 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{{ asset('/admin/index')}}">后台管理首页</a>
+            <a class="navbar-brand" onclick="window.history.go(-1)" ><span class='glyphicon glyphicon-arrow-left'></span></a>
+            <a class='navbar-brand' onclick="window.location.reload()"><span class='glyphicon glyphicon-refresh'></span ></a>
+            <a class='navbar-brand' onclick="window.history.go(1)"><span class='glyphicon glyphicon-arrow-right' ></span></a>
+>>>>>>> origin/master
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
