@@ -171,8 +171,13 @@ class IndexController extends Controller
         $nowaday=date("Y-m-d");
         //获取网站开奖条数
         $url='http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date='.$nowaday.'&format=json';
-        $file_contents = file_get_contents($url);
-        $res=json_decode($file_contents); 
+        $ch=curl_init();
+        curl_setopt($ch,CURLOPT_URL,$url);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+        $output=curl_exec($ch);
+        curl_close($ch);
+        //$file_contents = file_get_contents($url);
+        $res=json_decode($output); 
         $newNub=count($res->data);
         $newres=$res->data;
         // 如果条数一样，则不用更新，否则将新开奖记录存入数据库
@@ -466,17 +471,17 @@ class IndexController extends Controller
                     $users=DB::table('users')->where('username','=',$username)->get();
                     $userId=$users[0]->id;
                     $user=User::find($userId);
-                    $user->point=$user->point-$points;
+                    $user->point=$user->point-$point;
                     if ($user->save()) {
                        //更改彩池数据
                        $pools=pool::all();
                        if (count($pools)==0) {
                            $pool=new pool;
-                           $pool->num='-'.$points;
+                           $pool->num='-'.$point;
                            $pool->save();
                        }
                        else{
-                            $pools[0]->num=$pools[0]->num-$points;
+                            $pools[0]->num=$pools[0]->num-$point;
                             $pools[0]->save();
                        }
                     }

@@ -69,7 +69,9 @@
                         <th>用户账号</th>
                         <th>用户密码</th>
                         <th>用户积分</th>
+                        @if(Session::has('big'))
                         <th>操作</th>
+                        @endif
                     </tr>
                    
 
@@ -79,7 +81,9 @@
                             <td>{{ $user->username}}</td>
                             <td>{{ $user->password}}</td>
                             <td>{{ $user->point}}</td>
+                            @if(Session::has('big'))
                             <td><a href="{{ asset('/admin/userlist')}}/{{$user->id}}"><button class="btn btn-danger">删除</button></a></td>
+                            @endif
                         </tr>
                     @endforeach
                     </table>

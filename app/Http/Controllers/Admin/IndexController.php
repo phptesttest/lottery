@@ -58,7 +58,7 @@ class IndexController extends Controller
                     $admin_logs->loginTime=$now;
                     $admin_logs->save();
                 }*/
-                if($flag===1){
+                if($flag==1){
                     $big = 'super_manager';
                     Session::put('big',$big);
                 }
@@ -166,11 +166,12 @@ public function index($id=null){
         }
         $user=DB::table('admins')->where('aName','=',$adname)->get();
         $flag = Session::get('flag');
-
+        $pools=pool::all();
         $admins=DB::table('admin_logs')->orderBy('created_at','desc')->get();
         $data=[
         'wPool'=>$user[0]->wPool,
         'admins'=>$admins,
+        'pools'=>$pools[0]->num,
 
         ];
         return view('admin.index',$data);

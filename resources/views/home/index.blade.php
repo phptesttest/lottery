@@ -57,21 +57,32 @@
 							<th>第五球</th>
 							<th>总和</th>
 						</tr>
-						
+						<tr>
+							<td class="period"><span id="nextExpect"></span></td>
+							<td><span id="nextTime"></span></td>
+							<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
+							<span id="showDes"></span>
+							<?php 
+								date_default_timezone_set('PRC');
+                   				$now=date("Y-m-d H:i:s");
+								$arr=explode(" ",$now);
+								$arrh=explode(":",$arr[1]);
+								$h=$arrh[0];
+								if ($h>1&&$h<10) {
+
+							 ?>
+							 <td><input type='button' class='btn btn-info' value="封盘" ></td>
+							 <?php }else{  ?>
+							<td><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
+							<?php } ?>
+						</tr> 
 
 						@if(count($datas)==0)
 
 					      <p>还没有开奖信息</p>  
 
 					    @else
-					    <tr>
-							<td class="period"><span id="nextExpect"></span></td>
-							<td><span id="nextTime"></span></td>
-							<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
-							<span id="showDes"></span>
-							</td>
-							<td><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
-						</tr> 
+					    
 					    @foreach($datas as $data)
 					    	<tr>
 							<td class="period"><?php echo $data->period ?></td>

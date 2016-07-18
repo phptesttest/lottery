@@ -43,6 +43,29 @@
             </div>
         </div>
     </div>
+
+    <div class="col-xs-12 col-sm-6">
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">彩池</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tr>
+                        <td>现在彩池大小为：</td>
+                        <td>{{ $pools}}</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    
+                   
+                </table>
+            </div>
+        </div>
+    </div>
+
     <!-- @if(Session::has('big'))
     <div class="col-xs-12 col-sm-6">
         <div class="panel">
