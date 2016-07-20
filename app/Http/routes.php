@@ -30,7 +30,6 @@ Route::group(['middleware' => ['web']], function () {
 	  Route::get('/index', 'Home\IndexController@index');//前台会员登录
 	  Route::get('/buy', 'Home\IndexController@buy');//前台会员登录
 	  Route::post('/buy', 'Home\IndexController@buyFun');//前台会员登录
-	  Route::get('buy', 'Home\IndexController@buy');//前台会员登录
 	  Route::get('/', 'Home\IndexController@login');//前台会员登录
 	  Route::post('/logindeal', 'Home\IndexController@logindeal');//前台会员登录
 	  Route::get('/logout', 'Home\IndexController@logout');//前台会员登录

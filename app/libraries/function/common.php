@@ -30,7 +30,28 @@ if (!function_exists('getRandomPassword')) {
 	 }
 }
 
-//判断有没有中奖
+//获取标准网络时间
+if (!function_exists('getCurrentTime')) {
+	function getCurrentTime(){
+		$url='http://c.apiplus.net/time.json';
+		$ch=curl_init();
+		curl_setopt($ch,CURLOPT_URL,$url);
+		curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+		$output=curl_exec($ch);
+		curl_close($ch);
+		$arr=json_decode($output);
+		return $arr->now;
+	}
+}
+
+//获取标准的日期
+if (!function_exists('getCurrentDate')) {
+	function getCurrentDate(){
+		$time=getCurrentTime();
+		$arr=explode(" ",$time);
+		return $arr[0];
+	}
+}
 
 
 //将开奖号码字符串转化为数组

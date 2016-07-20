@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use DB;
 use App\withdraw;
+use App\common;
 use App\bet;
 use App\recharge;
 use App\openrecord;
@@ -79,7 +80,7 @@ class RecordController extends Controller
         // 获取数据库开奖条数
         $openRecords=openrecord::all();
         $dbNub=count($openRecords);
-        $nowaday=date("Y-m-d");
+        $nowaday=getCurrentDate();
         //获取网站开奖条数
         $url='http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date='.$nowaday.'&format=json';
         $file_contents = file_get_contents($url);

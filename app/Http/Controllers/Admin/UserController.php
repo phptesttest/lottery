@@ -5,6 +5,7 @@ use Request;
 use App\User;
 use App\pool;
 use App\admin;
+use App\common;
 use App\openrecord;
 use App\recharge;
 use Redirect;
@@ -53,48 +54,8 @@ class UserController extends Controller
 
     public function search(){
         //结算
-        $bets = DB::table('bets as b')
-        ->leftJoin('categories as c','b.content','=','c.id')
-        ->select('b.id as bId','b.*','c.*')
-        ->orderBy('b.created_at','desc')
-        ->get();
-        foreach ($bets as $key => $bet) {
-            if ($bet->isaccount==0) {
-                $expect=$bet->period;
-                $open=DB::table('openrecords')->where('period','=',$expect)->get();
-                if (count($open)!=0) {
-                    $openCode=$open[0]->number;
-                    $arrCode=explode(",",$openCode); 
-                    if(iswin($bet,$arrCode)==1){
-                        $addpoint=($bet->number)*($bet->rate);
-                        $users=DB::table('users')->where('username','=',$bet->username)->get();
-                        $userId=$users[0]->id;
-                        $user=User::find($userId);
-                        $oldPoint=$user->point;
-                        $user->point=$oldPoint+$addpoint;
-                        if ($user->save()) {
-                            //更改彩池数据
-                           $pools=pool::all();
-                           if (count($pools)==0) {
-                               $pool=new pool;
-                               $pool->num=$addpoint;
-                               $pool->save();
-                           }
-                           else{
-                                $pools[0]->num=$pools[0]->num+$addpoint;
-                                $pools[0]->save();
-                           }
-                        }
-                                                   
-                    } 
-                    $betId=$bet->bId;
-                    $be=bet::find($betId);
-                    $be->isaccount='1';
-                    $be->save();     
-                }
-            }
-                
-        }
+        $common=new common();
+        $common->account();
     	return view('admin.user.search');
     }
 
@@ -176,49 +137,8 @@ class UserController extends Controller
 
     public function userlist($id=null){
         //结算
-        $bets = DB::table('bets as b')
-        ->leftJoin('categories as c','b.content','=','c.id')
-        ->select('b.id as bId','b.*','c.*')
-        ->orderBy('b.created_at','desc')
-        ->get();
-        foreach ($bets as $key => $bet) {
-            if ($bet->isaccount==0) {
-                $expect=$bet->period;
-                $open=DB::table('openrecords')->where('period','=',$expect)->get();
-                if (count($open)!=0) {
-                    $openCode=$open[0]->number;
-                    $arrCode=explode(",",$openCode); 
-                    if(iswin($bet,$arrCode)==1){
-                        $addpoint=($bet->number)*($bet->rate);
-                        $users=DB::table('users')->where('username','=',$bet->username)->get();
-                        $userId=$users[0]->id;
-                        $user=User::find($userId);
-                        $oldPoint=$user->point;
-                        $user->point=$oldPoint+$addpoint;
-                        if ($user->save()) {
-                            //更改彩池数据
-                           $pools=pool::all();
-                           if (count($pools)==0) {
-                               $pool=new pool;
-                               $pool->num=$addpoint;
-                               $pool->save();
-                           }
-                           else{
-                                $pools[0]->num=$pools[0]->num+$addpoint;
-                                $pools[0]->save();
-                           }
-                        }
-                                                   
-                    } 
-                    $betId=$bet->bId;
-                    $be=bet::find($betId);
-                    $be->isaccount='1';
-                    $be->save();     
-                }
-            }
-                
-        }
-
+        $common=new common();
+        $common->account();
     	//$users=user::all()->orderBy('c.created_at','desc');
         if ($id!=null) {
             $delusr=User::find($id);

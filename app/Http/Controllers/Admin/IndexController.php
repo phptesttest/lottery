@@ -9,6 +9,7 @@ use Request;
 use App\admin;
 use App\User;
 use App\recharge;
+use App\common;
 use App\pool;
 use App\openrecord;
 use App\nextinfo;
@@ -67,83 +68,21 @@ class IndexController extends Controller
                 Session::put('flag',$flag);
 
                 if(!empty($remember)){//如果用户选择了，记录登录状态就把用户名和加了密的密码放到cookie里面
-                   setcookie("adname",$adname,time()+3600*24*365);
-                   setcookie("adpwd",$password,time()+3600*24*365);
-                   setcookie("remember",$remember,time()+3600*24*365);
+                   setcookie("adname",$adname,strtotime(getCurrentTime())+3600*24*365);
+                   setcookie("adpwd",$password,strtotime(getCurrentTime())+3600*24*365);
+                   setcookie("remember",$remember,strtotime(getCurrentTime())+3600*24*365);
                }else{
                     setcookie("adname","");
                     setcookie("adpwd","");
                     setcookie('remember',"");
                 }
                 //结算
-                $bets = DB::table('bets as b')
-                ->leftJoin('categories as c','b.content','=','c.id')
-                ->select('b.id as bId','b.*','c.*')
-                ->orderBy('b.created_at','desc')
-                ->get();
-                foreach ($bets as $key => $bet) {
-                    if ($bet->isaccount==0) {
-                        $expect=$bet->period;
-                        $open=DB::table('openrecords')->where('period','=',$expect)->get();
-                        if (count($open)!=0) {
-                            $openCode=$open[0]->number;
-                            $arrCode=explode(",",$openCode); 
-                            if(iswin($bet,$arrCode)==1){
-                                $addpoint=($bet->number)*($bet->rate);
-                                $users=DB::table('users')->where('username','=',$bet->username)->get();
-                                $userId=$users[0]->id;
-                                $user=User::find($userId);
-                                $oldPoint=$user->point;
-                                $user->point=$oldPoint+$addpoint;
-                                if ($user->save()) {
-                                    //更改彩池数据
-                                   $pools=pool::all();
-                                   if (count($pools)==0) {
-                                       $pool=new pool;
-                                       $pool->num=$addpoint;
-                                       $pool->save();
-                                   }
-                                   else{
-                                        $pools[0]->num=$pools[0]->num+$addpoint;
-                                        $pools[0]->save();
-                                   }
-                                }
-                                
-                                                           
-                            } 
-                            $betId=$bet->bId;
-                            $be=bet::find($betId);
-                            $be->isaccount='1';
-                            $be->save();  
-                        }
-                      
-                    }
-
-                }
-                $openRecords=openrecord::all();
-                if (count($openRecords)!=0) {
-                    //更新开奖记录数据库
-                    date_default_timezone_set('PRC');
-                    $nowaday=date("Y-m-d");
-                    $openRecords=openrecord::all();
-                    if (count($openRecords)!=0) {
-                        if (isSameDay($nowaday,$openRecords[1]->created_at)==0) {
-                            foreach ($openRecords as $key => $value) {
-                                $value->delete();
-                            }
-                        }
-                    }
-                }
-
+                $common=new common();
+                $common->account();
+                //更新开奖记录数据库
+                $common->updateOpenRecord();
                 //更新下一期开奖信息数据库
-                $nextinfos=nextinfo::all();
-                if (count($nextinfos)!=0) {
-                    if (isSameDay($nowaday,$nextinfos[0]->created_at)==0) {
-                        foreach ($nextinfos as $key => $value) {
-                            $value->delete();
-                        }
-                    }
-                }
+                $common->updateNextOpenInfo();
                 return redirect('/admin/index')->with('message','登录成功');
             }
             else{
@@ -183,46 +122,8 @@ public function index($id=null){
 
     public function account($id=null){  //结算管理，显示
         //结算
-        $bets = DB::table('bets as b')
-        ->leftJoin('categories as c','b.content','=','c.id')
-        ->select('b.id as bId','b.*','c.*')
-        ->orderBy('b.created_at','desc')
-        ->get();
-        foreach ($bets as $key => $bet) {
-            if ($bet->isaccount==0) {
-                $expect=$bet->period;
-                $open=DB::table('openrecords')->where('period','=',$expect)->get();
-                if (count($open)!=0) {
-                    $openCode=$open[0]->number;
-                    $arrCode=explode(",",$openCode); 
-                    if(iswin($bet,$arrCode)==1){
-                        $addpoint=($bet->number)*($bet->rate);
-                        $users=DB::table('users')->where('username','=',$bet->username)->get();
-                        $userId=$users[0]->id;
-                        $user=User::find($userId);
-                        $oldPoint=$user->point;
-                        $user->point=$oldPoint+$addpoint;
-                        if ($user->save()) {
-                            //更改彩池数据
-                           $pools=pool::all();
-                           if (count($pools)==0) {
-                               $pool=new pool;
-                               $pool->num=$addpoint;
-                               $pool->save();
-                           }
-                           else{
-                                $pools[0]->num=$pools[0]->num+$addpoint;
-                                $pools[0]->save();
-                           }
-                        }
-                        $betId=$bet->bId;
-                        $be=bet::find($betId);
-                        $be->isaccount='1';
-                        $be->save();     
-                    }
-                }
-            }
-        }
+        $common=new common();
+        $common->account();
         if(Session::get('adname')){
             if($id != null){
                 $user=User::find($id);  //请求提现

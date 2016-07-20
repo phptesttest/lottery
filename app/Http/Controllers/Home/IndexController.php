@@ -12,6 +12,7 @@ use App\category;
 use Redirect;
 use DB;
 use Input;
+use App\common;
 use Illuminate\Support\Facades\Session;
 use App\rule;
 
@@ -69,77 +70,22 @@ class IndexController extends Controller
                 Session::put('userid',$userid);
                 Session::put('username',$username);
                 if(!empty($remember)){//如果用户选择了，记录登录状态就把用户名和加了密的密码放到cookie里面
-                           setcookie("username",$username,time()+3600*24*365);
-                           setcookie("password",$password,time()+3600*24*365);
-                           setcookie("remember",$remember,time()+3600*24*365);
+                           setcookie("username",$username,strtotime(getCurrentTime())+3600*24*365);
+                           setcookie("password",$password,strtotime(getCurrentTime())+3600*24*365);
+                           setcookie("remember",$remember,strtotime(getCurrentTime())+3600*24*365);
                 }else{
                         setcookie("username","");
                         setcookie("password","");
                         setcookie('remember',"");
                 }
                 //结算
-                $bets = DB::table('bets as b')
-                ->leftJoin('categories as c','b.content','=','c.id')
-                ->select('b.id as bId','b.*','c.*')
-                ->orderBy('b.created_at','desc')
-                ->get();
-                foreach ($bets as $key => $bet) {
-                    if ($bet->isaccount==0) {
-                        $expect=$bet->period;
-                        $open=DB::table('openrecords')->where('period','=',$expect)->get();
-                        if (count($open)!=0) {
-                            $openCode=$open[0]->number;
-                            $arrCode=explode(",",$openCode); 
-                            if(iswin($bet,$arrCode)==1){
-                                $addpoint=($bet->number)*($bet->rate);
-                                $users=DB::table('users')->where('username','=',$bet->username)->get();
-                                $userId=$users[0]->id;
-                                $user=User::find($userId);
-                                $oldPoint=$user->point;
-                                $user->point=$oldPoint+$addpoint;
-                                if ($user->save()) {
-                                    //更改彩池数据
-                                   $pools=pool::all();
-                                   if (count($pools)==0) {
-                                       $pool=new pool;
-                                       $pool->num=$addpoint;
-                                       $pool->save();
-                                   }
-                                   else{
-                                        $pools[0]->num=$pools[0]->num+$addpoint;
-                                        $pools[0]->save();
-                                   }
-                                }
-                                                           
-                            } 
-                            $betId=$bet->bId;
-                            $be=bet::find($betId);
-                            $be->isaccount='1';
-                            $be->save();     
-                        }
-                    }
-                        
-                }
+                $common=new common();
+                $common->account();
+        
                 //更新开奖记录数据库
-                date_default_timezone_set('PRC');
-                $nowaday=date("Y-m-d");
-                $openRecords=openrecord::all();
-                if (count($openRecords)!=0) {
-                    if (isSameDay($nowaday,$openRecords[0]->created_at)==0) {
-                        foreach ($openRecords as $key => $value) {
-                            $value->delete();
-                        }
-                    }
-                }
+                $common->updateOpenRecord();
                 //更新下一期开奖信息数据库
-                $nextinfos=nextinfo::all();
-                if (count($nextinfos)!=0) {
-                    if (isSameDay($nowaday,$nextinfos[0]->created_at)==0) {
-                        foreach ($nextinfos as $key => $value) {
-                            $value->delete();
-                        }
-                    }
-                }
+                $common->updateNextOpenInfo();
                 return redirect('/index')->with('message','登录成功');
             }else{
                 return redirect()->back()->with('errors','密码错误');
@@ -154,167 +100,89 @@ class IndexController extends Controller
 
         if($username=Session::get('username')){
 
-        date_default_timezone_set('PRC');
-        $nowaday=date("Y-m-d");
-        $openRecords=openrecord::all();
-        if (count($openRecords)!=0) {
-            if (isSameDay($nowaday,$openRecords[0]->created_at)==0) {
-                foreach ($openRecords as $key => $value) {
-                    $value->delete();
-                }
-            }
-        }
-        //获取开奖信息，加工整理后存入数据库
-        // 获取数据库开奖条数
-        $openRecords=openrecord::all();
-        $dbNub=count($openRecords);
-        $nowaday=date("Y-m-d");
-        //获取网站开奖条数
-        $url='http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date='.$nowaday.'&format=json';
-        $ch=curl_init();
-        curl_setopt($ch,CURLOPT_URL,$url);
-        curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
-        $output=curl_exec($ch);
-        curl_close($ch);
-        //$file_contents = file_get_contents($url);
-        $res=json_decode($output); 
-        $newNub=count($res->data);
-        $newres=$res->data;
-        // 如果条数一样，则不用更新，否则将新开奖记录存入数据库
-        if ($dbNub!=$newNub) {
-            //如何存储开奖记录：
-            //如果数据库为空时，一次存储每一天开奖记录，开奖时间从00:05开始，如果是两点前，后一期加五分钟，如果是十点前，每后一期加十分钟.读出开奖记录时间，如果开奖时间在前面计算出来的后五分钟或十分钟内，则存入，否则，该期开奖记录为空。
-            if ($dbNub==0) {
-                
-                for ($i=count($res->data)-1; $i>=0 ; $i--) { 
-                    $openrecord=new openrecord;
-                   //echo $newres[$i]->opencode;
-                    $openrecord->period=$newres[$i]->expect;
-                    $openrecord->number=$newres[$i]->opencode;
-                    $openrecord->time=outDelay(timeTurn($newres[$i]->opentime));
-                    $openrecord->save();
-                }
-            }
-            else{
-                $addNub=$newNub-$dbNub;
-                for ($i=$addNub-1; $i>=0 ; $i--) { 
-                    $openrecord=new openrecord;
-                   //echo $newres[$i]->opencode;
-                    $openrecord->period=$newres[$i]->expect;
-                    $openrecord->number=$newres[$i]->opencode;
-                    $openrecord->time=outDelay(timeTurn($newres[$i]->opentime));
-                    $openrecord->save();
-                }
-            }
-           
-        }          
-        //从下注记录表中读出未结算记录，进行结算
-        //结算
-        $bets = DB::table('bets as b')
-        ->leftJoin('categories as c','b.content','=','c.id')
-        ->select('b.id as bId','b.*','c.*')
-        ->orderBy('b.created_at','desc')
-        ->get();
-        foreach ($bets as $key => $bet) {
-            if ($bet->isaccount==0) {
-                $expect=$bet->period;
-                $open=DB::table('openrecords')->where('period','=',$expect)->get();
-                if (count($open)!=0) {
-                    $openCode=$open[0]->number;
-                    $arrCode=explode(",",$openCode); 
-                    if(iswin($bet,$arrCode)==1){
-                        $addpoint=($bet->number)*($bet->rate);
-                        $users=DB::table('users')->where('username','=',$bet->username)->get();
-                        $userId=$users[0]->id;
-                        $user=User::find($userId);
-                        $oldPoint=$user->point;
-                        $user->point=$oldPoint+$addpoint;
-                        if ($user->save()) {
-                            //更改彩池数据
-                           $pools=pool::all();
-                           if (count($pools)==0) {
-                               $pool=new pool;
-                               $pool->num=$addpoint;
-                               $pool->save();
-                           }
-                           else{
-                                $pools[0]->num=$pools[0]->num+$addpoint;
-                                $pools[0]->save();
-                           }
-                        }
-                                                   
-                    } 
-                    $betId=$bet->bId;
-                    $be=bet::find($betId);
-                    $be->isaccount='1';
-                    $be->save();     
-                }
-            }
-                
-        }
-        //从数据库查询数据，传给前台显示
-        //如果没有网，怎么处理
-        $dates=DB::table('openrecords')->orderBy('time','desc')->take('20')->get();
-        $user=DB::table('users')->where('username','=',$username)->get();
-        $point=$user[0]->point;
+            $common=new common();
+            $common->updateOpenRecord();
+            $common->updateDB();          
+            //从下注记录表中读出未结算记录，进行结算
+            $common->account();
+            //从数据库查询数据，传给前台显示
+            //如果没有网，怎么处理
+            $dates=DB::table('openrecords')->orderBy('time','desc')->take('20')->get();
+            $user=DB::table('users')->where('username','=',$username)->get();
+            $point=$user[0]->point;
 
-        //读出下一条开奖信息
-        $nexts=nextinfo::all();
-        if ($dbNub!=$newNub&&count($nexts)==0) {
-            $nextinfos=new nextinfo;
-            date_default_timezone_set('PRC');
-            $date=date("Y-m-d"); //2016-07-09
-            $expect=$date."001";
-            $nextinfos->period=$expect;
-            $nextinfos->time="00:05";
-            $nextinfos->save();
+            $openRecords=openrecord::all();
+            $dbNub=count($openRecords);
+            $nowaday=getCurrentDate();
+            //获取网站开奖条数
+            $url='http://c.apiplus.net/daily.do?token=66c6e6553316f570&code=cqssc&date='.$nowaday.'&format=json';
+            $ch=curl_init();
+            curl_setopt($ch,CURLOPT_URL,$url);
+            curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+            $output=curl_exec($ch);
+            curl_close($ch);
+            //$file_contents = file_get_contents($url);
+            $res=json_decode($output); 
+            $newNub=count($res->data);
+            $newres=$res->data;
 
-        }
-        $nexts=nextinfo::all();
-        if (count($nexts)==0) {
-           //计算出下一期开奖时间
-            $lastest=DB::table('openrecords')->orderBy('time','desc')->first();
-            if (count($lastest)==0) {
+            //读出下一条开奖信息
+            $nexts=nextinfo::all();
+            if ($dbNub!=$newNub&&count($nexts)==0) {
                 $nextinfos=new nextinfo;
                 date_default_timezone_set('PRC');
-                $date=date("Y-m-d"); //2016-07-09
+                $date=getCurrentDate(); //2016-07-09
                 $expect=$date."001";
                 $nextinfos->period=$expect;
                 $nextinfos->time="00:05";
-                $nextinfos->save(); 
+                $nextinfos->save();
+
+            }
+            $nexts=nextinfo::all();
+            if (count($nexts)==0) {
+               //计算出下一期开奖时间
+                $lastest=DB::table('openrecords')->orderBy('time','desc')->first();
+                if (count($lastest)==0) {
+                    $nextinfos=new nextinfo;
+                    date_default_timezone_set('PRC');
+                    $date=getCurrentDate(); //2016-07-09
+                    $expect=$date."001";
+                    $nextinfos->period=$expect;
+                    $nextinfos->time="00:05";
+                    $nextinfos->save(); 
+                }
+                else{
+                    $nexttime=nextTime($lastest->time);
+                    $nextexpect=nextExpect($lastest->period); 
+                    $addnext=new nextinfo;
+                    $addnext->period=$nextexpect;
+                    $addnext->time=$nexttime;
+                    $addnext->save(); 
+                }
+                
             }
             else{
-                $nexttime=nextTime($lastest->time);
-                $nextexpect=nextExpect($lastest->period); 
-                $addnext=new nextinfo;
-                $addnext->period=$nextexpect;
-                $addnext->time=$nexttime;
-                $addnext->save(); 
-            }
-            
-        }
-        else{
-            $nextinfo=$nexts[0];
-            $nexttime=$nextinfo->time;
-            $arr1=explode(":",$nexttime);
-            $first=DB::table('openrecords')->orderBy('time','desc')->first();
-            if (count($first)!=0) {
-                $arr2=explode(":",$first->time);
-                if (($arr2[0]*60+$arr2[1]+10)>($arr1[0]*60+$arr1[1])) {
-                    $nextinfo->period=nextExpect($first->period);
-                    $nextinfo->time=nextTime($first->time);
-                    $nextinfo->save();
+                $nextinfo=$nexts[0];
+                $nexttime=$nextinfo->time;
+                $arr1=explode(":",$nexttime);
+                $first=DB::table('openrecords')->orderBy('time','desc')->first();
+                if (count($first)!=0) {
+                    $arr2=explode(":",$first->time);
+                    if (($arr2[0]*60+$arr2[1]+10)>($arr1[0]*60+$arr1[1])) {
+                        $nextinfo->period=nextExpect($first->period);
+                        $nextinfo->time=nextTime($first->time);
+                        $nextinfo->save();
+                    }
                 }
+                
             }
-            
-        }
-  
-        $data=[
-            'datas'=>$dates,
-            'username'=>$username,
-            'point'=>$point,
-        ];
-        return view('home.index',$data);
+      
+            $data=[
+                'datas'=>$dates,
+                'username'=>$username,
+                'point'=>$point,
+            ];
+            return view('home.index',$data);
         }else{
             return redirect('/');
         }
@@ -336,12 +204,12 @@ class IndexController extends Controller
         $nextexpect=$nextinfo[0]->period;
         //倒计时时间
         date_default_timezone_set('PRC');
-        $date=date("Y-m-d"); //2016-07-09
+        $date=getCurrentDate(); //2016-07-09
         $arr=explode(":",$nexttime);
         $desTime=$date." ".$nexttime.":00";
-        $now=time();
+        $now=strtotime(getCurrentTime());
         $desStamp=strtotime($desTime);
-        $detail=date("Y-m-d H:i:s");
+        $detail=getCurrentTime();
         $bug=explode(" ",$detail);
         $bug2=explode(":",$bug[1]);
         if (($arr[0]*60+$arr[1]==0)&&($bug2[1]>55)) {
@@ -404,7 +272,7 @@ class IndexController extends Controller
                 }
                 //更新下一期开奖信息
                 date_default_timezone_set('PRC');
-                $date=date("Y-m-d"); //2016-07-09
+                $date=getCurrentDate(); //2016-07-09
                 $arr3=explode("-",$date);
                 $dstr=$arr3[0].$arr3[1].$arr3[2];
                 $expect=$dstr."001";
@@ -451,7 +319,7 @@ class IndexController extends Controller
         //存储下注记录
         if($username=Session::get('username')){
             date_default_timezone_set('PRC');
-            $now=date("Y-m-d H:i:s");
+            $now=getCurrentTime();
             $getId=Request::input('getId');
             $expect=Request::input("expect");
             $username=Session::get('username');
