@@ -20,8 +20,31 @@ use Redirect;
 use DB;
 use Session;
 use App\rule;
+use App\application;
+
 class IndexController extends Controller
 {
+
+//提现申请记录
+    public function application($id=null){
+        if($id==null){
+            $application = DB::table('applications as r')
+            ->leftJoin('users as a','r.userid','=','a.id')
+            ->select('a.username','a.created_at','a.point','r.id')
+            ->orderBy('r.created_at','desc')
+            ->get();
+
+            return view('admin.application')->with('application',$application);
+        }else{
+            //提现申请记录删除
+            $application = application::find($id);
+            if(!is_null($application)){
+                $application->delete();
+                return redirect('/admin/application');
+            }
+        }
+        
+    }
 
 //显示管理员登录页面
     public function login(){
@@ -110,7 +133,7 @@ public function index($id=null){
         $data=[
         'wPool'=>$user[0]->wPool,
         'admins'=>$admins,
-        'pools'=>$pools[0]->num,
+        'pools'=>@$pools[0]->num,
 
         ];
         return view('admin.index',$data);

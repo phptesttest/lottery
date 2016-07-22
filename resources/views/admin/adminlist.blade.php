@@ -76,7 +76,7 @@
                             <td>{{ $admin->aName}}</td>
                             <td>{{ $admin->password}}</td>
                             <td>{{ $admin->wPool}}</td>
-                            <td><a href="{{ asset('/admin/admindelete')}}/{{$admin->id}}"><button type="submit" class="btn btn-danger">删除</button></a></td>
+                            <td><a onclick="javascript:if(confirm('确定要删除此信息吗？')){alert('删除成功！');return true;}return false;" href="{{ asset('/admin/admindelete')}}/{{$admin->id}}"><button type="submit" class="btn btn-danger">删除</button></a></td>
                             </tr>
                         <?php
                              } 

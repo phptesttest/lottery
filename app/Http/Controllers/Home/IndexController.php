@@ -15,6 +15,7 @@ use Input;
 use App\common;
 use Illuminate\Support\Facades\Session;
 use App\rule;
+use App\application;
 
 class IndexController extends Controller
 {
@@ -24,9 +25,40 @@ class IndexController extends Controller
         return view('home.rules')->with('rule',$rule);
     }
 
+//用户提现申请
+    public function withdraw_apply($id=null){
+        if($id!=null){
+            $user = DB::table('users')->where('id','=',$id)->get();
+            if($user){
+                $application = new application;
+                $application->userid = $id;
+                $application->save();
+                return redirect('/index');
+            }else{
+                return redirect()->back()->with('errors','该用户不存在');
+            }
+            
+        }else{
+            return redirect()->back()->with('errors','请求错误');
+        }
+    }
    
     public function withdraw(){
-        return view('home.withdraw');
+        if(Session::get('username')){
+            $username = Session::get('username');
+            $user=DB::table('users')->where('username','=',$username)->get();
+            $point=$user[0]->point;
+            $userid = $user[0]->id;
+            $data=[
+                'username' => $username,
+                'point' => $point,
+                'userid' => $userid,
+            ];
+            return view('home.withdraw',$data);
+        }else{
+            return redirect('/');
+        }
+        
     }
     
    //显示登录页面

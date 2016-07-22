@@ -33,7 +33,7 @@
                             <td>{{$recharges->num}}</td>
                             <td>{{$recharges->created_at}}</td>
                             <td>{{$recharges->aName}}</td>
-                            <td><a href="{{ asset('/admin/delRecharge')}}/{{$recharges->id}}"><button class="btn btn-danger">删除</button></a></td>
+                            <td><a onclick="javascript:if(confirm('确定要删除此信息吗？')){alert('删除成功！');return true;}return false;" href="{{ asset('/admin/delRecharge')}}/{{$recharges->id}}"><button class="btn btn-danger">删除</button></a></td>
                         </tr>
                     @endforeach
                 @endif

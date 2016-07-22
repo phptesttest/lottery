@@ -42,7 +42,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ asset('/admin/index')}}">后台管理首页</a>
+            <a class="navbar-brand" href="{{ asset('/admin/index')}}">后台</a>
             <a class="navbar-brand" onclick="window.history.go(-1)" ><span class='glyphicon glyphicon-arrow-left'></span></a>
             <a class='navbar-brand' onclick="window.location.reload()"><span class='glyphicon glyphicon-refresh'></span ></a>
             <a class='navbar-brand' onclick="window.history.go(1)"><span class='glyphicon glyphicon-arrow-right' ></span></a>
@@ -80,18 +80,13 @@
                 <li><a href="{{ asset('/admin/account')}}">结算管理</a></li>
                 <li><a href="{{ asset('/admin/times')}}">赔率设置</a></li>
                 <li><a href="{{ asset('/admin/rules')}}">游戏规则设定</a></li>
-                <li><a href="javascript:void(0)" id="reload">刷新</a></li>
+                <li><a href="{{ asset('/admin/application')}}">查看提现申请</a></li>
                 <li><a href="{{ asset('/admin/logout')}}">退出</a></li>
             </ul>
         </div>
     </div>
 </nav>
-    @yield('content')
-<script type="text/javascript">
-    $("#reload").click(function(){
-        window.location.reload(); 
-    });
-    
+@yield('content') 
 </script>
 </body>
 </html>

@@ -43,7 +43,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ asset('/index')}}">欢迎来到首页</a>
+            <a class="navbar-brand" href="{{ asset('/index')}}">首页</a>
             <a class="navbar-brand" onclick="window.history.go(-1)" ><span class='glyphicon glyphicon-arrow-left'></span></a>
             <a class='navbar-brand' onclick="window.location.reload()"><span class='glyphicon glyphicon-refresh'></span ></a>
             <a class='navbar-brand' onclick="window.history.go(1)"><span class='glyphicon glyphicon-arrow-right' ></span></a>
@@ -55,7 +55,6 @@
                 <li><a href="{{ asset('/buy')}}">彩票下注</a></li>
                 <li><a href="{{ asset('/rules')}}">游戏规则</a></li>
                 <li><a href="{{ asset('/withdraw')}}">提现</a></li>
-                <li><a href="javascript:void(0)" id="reload">刷新</a></li>
                 <li><a href="{{ asset('/logout')}}">退出</a></li>
             </ul>
         </div>

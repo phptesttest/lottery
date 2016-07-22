@@ -36,6 +36,7 @@ Route::group(['middleware' => ['web']], function () {
 	  Route::get('/countdown', 'Home\IndexController@countdown');
 	  Route::get('/rules','Home\IndexController@rules');
 	  Route::get('/withdraw','Home\IndexController@withdraw');
+	  Route::get('/withdraw/{id}','Home\IndexController@withdraw_apply');
 
 });
 
@@ -55,7 +56,8 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('rules','Admin\IndexController@rules');
 	  Route::post('setrules','Admin\IndexController@setrules');
 	  Route::get('deleterules/{id}','Admin\IndexController@deleterules');
-
+	  Route::get('application','Admin\IndexController@application');//提现申请记录
+	  Route::get('application/{id}','Admin\IndexController@application');//提现申请记录
 
 });
 

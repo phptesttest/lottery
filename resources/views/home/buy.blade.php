@@ -32,7 +32,9 @@
                 <table>
                 	<tr>
 						<td class="period"><span id="nextExpect"></span></td>
+						<td>---</td>
 						<td><span id="nextTime"></span></td>
+						<td>---</td>
 						<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
 						<span id="showDes"></span>
 						</td>
@@ -44,6 +46,8 @@
             <form id="form" action="{{ asset('/buy')}}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input id="expect" type="hidden" name="expect" value="">
+
+
                <div class='table-responsive'>
                 <table class="table">
                     <tr>
@@ -129,6 +133,7 @@
 
                 </table>
                 </div>
+                
                 <input value=""  id="getId" type="hidden" name="getId">
                 <input type="button" value="返回" class="btn btn-info" id="return">
                 <input type="button" value="重置" class="btn btn-info" id="reset">

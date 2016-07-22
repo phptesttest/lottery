@@ -5,16 +5,17 @@
 		box-shadow:3px 3px #cccc;
 	}
 	.result tr td{
-		text-align:center;
+		text-align:left;
 	}
 	.smallRedball{
 		background-color:rgb(46,94,187);
 		color:white;
 		display: block;
-		width: 30px;
-		height: 30px;
-		line-height:30px;
-		border-radius: 30px
+		width: 20px;
+		height: 20px;
+		line-height:20px;
+		border-radius: 20px;
+		text-align:center;
 	}
 @endsection
 @section('content')
@@ -48,19 +49,19 @@
             <div class='table-responsive'>
                 <table class="table table-condensed result">
                     <tr>
-							<th>期次</th>
-							<th>开奖时间</th>
+							
 							<th>第一球</th>
 							<th>第二球</th>
 							<th>第三球</th>
 							<th>第四球</th>
 							<th>第五球</th>
 							<th>总和</th>
+							<th>期次</th>
+							<th>开奖时间</th>
 						</tr>
 						<tr>
-							<td class="period"><span id="nextExpect"></span></td>
-							<td><span id="nextTime"></span></td>
-							<td colspan="5" style="text-align:center;color:red;">距离开奖时间还有
+							
+							<td colspan="3" style="text-align:center;color:red;">距离开奖时间还有
 							<span id="showDes"></span>
 							<?php 
 								date_default_timezone_set('PRC');
@@ -73,8 +74,10 @@
 							 ?>
 							 <td><input type='button' class='btn btn-info' value="封盘" ></td>
 							 <?php }else{  ?>
-							<td><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
+							<td colspan="2"><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
 							<?php } ?>
+							<td class="period"><span id="nextExpect"></span></td>
+							<td><span id="nextTime"></span></td>
 						</tr> 
 
 						@if(count($datas)==0)
@@ -85,8 +88,7 @@
 					    
 					    @foreach($datas as $data)
 					    	<tr>
-							<td class="period"><?php echo $data->period ?></td>
-							<td><?php echo $data->time ?></td>
+							
 					        <?php
 					        	$all=0; 
 					        	$arr=stringToArray($data->number);
@@ -99,11 +101,14 @@
 					        	}
 					        ?>
 					        <td><?php echo $all ?></td>
+
+					        <td class="period"><?php echo $data->period ?></td>
+							<td><?php echo $data->time ?></td>
 					        </tr>
 					    @endforeach
 
 					    @endif
-		
+						
                 </table>
                 </div>
             </div>
