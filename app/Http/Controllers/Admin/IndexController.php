@@ -151,6 +151,12 @@ public function index($id=null){
             if($id != null){
                 $user=User::find($id);  //请求提现
                 if (!is_null($user)) { 
+                    if ($user->consuption>0) {
+                        $users = DB::table('users')->get();
+                        $flag = Session::get('flag');
+                        $msg="操作失败！你的消费还没达到扫码量还需消费".$user->consuption;
+                        return redirect()->back()->with('users',$users)->with('flag',$flag)->with('errors',$msg);
+                    }
                     $withdraw=new \App\withdraw;
                     $point=$user->point;
                     $withdraw->username=$user->username;

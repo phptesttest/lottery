@@ -19,7 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('password', 60);
             $table->integer('point');
             $table->integer('level');
-            $table->integer('loginTime');
+            $table->integer('consuption');
+            $table->integer('islogin');
             $table->integer('timeNub');
             $table->integer('account');
             $table->rememberToken();

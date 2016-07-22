@@ -94,11 +94,17 @@ class IndexController extends Controller
         $user=DB::select('select * from users where username = ?', [$username]); 
         //dd($user); die;   
         if($user){
+            if ($user[0]->islogin==1) {
+               return redirect()->back()->with('errors','该账号已在别处登录'); 
+            }
             $truepsw = md5(trim($user[0]->password));
             //验证密码
             if($truepsw == $password){
                 //存储用户账号和id
                 $userid = $user[0]->id;
+                $u=User::find($userid);
+                $u->islogin=1;
+                $u->save();
                 Session::put('userid',$userid);
                 Session::put('username',$username);
                 if(!empty($remember)){//如果用户选择了，记录登录状态就把用户名和加了密的密码放到cookie里面
@@ -372,6 +378,13 @@ class IndexController extends Controller
                     $userId=$users[0]->id;
                     $user=User::find($userId);
                     $user->point=$user->point-$point;
+                    if (($user->consuption-$point)<0) {
+                        $user->consuption=0;
+                    }else{
+                        $user->consuption=$user->consuption-$point;
+                    }
+                    
+
                     if ($user->save()) {
                        //更改彩池数据
                        $pools=pool::all();

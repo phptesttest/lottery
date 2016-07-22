@@ -63,12 +63,6 @@
 @yield('content')
 
 @yield('script')
-<script type="text/javascript">
-    $("#reload").click(function(){
-        window.location.reload(); 
-    });
-    
-</script>
 </body>
 </html>
 

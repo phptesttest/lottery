@@ -26,6 +26,7 @@ class UserController extends Controller
         $user->point=$point;
         $user->username=$account;
         $user->password=$password;
+        $user->consuption=$point;
         
         if ($user->save()) {
             //扣除管理员福利池
@@ -103,6 +104,7 @@ class UserController extends Controller
     	if (!is_null($user)) {
     		$oldPoint=$user->point;
     		$user->point=$oldPoint+$point;
+            $user->consuption=$user->consuption+$point;
             if ($user->save()) {
                 //存储操作管理信息
                 $adminid=$adname=Session::get('adminid');
