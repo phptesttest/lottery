@@ -19,7 +19,6 @@
                         <th>时间</th>
                         <th>提现用户</th>
                         <th>提现积分</th>
-                        <th>操作者</th>
                         <th>操作</th>
                     </tr>
                 @if(count($withdraw)==0)
@@ -35,7 +34,6 @@
                         <td>{{$withdraw->created_at}}</td>
                         <td>{{$withdraw->username}}</td>
                         <td>{{$withdraw->withdraw_num}}</td>
-                        <td>{{$withdraw->adminname}}</td>
                         <td><a onclick="javascript:if(confirm('确定要删除此信息吗？')){alert('删除成功！');return true;}return false;" href="{{ asset('/admin/withdraw')}}/{{$withdraw->id}}"><button type="submit" class="btn btn-danger">删除</button></a></td>
                     </tr>
                     <?php

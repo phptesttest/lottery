@@ -23,19 +23,19 @@
 						<input type="hidden" method='post' name="_token" value="{{ csrf_token() }}">
 
 						<div class="form-group">
-							<label class="col-md-4 control-label">用户名</label>
+							<label class="col-md-4 control-label">请输入你的邀请码</label>
 							<div class="col-md-4">
 								<input type="name" class="form-control" name="username" value="<?php echo @$_COOKIE['username'];?>" >
 								
 							</div>
 						</div>
 
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<label class="col-md-4 control-label">密码</label>
 							<div class="col-md-4">
 								<input type="password" class="form-control" name="password" value='<?php echo @$_COOKIE['password'];?>'>
 							</div>
-						</div>
+						</div> -->
 						<div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="checkbox">

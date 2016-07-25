@@ -98,7 +98,7 @@
 					    @foreach($bigs as $big)
 					    	<td>大</td>
 							<td><?php echo $big->rate ?></td>
-							<td><input class="rate" type='text' name='<?php echo $big->id.":".$big->cId."球".$big->cName ?>' ></td>
+							<td><input class="rate" type='text' name='<?php echo $big->id.":".$big->cId."球".$big->cName ?>' size="10" onkeyup="if(event.keyCode !=37 && event.keyCode != 39){if (! /^\d+$/ig.test(this.value)){this.value='';}}" ></td>
 					    @endforeach
 					    </tr>
 
@@ -107,7 +107,7 @@
 					    @foreach($smalls as $small)
 					    	<td>小</td>
 							<td><?php echo $small->rate ?></td>
-							<td><input class="rate" type='text' name='<?php echo $small->id.":".$small->cId."球".$small->cName ?>'></td>
+							<td><input class="rate" type='text' name='<?php echo $small->id.":".$small->cId."球".$small->cName ?>' size="10"  onkeyup="if(event.keyCode !=37 && event.keyCode != 39){if (! /^\d+$/ig.test(this.value)){this.value='';}}" ></td>
 					    @endforeach
 					    </tr>
 
@@ -116,7 +116,7 @@
 					    @foreach($singles as $single)
 					    	<td>单</td>
 							<td><?php echo $single->rate ?></td>
-							<td><input class="rate" type='text' name='<?php echo $single->id.":".$single->cId."球".$single->cName ?>'></td>
+							<td><input class="rate" type='text' name='<?php echo $single->id.":".$single->cId."球".$single->cName ?>' size="10"  onkeyup="if(event.keyCode !=37 && event.keyCode != 39){if (! /^\d+$/ig.test(this.value)){this.value='';}}"></td>
 					    @endforeach
 					    </tr>
 
@@ -125,7 +125,7 @@
 					    @foreach($doubles as $double)
 					    	<td>双</td>
 							<td><?php echo $double->rate ?></td>
-							<td><input class="rate" type='text' name='<?php echo $double->id.":".$double->cId."球".$double->cName ?>'></td>
+							<td><input class="rate" type='text' name='<?php echo $double->id.":".$double->cId."球".$double->cName ?>' size="10"  onkeyup="if(event.keyCode !=37 && event.keyCode != 39){if (! /^\d+$/ig.test(this.value)){this.value='';}}"></td>
 					    @endforeach
 					    </tr>
 
@@ -135,7 +135,7 @@
                 </div>
                 
                 <input value=""  id="getId" type="hidden" name="getId">
-                <input type="button" value="返回" class="btn btn-info" id="return">
+                <a href="{{asset('/index')}}"><input type="button" value="返回" class="btn btn-info" id="return"></a>
                 <input type="button" value="重置" class="btn btn-info" id="reset">
                 <input type="button" value="提交" class="btn btn-info" id="sub">
                </form> 
@@ -146,9 +146,9 @@
 <script type="text/javascript">
 $(function(){
 
-	$("#return").click(function(){
-		history.back(-1);
-	});
+	// $("#return").click(function(){
+	// 	history.go(-1);
+	// });
 
 	$("#reset").click(function(){
 		var alls=$(".rate");

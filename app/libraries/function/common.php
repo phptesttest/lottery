@@ -1,11 +1,26 @@
 <?php
+//生成随机账号-----前台账号
 
-//生成随机账号
+if (!function_exists('getUserRandomAccount')) {
+	function getUserRandomAccount($len, $chars=null)
+	 {
+	     if (is_null($chars)){
+	         $chars = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQUVWXYZ";
+	     }  
+	     mt_srand(10000000*(double)microtime());
+	     for ($i = 0, $str = '', $lc = strlen($chars)-1; $i < $len; $i++){
+	         $str .= $chars[mt_rand(0, $lc)];  
+	     }
+	     return $str;
+	 }
+}
+
+//生成随机账号---后台账号
 if (!function_exists('getRandomAccount')) {
 	function getRandomAccount($len, $chars=null)
 	 {
 	     if (is_null($chars)){
-	         $chars = "0123456789";
+	         $chars = "abcdefghijklmnopqrs0123456789";
 	     }  
 	     mt_srand(10000000*(double)microtime());
 	     for ($i = 0, $str = '', $lc = strlen($chars)-1; $i < $len; $i++){

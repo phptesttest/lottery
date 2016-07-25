@@ -5,21 +5,34 @@
 		box-shadow:3px 3px #cccc;
 	}
 	.result tr td{
-		text-align:left;
+		text-align:center;
 	}
 	.smallRedball{
 		background-color:rgb(46,94,187);
 		color:white;
 		display: block;
-		width: 20px;
-		height: 20px;
-		line-height:20px;
-		border-radius: 20px;
+		width: 30px;
+		height: 30px;
+		line-height:30px;
+		border-radius: 30px;
 		text-align:center;
+	}
+	.container{
+		padding-right:0px;
+		padding-left:5px;
+	}
+	.table-condensed > thead > tr > th, 
+	.table-condensed > tbody > tr > th, 
+	.table-condensed > tfoot > tr > th, 
+	.table-condensed > thead > tr > td, 
+	.table-condensed > tbody > tr > td, 
+	.table-condensed > tfoot > tr > td{
+		padding-top: 5px;
+		text-align: left;
 	}
 @endsection
 @section('content')
-<div class="col-xs-12 col-sm-3">
+<div class="col-xs-12 col-sm-3 container">
         <div class="panel">
             <div class="panel-heading">
                 <h3 class="panel-title">彩票结果信息</h3>
@@ -40,7 +53,7 @@
       </div>
 </div>
 
-    <div class="col-xs-12 col-sm-9">
+    <div class="col-xs-12 col-sm-9 container">
         <div class="panel">
             <div class="panel-heading">
                 <h3 class="panel-title">彩票结果信息</h3>
@@ -50,11 +63,11 @@
                 <table class="table table-condensed result">
                     <tr>
 							
-							<th>第一球</th>
-							<th>第二球</th>
-							<th>第三球</th>
-							<th>第四球</th>
-							<th>第五球</th>
+							<th>一</th>
+							<th>二</th>
+							<th>三</th>
+							<th>四</th>
+							<th>五</th>
 							<th>总和</th>
 							<th>期次</th>
 							<th>开奖时间</th>

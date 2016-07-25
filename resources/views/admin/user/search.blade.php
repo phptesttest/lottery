@@ -62,12 +62,12 @@
 
                             <tr>
                                 <th>用户账号</th>
-                                <th>用户密码</th>
+                                <!-- <th>用户密码</th> -->
                                 <th>用户积分</th>
                             </tr>
                             <tr>
                                 <td>{{ $user->username}}</td>
-                                <td>{{ $user->password}}</td>
+                                <!-- <td>{{ $user->password}}</td> -->
                                 <td>{{ $user->point}}</td>
                             </tr>
 

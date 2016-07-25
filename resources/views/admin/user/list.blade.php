@@ -14,16 +14,22 @@
     .enterPoint{
         width:50px;
     }
+    .container{
+        padding:0px;
+    }
+    .respondcontainer{
+        padding:0px;
+    }
 @endsection
 <?php 
 
 ?>
 @section('content')
 	<div class="container">
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-xs-12 col-sm-12" class="respondcontainer">
         <div class="panel">
                 <div class="panel-heading">
-                    <h3 class="panel-title">账号生成</h3>
+                    <h3 class="panel-title">生成用户邀请码</h3>
                 </div>
                 <div class="panel-body">
                 <form id="form1" action="{{ asset('/admin/userlist')}}" method="POST" onsubmit = "return checkUser();">
@@ -33,16 +39,29 @@
                         <tr>
                             <th>下注等级</th>
                             <th>初始积分</th>
-                            <th></th>
                         </tr>
                         <tr>
-                            <td><select name='level'>
+                            <td><select name='level' class="form-control">
                                 <option value="1" selected="selected">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
                             </select></td>
                             <td><input id="point" class="enterPoint" type='text' name='point'></td>
+                            
+                        </tr>
+                        <tr>
                             <td><input type="submit" id="submit" value="确定生成" class="btn btn-info"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <strong>PS:</strong>等级1：最大下注金额为100元
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">等级2：最大下注金额为1000元</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">等级3：最大下注金额为10000元</td>
                         </tr>
                     </table>
                     </div>
@@ -67,7 +86,6 @@
 
                     <tr>
                         <th>用户账号</th>
-                        <th>用户密码</th>
                         <th>用户积分</th>
                         @if(Session::has('big'))
                         <th>操作</th>
@@ -79,7 +97,6 @@
                     @foreach($users as $user)
                         <tr>
                             <td>{{ $user->username}}</td>
-                            <td>{{ $user->password}}</td>
                             <td>{{ $user->point}}</td>
                             @if(Session::has('big'))
                             <td><a onclick="javascript:if(confirm('确定要删除此信息吗？')){alert('删除成功！');return true;}return false;" href="{{ asset('/admin/userlist')}}/{{$user->id}}"><button class="btn btn-danger">删除</button></a></td>
@@ -96,6 +113,7 @@
 
 </div>
 <script type="text/javascript">
+
    function checkUser(){
         var point=$("#point").val();
         var s = /^[0-9]*$/;

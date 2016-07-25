@@ -20,7 +20,8 @@
         color:white;
     }
     .navbar{
-        background-color: #B3B3B3;
+        background-color: rgba(151, 168, 173, 0.32);
+        color:white;
     }
     .dropdown-menu{
         background-color: #B3B3B3;
@@ -77,9 +78,15 @@
                         <li><a href="{{ asset('/admin/withdraw')}}">提现记录</a></li>
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">规则设定<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="{{ asset('/admin/rules')}}">游戏规则设定</a></li>
+                        <li><a href="{{ asset('/admin/buylevel')}}">用户下注等级设定</a></li>
+                    </ul>
+                </li>
                 <li><a href="{{ asset('/admin/account')}}">结算管理</a></li>
                 <li><a href="{{ asset('/admin/times')}}">赔率设置</a></li>
-                <li><a href="{{ asset('/admin/rules')}}">游戏规则设定</a></li>
                 <li><a href="{{ asset('/admin/application')}}">查看提现申请</a></li>
                 <li><a href="{{ asset('/admin/logout')}}">退出</a></li>
             </ul>

@@ -19,8 +19,8 @@ class UserController extends Controller
 
         $level=Request::input('level');
         $point=Request::input('point');
-        $account=getRandomAccount(10);
-        $password=getRandomPassword(10);
+        $account=getUserRandomAccount(12);
+        $password=getRandomPassword(2);
         $user=new User();
         $user->level=$level;
         $user->point=$point;

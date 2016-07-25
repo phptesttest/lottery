@@ -58,7 +58,8 @@ Route::group(['middleware' => ['web'],'prefix'=>'admin'], function () {
 	  Route::get('deleterules/{id}','Admin\IndexController@deleterules');
 	  Route::get('application','Admin\IndexController@application');//提现申请记录
 	  Route::get('application/{id}','Admin\IndexController@application');//提现申请记录
-
+	  Route::get('buylevel','Admin\IndexController@levelset');
+	  Route::post('levelsetFun','Admin\IndexController@levelsetFun');
 });
 
 /**记录(充值记录和下注记录) Record 路由**/

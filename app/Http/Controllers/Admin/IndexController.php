@@ -21,9 +21,33 @@ use DB;
 use Session;
 use App\rule;
 use App\application;
-
+use App\level;
 class IndexController extends Controller
 {
+
+    //设定用户等级下注的最大值
+    public function levelsetFun(){
+        $level=Request::input('level');
+        $max=Request::input('max');
+        $levels = new level();
+        $find = DB::table('levels')->where('level','=',$level)->get();
+        //dd(count($find));die;
+        if(count($find)!=0){    //数据库中有信息，则覆盖原来的
+            DB::update('update levels set max = ? where level = ?', [$max,$find[0]->level]);
+        }else{  //数据库中没有,则插入
+            $levels->level = $level;
+            $levels->max = $max;
+            $levels->save();
+        }
+       return redirect('/admin/buylevel');
+    
+    }
+
+    //用户下注等级设定
+    public function levelset(){
+        $result = DB::table('levels')->orderBy('level')->get();
+        return view('admin.levelset')->with('levels',$result);
+    }
 
 //提现申请记录
     public function application($id=null){

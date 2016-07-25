@@ -70,50 +70,49 @@ class IndexController extends Controller
         Session::forget('username');
         Session::forget('userid');
         Session::flush();
-        setcookie('password',"");
+        //setcookie('password',"");
         return redirect('/');
     }
 
 //用户登录表单的处理post类型
     public function logindeal(){
 
-        $password = Request::input('password');
-        if( strlen($password)>10 ){  //判断密码是否加过密
-            $password = $password;
-        }else{
-            $password = md5($password);
-        }
+        //$password = Request::input('password');
+        // if( strlen($password)>10 ){  //判断密码是否加过密
+        //     $password = $password;
+        // }else{
+        //     $password = md5($password);
+        // }
         $username  = Request::input('username');
         $remember=Request::input('remember');//是否自动登录标示
         //dd($username);die;
-        if($password==''||$username==''){
-            return redirect()->back()->with('errors','账号或密码不能为空');
+        if($username==''){
+            return redirect()->back()->with('errors','请输入你的邀请码');
         }
         //dd($username);die;
         //$user=DB::table('users')->where('username','=',$username)->get();
         $user=DB::select('select * from users where username = ?', [$username]); 
         //dd($user); die;   
         if($user){
-            if ($user[0]->islogin==1) {
-               return redirect()->back()->with('errors','该账号已在别处登录'); 
-            }
-            $truepsw = md5(trim($user[0]->password));
+            //$truepsw = md5(trim($user[0]->password));
             //验证密码
-            if($truepsw == $password){
+            // if($truepsw == $password){
+                // if (session_id()) {
+                //     return redirect()->back()->with('errors','该账号已在别处登录'); 
+                // }
                 //存储用户账号和id
                 $userid = $user[0]->id;
                 $u=User::find($userid);
-                $u->islogin=1;
                 $u->save();
                 Session::put('userid',$userid);
                 Session::put('username',$username);
                 if(!empty($remember)){//如果用户选择了，记录登录状态就把用户名和加了密的密码放到cookie里面
                            setcookie("username",$username,strtotime(getCurrentTime())+3600*24*365);
-                           setcookie("password",$password,strtotime(getCurrentTime())+3600*24*365);
+                           //setcookie("password",$password,strtotime(getCurrentTime())+3600*24*365);
                            setcookie("remember",$remember,strtotime(getCurrentTime())+3600*24*365);
                 }else{
                         setcookie("username","");
-                        setcookie("password","");
+                        //setcookie("password","");
                         setcookie('remember',"");
                 }
                 //结算
@@ -124,12 +123,12 @@ class IndexController extends Controller
                 $common->updateOpenRecord();
                 //更新下一期开奖信息数据库
                 $common->updateNextOpenInfo();
-                return redirect('/index')->with('message','登录成功');
-            }else{
-                return redirect()->back()->with('errors','密码错误');
-            }
+                return redirect('/index')->with('message','欢迎你！');
+            // }else{
+            //     return redirect()->back()->with('errors','密码错误');
+            // }
         }else{
-            return redirect()->back()->with('errors','该用户不存在');
+            return redirect()->back()->with('errors','您输入的邀请码不正确');
         }
               
     }
