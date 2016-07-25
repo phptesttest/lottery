@@ -42,9 +42,8 @@
 @section('content')
 <div class="col-xs-12 col-sm-3 container">
         <div class="panel">
-            <div class="panel-heading">
-                <h3 class="panel-title">彩票结果信息</h3>
-            </div>
+            <!-- <div class="panel-heading">
+            </div> -->
             <div class="panel-body">
             <div class="table-responsive">
                 <table class="table">

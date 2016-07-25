@@ -13,7 +13,6 @@
     <script src="//cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <style>
     body {
-    padding-top: 50px;
     padding-bottom: 40px;
     color: #5a5a5a;
     }
@@ -32,7 +31,7 @@
     @yield('headder')
     </style>
 </head>
-<body id="app-layout" style='padding-top:100px;'>
+<body id="app-layout" style='padding-top:60px;'>
     <nav class="navbar navbar-default navbar navbar-fixed-top" role="navigation">
         <div class="container-fluid">
             <div class="navbar-header">

@@ -25,6 +25,7 @@
                     </tr>
                    <tr><td><a href="{{ asset('/withdraw')}}/{{$userid}}"><button type="submit" class="btn btn-primary" onclick="confirm('你确定要申请提现吗？')">申请提现</button></a></td></tr>
                 </table>
+                <p>申请提现后请联系客服，以客服结算时的金额为准。</p>
                 </div>
             </div>
         </div>
