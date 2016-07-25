@@ -19,12 +19,11 @@
                         <th>个人名称</th>
                         <th>个人积分</th>
                     </tr>
-                    
                     <tr>
                         <td>{{$username}}</td>
                         <td>{{$point}}</td>
                     </tr>
-                   <tr><td><a href='/withdraw/{{$userid}}'><button type="submit" class="btn btn-primary" onclick="confirm('你确定要申请提现吗？')">申请提现</button></a></td></tr>
+                   <tr><td><a href="{{ asset('/withdraw')}}/{{$userid}}"><button type="submit" class="btn btn-primary" onclick="confirm('你确定要申请提现吗？')">申请提现</button></a></td></tr>
                 </table>
                 </div>
             </div>

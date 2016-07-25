@@ -29,6 +29,14 @@
 	.table-condensed > tfoot > tr > td{
 		padding-top: 5px;
 		text-align: left;
+		width:50px;
+	}
+	.table-condensed 
+	.result{
+
+	}
+	#lotteryresult{
+		padding-top:0px;
 	}
 @endsection
 @section('content')
@@ -38,10 +46,11 @@
                 <h3 class="panel-title">彩票结果信息</h3>
             </div>
             <div class="panel-body">
+            <div class="table-responsive">
                 <table class="table">
                     	<tr>
-							<th>用户账号</th>
-							<th>用户余额</th>
+							<th>邀请码</th>
+							<th>余额</th>
 						</tr>
 						<tr>
 							<td><em>{{$username}}</em></td>
@@ -49,8 +58,29 @@
 						</tr>
 						
                 </table>
+              </div>
+                <div >
+                	<p style="color:blue;">您最近的十笔交易</br></p>
+                	<?php
+                	if (isset($records)) {
+                		foreach ($records as $record) {
+                			$which=$record->cId;
+                			if ($which==6) {
+                				echo '第'.$period.'期'.' :总和'.$record->cName.'金额'.$record->number.'</br>';
+                			}
+                			else{
+                				echo '第'.$period.'期'.' :第'.$record->cId.$record->cName.'金额'.$record->number.'</br>';
+                			
+                			}
+                		}	
+                	}
+                		
+                	?>
+                	              
+        		</div>
             </div>
       </div>
+     
 </div>
 
     <div class="col-xs-12 col-sm-9 container">
@@ -58,23 +88,12 @@
             <div class="panel-heading">
                 <h3 class="panel-title">彩票结果信息</h3>
             </div>
-            <div class="panel-body">
-            <div class='table-responsive'>
-                <table class="table table-condensed result">
-                    <tr>
+            <div class="panel-body" id='lotteryresult'>
+            	<div class='table-responsive'>
+                	<table class="table table-condensed result">
+                	<tr>
 							
-							<th>一</th>
-							<th>二</th>
-							<th>三</th>
-							<th>四</th>
-							<th>五</th>
-							<th>总和</th>
-							<th>期次</th>
-							<th>开奖时间</th>
-						</tr>
-						<tr>
-							
-							<td colspan="3" style="text-align:center;color:red;">距离开奖时间还有
+							<td colspan="4" style="text-align:center;color:red;">&nbsp;&nbsp;&nbsp;&nbsp;距离开奖时间还有
 							<span id="showDes"></span>
 							<?php 
 								date_default_timezone_set('PRC');
@@ -87,11 +106,24 @@
 							 ?>
 							 <td><input type='button' class='btn btn-info' value="封盘" ></td>
 							 <?php }else{  ?>
-							<td colspan="2"><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-info' value="投注" ></a></td>
+							<td colspan="2"><a href="{{ asset('/buy')}}"><input type='button' class='btn btn-danger' value="投注" ></a></td>
 							<?php } ?>
-							<td class="period"><span id="nextExpect"></span></td>
+							
 							<td><span id="nextTime"></span></td>
+							<td class="period"><span id="nextExpect"></span></td>
 						</tr> 
+
+                    	<tr>
+							<td>一</td>
+							<td>二</td>
+							<td>三</td>
+							<td>四</td>
+							<td>五</td>
+							<td>总和</td>
+							<th>开奖时间</td>
+							<td>期次</td>
+						</tr>
+						
 
 						@if(count($datas)==0)
 
@@ -113,16 +145,17 @@
 					        <?php
 					        	}
 					        ?>
-					        <td><?php echo $all ?></td>
+					        <td><strong><?php echo $all ?></strong></td>
 
-					        <td class="period"><?php echo $data->period ?></td>
 							<td><?php echo $data->time ?></td>
+
+							<td class="period"><?php echo $data->period ?></td>
 					        </tr>
 					    @endforeach
 
 					    @endif
 						
-                </table>
+                	</table>
                 </div>
             </div>
         </div>

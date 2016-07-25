@@ -47,9 +47,6 @@ class UserController extends Controller
                 $pools[0]->save();
            }
         }
-
-
-
         return Redirect('/admin/userlist');
     }
 

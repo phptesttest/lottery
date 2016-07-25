@@ -52,17 +52,6 @@
                         <tr>
                             <td><input type="submit" id="submit" value="确定生成" class="btn btn-info"></td>
                         </tr>
-                        <tr>
-                            <td colspan="2">
-                                <strong>PS:</strong>等级1：最大下注金额为100元
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">等级2：最大下注金额为1000元</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">等级3：最大下注金额为10000元</td>
-                        </tr>
                     </table>
                     </div>
                     </form>
@@ -75,27 +64,23 @@
                 <h3 class="panel-title">用户列表信息</h3>
             </div>
             <div class="panel-body">
-
                 @if(count($users)==0)
-
                   <p>您还没有生成用户账号！</p>  
-
                 @else
                     <div class='table-responsive'>
                     <table class="table">
-
                     <tr>
-                        <th>用户账号</th>
-                        <th>用户积分</th>
+                        <th>等级</th>
+                        <th>邀请码</th>
+                        <th>积分</th>
                         @if(Session::has('big'))
                         <th>操作</th>
                         @endif
                     </tr>
                    
-
-                
-                    @foreach($users as $user)
+                 @foreach($users as $user)
                         <tr>
+                            <td>{{ $user->level}}</td>
                             <td>{{ $user->username}}</td>
                             <td>{{ $user->point}}</td>
                             @if(Session::has('big'))

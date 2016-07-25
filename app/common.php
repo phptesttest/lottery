@@ -33,6 +33,9 @@ class common extends Model
 	                    $user=User::find($userId);
 	                    $oldPoint=$user->point;
 	                    $user->point=$oldPoint+$addpoint;
+	                  //结算的时候用户的提现记录加1
+	                    //$user->witime += 1;
+
 	                    if ($user->save()) {
 	                        //更改彩池数据
 	                       $pools=pool::all();

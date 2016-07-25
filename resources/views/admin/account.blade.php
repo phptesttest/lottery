@@ -40,7 +40,7 @@
                             <td>{{ $user->username}}</td>
                             <td>{{ $user->point}}</td>
                             @if(Session::has('big'))
-                            <td><a href="{{ asset('/admin/account')}}/{{ $user->id}}"><button type="submit" class="btn btn-info">提现</button></a></td>
+                            <td><a href="{{ asset('/admin/account')}}/{{ $user->id}}"><button type="submit" class="btn btn-info">结算</button></a></td>
                             @endif
                         </tr>
                         <?php } ?>

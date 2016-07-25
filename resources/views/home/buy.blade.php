@@ -134,6 +134,7 @@
                 </table>
                 </div>
                 
+                <br/>
                 <input value=""  id="getId" type="hidden" name="getId">
                 <a href="{{asset('/index')}}"><input type="button" value="返回" class="btn btn-info" id="return"></a>
                 <input type="button" value="重置" class="btn btn-info" id="reset">
@@ -175,7 +176,10 @@ $(function(){
 				allPoints=parseInt(allPoints)+parseInt(alls[i].value);
 			}
 		}
-		if (({{ $point}})<allPoints) {
+		if( {{$maxvalue}}<allPoints ){
+			alert('已超过最大下注限度,请重新下注');
+		}
+		else if (({{ $point}})<allPoints) {
 			alert('你的余额不足');
 		}
 		else if (str!="") {
@@ -206,6 +210,7 @@ $(function(){
       $("#nextTime").html(re.nexttime);
       $("#showDes").html(re.desTime);
       $("#expect").val(re.nextexpect);
+
     }
     })
 });

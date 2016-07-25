@@ -16,6 +16,7 @@ use App\common;
 use Illuminate\Support\Facades\Session;
 use App\rule;
 use App\application;
+use App\level;
 
 class IndexController extends Controller
 {
@@ -213,11 +214,18 @@ class IndexController extends Controller
                 }
                 
             }
-      
+            $records=DB::table('bets as b')
+                    ->leftJoin('categories as c','b.content','=','c.id')
+                    ->where('b.username','=',Session::get('username'))
+                    ->select('b.*','c.cName','c.cId')
+                    ->orderBy('period','desc')->get();  
+            $period=Session::get('period');   
             $data=[
                 'datas'=>$dates,
                 'username'=>$username,
                 'point'=>$point,
+                'records'=>$records,
+                'period'=>$period,
             ];
             return view('home.index',$data);
         }else{
@@ -322,6 +330,7 @@ class IndexController extends Controller
                 $nextinfos=nextinfo::all();
                 $nextinfo[0]->period=nextExpect($nextinfo[0]->period);
                 $nextinfo[0]->time=nextTime($nextinfo[0]->time);
+                Session::put('period',$nextinfo[0]->period);
                 $nextinfo[0]->save();
             }
         }
@@ -414,16 +423,21 @@ class IndexController extends Controller
             $samll=DB::table('categories')->where('cName','=','小')->orderBy('cId','Asc')->get();
             $single=DB::table('categories')->where('cName','=','单')->orderBy('cId','Asc')->get();
             $double=DB::table('categories')->where('cName','=','双')->orderBy('cId','Asc')->get();
+            
             $username=Session::get('username');
             $users=DB::table('users')->where('username','=',$username)->get();
             $userId=$users[0]->id;
             $user=User::find($userId);
+            $level = $user->level;
+            $levelmax = DB::table('levels')->where('level','=',$level)->get();
+            //dd($levelmax);die;
             $data=[
                 'bigs'=>$big,
                 'smalls'=>$samll,
                 'singles'=>$single,
                 'doubles'=>$double,
                 'point'=>$user->point,
+                'maxvalue'=>$levelmax[0]->max,
             ];
             return view('home.buy',$data);
         }else{
