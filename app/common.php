@@ -64,9 +64,10 @@ class common extends Model
    	public function updateOpenRecord(){
 	   	date_default_timezone_set('PRC');
 	    $nowaday=getCurrentDate();
-	    $openRecords=openrecord::all();
+	    $openRecords=DB::table('openrecords')->take(2)->get();
 	    if (count($openRecords)!=0) {
 	        if (isSameDay($nowaday,$openRecords[0]->created_at)==0) {
+	        	$openrecords=openrecord::all();
 	            foreach ($openRecords as $key => $value) {
 	                $value->delete();
 	            }

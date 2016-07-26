@@ -140,15 +140,17 @@ class IndexController extends Controller
 
             $common=new common();
             $common->updateOpenRecord();
-            $common->updateDB();          
+            //$common->updateDB();          
             //从下注记录表中读出未结算记录，进行结算
-            $common->account();
+            //$common->account();
             //从数据库查询数据，传给前台显示
             //如果没有网，怎么处理
             $dates=DB::table('openrecords')->orderBy('time','desc')->take('20')->get();
             $user=DB::table('users')->where('username','=',$username)->get();
             $point=$user[0]->point;
 
+            //获取开奖信息，加工整理后存入数据库
+            // 获取数据库开奖条数
             $openRecords=openrecord::all();
             $dbNub=count($openRecords);
             $nowaday=getCurrentDate();
@@ -163,6 +165,33 @@ class IndexController extends Controller
             $res=json_decode($output); 
             $newNub=count($res->data);
             $newres=$res->data;
+            // 如果条数一样，则不用更新，否则将新开奖记录存入数据库
+            if ($dbNub!=$newNub) {
+                //如何存储开奖记录：
+                //如果数据库为空时，一次存储每一天开奖记录，开奖时间从00:05开始，如果是两点前，后一期加五分钟，如果是十点前，每后一期加十分钟.读出开奖记录时间，如果开奖时间在前面计算出来的后五分钟或十分钟内，则存入，否则，该期开奖记录为空。
+                if ($dbNub==0) {
+                    
+                    for ($i=count($res->data)-1; $i>=0 ; $i--) { 
+                        $openrecord=new openrecord;
+                       //echo $newres[$i]->opencode;
+                        $openrecord->period=$newres[$i]->expect;
+                        $openrecord->number=$newres[$i]->opencode;
+                        $openrecord->time=outDelay(timeTurn($newres[$i]->opentime));
+                        $openrecord->save();
+                    }
+                }
+                else{
+                    $addNub=$newNub-$dbNub;
+                    for ($i=$addNub-1; $i>=0 ; $i--) { 
+                        $openrecord=new openrecord;
+                       //echo $newres[$i]->opencode;
+                        $openrecord->period=$newres[$i]->expect;
+                        $openrecord->number=$newres[$i]->opencode;
+                        $openrecord->time=outDelay(timeTurn($newres[$i]->opentime));
+                        $openrecord->save();
+                    }
+                }
+            }
 
             //读出下一条开奖信息
             $nexts=nextinfo::all();
@@ -218,14 +247,12 @@ class IndexController extends Controller
                     ->leftJoin('categories as c','b.content','=','c.id')
                     ->where('b.username','=',Session::get('username'))
                     ->select('b.*','c.cName','c.cId')
-                    ->orderBy('period','desc')->get();  
-            $period=Session::get('period');   
+                    ->orderBy('period','desc')->get();    
             $data=[
                 'datas'=>$dates,
                 'username'=>$username,
                 'point'=>$point,
                 'records'=>$records,
-                'period'=>$period,
             ];
             return view('home.index',$data);
         }else{
@@ -330,7 +357,6 @@ class IndexController extends Controller
                 $nextinfos=nextinfo::all();
                 $nextinfo[0]->period=nextExpect($nextinfo[0]->period);
                 $nextinfo[0]->time=nextTime($nextinfo[0]->time);
-                Session::put('period',$nextinfo[0]->period);
                 $nextinfo[0]->save();
             }
         }

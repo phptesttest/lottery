@@ -65,10 +65,10 @@
                 		foreach ($records as $record) {
                 			$which=$record->cId;
                 			if ($which==6) {
-                				echo '第'.$period.'期'.' :总和'.$record->cName.'金额'.$record->number.'</br>';
+                				echo '第'.$record->period.'期'.' :总和'.$record->cName.'金额'.$record->number.'</br>';
                 			}
                 			else{
-                				echo '第'.$period.'期'.' :第'.$record->cId.$record->cName.'金额'.$record->number.'</br>';
+                				echo '第'.$record->period.'期'.' :第'.$record->cId.'球'.$record->cName.'金额'.$record->number.'</br>';
                 			
                 			}
                 		}	
