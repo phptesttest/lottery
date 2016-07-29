@@ -10,7 +10,7 @@ use App\withdraw;
 use App\common;
 use App\bet;
 use App\recharge;
-use App\openrecord;
+use App\openRecord;
 use Session;
 
 class RecordController extends Controller
@@ -78,7 +78,7 @@ class RecordController extends Controller
     public function openrecord(){
         //获取开奖信息，加工整理后存入数据库
         // 获取数据库开奖条数
-        $openRecords=openrecord::all();
+        $openRecords=openRecord::all();
         $dbNub=count($openRecords);
         $nowaday=getCurrentDate();
         //获取网站开奖条数
@@ -94,7 +94,7 @@ class RecordController extends Controller
             if ($dbNub==0) {
                 
                 for ($i=count($res->data)-1; $i>=0 ; $i--) { 
-                    $openrecord=new openrecord;
+                    $openrecord=new openRecord;
                    //echo $newres[$i]->opencode;
                     $openrecord->period=$newres[$i]->expect;
                     $openrecord->number=$newres[$i]->opencode;
@@ -105,7 +105,7 @@ class RecordController extends Controller
             else{
                 $addNub=$newNub-$dbNub;
                 for ($i=$addNub-1; $i>=0 ; $i--) { 
-                    $openrecord=new openrecord;
+                    $openrecord=new openRecord;
                    //echo $newres[$i]->opencode;
                     $openrecord->period=$newres[$i]->expect;
                     $openrecord->number=$newres[$i]->opencode;

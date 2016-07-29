@@ -11,7 +11,7 @@ use App\User;
 use App\recharge;
 use App\common;
 use App\pool;
-use App\openrecord;
+use App\openRecord;
 use App\nextinfo;
 use App\bet;
 use App\admin_log;

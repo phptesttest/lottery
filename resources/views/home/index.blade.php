@@ -40,6 +40,7 @@
 	}
 @endsection
 @section('content')
+
 <div class="col-xs-12 col-sm-3 container">
         <div class="panel">
             <!-- <div class="panel-heading">
