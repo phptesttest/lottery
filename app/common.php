@@ -69,7 +69,8 @@ class common extends Model
 	        if (isSameDay($nowaday,$openRecords[0]->created_at)==0) {
 	        	$openrecords=openrecord::all();
 	            foreach ($openRecords as $key => $value) {
-	                $value->delete();
+	            	$open=openRecord::find($value->id);
+	                $open->delete();
 	            }
 	        }
 	    }

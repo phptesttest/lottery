@@ -247,7 +247,9 @@ class IndexController extends Controller
                     ->leftJoin('categories as c','b.content','=','c.id')
                     ->where('b.username','=',Session::get('username'))
                     ->select('b.*','c.cName','c.cId')
-                    ->orderBy('period','desc')->get();    
+                    ->orderBy('period','desc')
+                    ->take('10')
+                    ->get();    
             $data=[
                 'datas'=>$dates,
                 'username'=>$username,

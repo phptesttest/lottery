@@ -57,6 +57,7 @@ if (!function_exists('getCurrentTime')) {
 		$arr=json_decode($output);
 		return $arr->now;
 	}
+	
 }
 
 //获取标准的日期
