@@ -8,9 +8,9 @@
 
     <title>Laravel</title>
 
-    <link href="//cdn.bootcss.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
-    <script src="//cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-    <script src="//cdn.bootcss.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{URL::asset('/css/bootstrap3.2.0.min.css')}}">
+    <script type="text/javascript" src="{{URL::asset('/js/jquery1.11.1.min.js')}}"></script>
+    <script type="text/javascript" src="{{URL::asset('/js/bootstrap3.2.0.min.js')}}"></script>
     <style>
     body {
     padding-bottom: 40px;
@@ -43,9 +43,10 @@
                 <span class="icon-bar"></span>
             </button>
             <!-- <a class="navbar-brand" href="{{ asset('/index')}}">首页</a> -->
-            <a class="navbar-brand" onclick="{{ asset('/index')}}" ><span class='glyphicon glyphicon-arrow-left'></span></a>
+            <a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            <a class="navbar-brand" href="{{ asset('/index')}}" ><span class='glyphicon glyphicon-arrow-left'></span></a>
             <a class='navbar-brand' onclick="window.location.reload()"><span class='glyphicon glyphicon-refresh'></span ></a>
-            <a class='navbar-brand' onclick="window.history.go(1)"><span class='glyphicon glyphicon-arrow-right' ></span></a>
+           <!--  <a class='navbar-brand' onclick="window.history.go(1)"><span class='glyphicon glyphicon-arrow-right' ></span></a> -->
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

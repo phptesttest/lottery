@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\bet;
-use App\openrecord;
+use App\openRecord;
 use App\User;
 use App\pool;
 use DB;
-
 class common extends Model
 {
    
@@ -69,7 +68,8 @@ class common extends Model
 	        if (isSameDay($nowaday,$openRecords[0]->created_at)==0) {
 	        	$openrecords=openrecord::all();
 	            foreach ($openRecords as $key => $value) {
-	                $value->delete();
+	            	$open=openRecord::find($value->id);
+	                $open->delete();
 	            }
 	        }
 	    }
